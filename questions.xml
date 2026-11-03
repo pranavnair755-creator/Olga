@@ -1,0 +1,135 @@
+<questions>
+	<fastest difficulty="0">
+		<text>Put the following letters in order to spell a popular man's name.</text>
+		<a>N</a>
+		<b>O</b>
+		<c>R</c>
+		<d>M</d>
+		<correctOrder>
+			<one>a</one>
+			<two>b</two>
+			<three>c</three>
+			<four>d</four>
+		</correctOrder>
+	</fastest>
+	<question>
+		<category>Quotes</category>
+		<text>Contestants on the "Price Is Right" game show are commonly told to do what just after their name is called from the audience to play?</text>
+		<a correct="yes">Come on down!</a>
+		<b correct="no">Go on up!</b>
+		<c correct="no">Stand up!</c>
+		<d correct="no">Go sit down!</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>What animated television character can be most credited with the phrase "I'm ready, I'm ready, I'm ready...?"</text>
+		<a correct="no">Stewie Griffin</a>
+		<b correct="no">Maggie Simpson</b>
+		<c correct="no">Charlie Brown</c>
+		<d correct="yes">Spongebob Squarepants</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"Bazinga!" is often used as the catch-all response to which of these television character's joke zingers?</text>
+		<a correct="no">Leonard Hofstadter</a>
+		<b correct="yes">Sheldon Cooper</b>
+		<c correct="no">Howard Wolowitz</c>
+		<d correct="no">Amy Farrah Fowler</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>The phrase "and many more" can be closely associated with what commonly sung tune?</text>
+		<a correct="no">Jolly Good Fellow</a>
+		<b correct="yes">Happy Birthday</b>
+		<c correct="no">Ring Around The Rosie</c>
+		<d correct="no">Mary Had A Little Lamb</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>In the movie "The Wizard of OZ" what must Dorothy say repeatedly while tapping her heels together to return home from the land of Oz?</text>
+		<a correct="yes">There's no place like home</a>
+		<b correct="no">Somewhere over the rainbow</b>
+		<c correct="no">The wicked witch is dead</c>
+		<d correct="no">I'll get you my pretty</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>What element is used to complete the following saying, "All that glitters is not" what?</text>
+		<a correct="no">Silver</a>
+		<b correct="no">Bronze</b>
+		<c correct="yes">Gold</c>
+		<d correct="no">Platinum</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"To be, or not to be" is an oft-quoted line that can be associated with what playwright?</text>
+		<a correct="no">Christopher Marlowe</a>
+		<b correct="yes">William Shakespeare</b>
+		<c correct="no">Andrew Lloyd Webber</c>
+		<d correct="no">Tennessee Williams</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"Remember, remember the fifth of November, the Gunpowder treason and plot" is a line from which of the following movies?</text>
+		<a correct="no">Watchmen</a>
+		<b correct="yes">V for Vendetta</b>
+		<c correct="no">The Matrix</c>
+		<d correct="no">The Dark Knight Rises</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"The tree of liberty must be refreshed from time to time with the blood of patriots and tyrants" is a quote from which former United States president?</text>
+		<a correct="yes">Thomas Jefferson</a>
+		<b correct="no">George Washington</b>
+		<c correct="no">Richard Nixon</c>
+		<d correct="no">Andrew Jackson</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"Make everything as simple as possible, but not simpler" is a quote by which of the following scientists?</text>
+		<a correct="no">Galileo Galilei</a>
+		<b correct="no">Bill Nye</b>
+		<c correct="yes">Albert Einstein</c>
+		<d correct="no">Isaac Newton</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"A Date Which Will Live in Infamy" is a quote by which United States president in response to the attacks by Japanese forces on December 7th, 1941?</text>
+		<a correct="no">Jimmy Carter</a>
+		<b correct="no">John F. Kennedy</b>
+		<c correct="yes">Franklin D. Roosevelt</c>
+		<d correct="no">Theodore Roosevelt</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>The quote "do not go where the path may lead, go instead where there is no path and leave a trail" can be attributed to what author?</text>
+		<a correct="no">Robert Frost</a>
+		<b correct="yes">Ralph Waldo Emerson</b>
+		<c correct="no">R.L. Stine</c>
+		<d correct="no">James Patterson</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"Is man merely a mistake of God's? Or God merely a mistake of man?" is a quote that comes from what known atheist?</text>
+		<a correct="no">Richard Dawkins</a>
+		<b correct="no">Voltaire</b>
+		<c correct="no">Martin Buber</c>
+		<d correct="yes">Friedrich Nietzsche</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>Referring to Helen of Troy, the oft-quoted line "Was this the face that launched a thousand ships" was written by whom?</text>
+		<a correct="no">Alexander Pope</a>
+		<b correct="no">Dante Alighieri</b>
+		<c correct="yes">Christopher Marlowe</c>
+		<d correct="no">John Milton</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>While mostly abbreviated to the phrase "hell hath no fury like a woman scorned", the complete quote from "The Mourning Bride" is attributed to which playwright?</text>
+		<a correct="no">Oscar Wilde</a>
+		<b correct="no">Anton Chekhov</b>
+		<c correct="no">William Shakespeare</c>
+		<d correct="yes">William Congreve</d>
+	</question>
+</questions>

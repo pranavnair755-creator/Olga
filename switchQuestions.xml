@@ -1,0 +1,135 @@
+<questions>
+	<fastest difficulty="0">
+		<text>Put the following letters in order to spell a popular man's name.</text>
+		<a>N</a>
+		<b>O</b>
+		<c>R</c>
+		<d>M</d>
+		<correctOrder>
+			<one>a</one>
+			<two>b</two>
+			<three>c</three>
+			<four>d</four>
+		</correctOrder>
+	</fastest>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text>"The man who says to me, 'Believe as I do, or God will damn you,' will presently say, 'Believe as I do, or I shall kill you'" is a quote attributed to whom?</text>
+		<a correct="no">Stephen Hawking</a>
+		<b correct="yes">Voltaire</b>
+		<c correct="no">Alan Turing</c>
+		<d correct="no">Neil deGrasse Tyson</d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+	<question>
+		<category>Quotes</category>
+		<text></text>
+		<a correct="no"></a>
+		<b correct="no"></b>
+		<c correct="no"></c>
+		<d correct="no"></d>
+	</question>
+</questions>
