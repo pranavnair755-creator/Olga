@@ -1,0 +1,7 @@
+{
+  "name": "Who Wants To Be A Millionaire",
+  "description": "Interactive Who Wants To Be A Millionaire game show simulator with authentic graphics, sound effects, lifelines, money tree, and timers.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

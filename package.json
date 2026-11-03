@@ -1,0 +1,14 @@
+{
+  "name": "who-wants-to-be-a-millionaire",
+  "version": "1.0.0",
+  "description": "Who Wants To Be A Millionaire game show simulator",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node -e \"console.log('Build successful')\""
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

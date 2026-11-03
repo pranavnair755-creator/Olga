@@ -16,7 +16,7 @@ function init(){
 		document.querySelector('.timerBaseDiv').style.opacity = 0;
 	}
 	
-	$('.totalPrizeMoneyWonDiv').html(accounting.formatMoney(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 2], "$", 0));
+	$('.totalPrizeMoneyWonDiv').html(accounting.formatMoney(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 2] || 0, "Rs. ", 0));
 	
 	/* Set initial transitions on certain elements */
 	$('.answerStrapLifeLineCenterContainerDiv').transition({perspective:0, scale:[0.2, 0.2], opacity:0}, 1);

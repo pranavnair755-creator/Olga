@@ -102,7 +102,7 @@ div {
 
 .currentLevelStrapAmountDiv{
 	color:white;
-	font-family:'Copperplate31bc';
+	font-family:'Copperplate31bc', 'Segoe UI', 'Noto Sans', sans-serif;
 	font-size:35pt;
 	height:46px;
 	width:733px;
@@ -481,7 +481,7 @@ div {
 	right:0px;
 	bottom:64px;
 	color:#FFA71E;
-	font-family:'Copperplate31bc';
+	font-family:'Copperplate31bc', 'Segoe UI', 'Noto Sans', sans-serif;
 	text-align:center;
 	font-size:94pt;
 	text-shadow:-1px -1px 0px black, 0px -1px 0px black, 1px -1px 0px black, -1px 0px 0px black, 1px 0px 0px black, -1px 1px 0px black, 0px 1px 0px black, 1px 1px 0px black, 4px 4px 0px black;

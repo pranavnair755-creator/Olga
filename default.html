@@ -1,17 +1,23 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Who Wants To Be A Millionaire</title>
-		
-		<link rel="shortcut icon" href="Images/favicon.ico" type="image/x-icon">
-		<link rel="icon" href="Images/favicon.ico" type="image/x-icon">
-		
-		<link rel="stylesheet" type="text/css" href="Styles/reset.css">
-		<link rel="stylesheet" type="text/css" href="Styles/bodyStyles.css">
-		<link rel="stylesheet" type="text/css" href="Styles/divStyles.css">
-		<link rel="stylesheet" type="text/css" href="Styles/pStyles.css">
-		<link rel="stylesheet" type="text/css" href="Styles/imgStyles.css">
-		<link rel="stylesheet" type="text/css" href="Styles/tableStyles.css">
-		
+		<meta name="description" content="Interactive Who Wants To Be A Millionaire game show simulator with authentic graphics, sound effects, lifelines, money tree, and timers." />
+		<meta property="og:title" content="Who Wants To Be A Millionaire" />
+		<meta property="og:description" content="Interactive Who Wants To Be A Millionaire game show simulator with authentic graphics, sound effects, lifelines, money tree, and timers." />
+
+		<link rel="shortcut icon" href="Images/favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="Images/favicon.ico" type="image/x-icon" />
+
+		<link rel="stylesheet" type="text/css" href="Styles/reset.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/bodyStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/divStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/pStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/imgStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/tableStyles.css" />
+
 		<script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
 		<script type="text/javascript" src="Scripts/jquery.3d.js"></script>
 		<script type="text/javascript" src="Scripts/accounting.js"></script>
@@ -26,8 +32,106 @@
 		<script type="text/javascript" src="Scripts/LifelineControl.js"></script>
 		<script type="text/javascript" src="Scripts/ContestantsControl.js"></script>
 		<script type="text/javascript" src="Scripts/TimerControl.js"></script>
-		<script type="text/javascript" src="Scripts/KeyboardController.js"></script>		
+		<script type="text/javascript" src="Scripts/KeyboardController.js"></script>
 		<script type="text/javascript" src="Scripts/Init.js"></script>
+
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100vw;
+				height: 100vh;
+				overflow: hidden;
+				background-color: #000;
+			}
+			.stageContainerDiv {
+				width: 1920px;
+				height: 1080px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				transform-origin: 0 0;
+			}
+			#hostControlPanel {
+				position: fixed;
+				bottom: 12px;
+				left: 50%;
+				transform: translateX(-50%);
+				z-index: 99999;
+				background: rgba(10, 15, 30, 0.92);
+				border: 1px solid rgba(80, 140, 240, 0.4);
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 100, 255, 0.2);
+				backdrop-filter: blur(8px);
+				border-radius: 12px;
+				padding: 8px 14px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+				font-size: 13px;
+				transition: transform 0.3s ease, opacity 0.3s ease;
+				max-width: 95vw;
+			}
+			#hostControlPanel.minimized {
+				transform: translateX(-50%) translateY(calc(100% - 32px));
+				opacity: 0.85;
+			}
+			#hostControlPanel button {
+				background: linear-gradient(180deg, #1e293b, #0f172a);
+				border: 1px solid rgba(148, 163, 184, 0.3);
+				color: #f1f5f9;
+				padding: 5px 10px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: 500;
+				font-size: 12px;
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+				transition: all 0.15s ease;
+				user-select: none;
+			}
+			#hostControlPanel button:hover {
+				background: linear-gradient(180deg, #334155, #1e293b);
+				border-color: #60a5fa;
+				color: #fff;
+				transform: translateY(-1px);
+			}
+			#hostControlPanel button:active {
+				transform: translateY(1px);
+			}
+			#hostControlPanel button.btn-highlight {
+				background: linear-gradient(180deg, #1d4ed8, #1e40af);
+				border-color: #93c5fd;
+				font-weight: 600;
+			}
+			#hostControlPanel button.btn-gold {
+				background: linear-gradient(180deg, #b45309, #78350f);
+				border-color: #fbbf24;
+				color: #fef08a;
+			}
+			#hostControlPanel .panel-title {
+				font-size: 12px;
+				font-weight: 700;
+				letter-spacing: 0.5px;
+				color: #93c5fd;
+				text-transform: uppercase;
+				display: flex;
+				align-items: center;
+				gap: 6px;
+			}
+			#hostControlPanel .toggle-btn {
+				background: transparent;
+				border: none;
+				color: #94a3b8;
+				font-size: 14px;
+				padding: 2px 6px;
+				cursor: pointer;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="stageContainerDiv">
@@ -108,9 +212,9 @@
 					<img src="Images/timer/bar/clockbar1.png" id="timerBar1Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
 					<img src="Images/timer/timer_base_gradient.png" class="timerBarBaseGradientImg"/>
 				</div>
-				<div class="timerBarDiv"/></div>
-				<div class="timerBarFillDiv"/></div>
-				<div class="timerBarGradientDiv"/></div>
+				<div class="timerBarDiv"></div>
+				<div class="timerBarFillDiv"></div>
+				<div class="timerBarGradientDiv"></div>
 			</div>
 			
 			<!-- Question Strap Div -->
@@ -196,7 +300,7 @@
 			
 			<!-- Win Strap Div -->
 			<div class="winStrapDiv">
-				<p class="winningsP">$250,000</p>
+				<p class="winningsP">Rs. 25,00,000</p>
 			</div>
 			
 			<!-- Fastest Finger Contestants Div -->
@@ -335,8 +439,6 @@
 				</div>
 			</div>
 			
-			
-			
 			<!-- Money Tree Div -->
 			<div class="moneyTreeDiv">
 				<div class="lifelineTreeHolderDiv" style="top:107px;left:102px;transform:perspective(0px);">
@@ -421,7 +523,7 @@
 			<!-- Phone a Friend Clock Div -->
 			<div class="pafClockDiv">
 				<div class="pafAtomDiv">
-					<img src="Images/paf_clock_atom.png" style="top:0px;bottom:0px;" id="pafAtomImg" style="opacity:1;-moz-opacity:1;-webkit-opacity:1;"/>
+					<img src="Images/paf_clock_atom.png" style="top:0px;bottom:0px;" id="pafAtomImg"/>
 				</div>
 				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
 					<img src="Images/paf_clock_bar/paf_clock_bar_30.png" style="top:0px;bottom:0px;" id="pafBarTimer0Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
@@ -546,7 +648,7 @@
 				<img src="Images/white_diagonal.png" style="top:240px;left:468px;"/>
 				<img src="Images/white_diagonal.png" style="top:240px;right:468px;"/>
 				<div class="totalPrizeDiv">TOTAL PRIZE</div>
-				<div class="totalPrizeMoneyWonDiv">$0</div>
+				<div class="totalPrizeMoneyWonDiv">Rs. 0</div>
 			</div>
 			
 			<!-- Current Level Strap Div-->
@@ -555,7 +657,7 @@
 				<img src="Images/small_side_strap_gold.png" class="sideStrapGoldImg"/>
 				<img src="Images/small_side_strap_gold_fill.png" class="sideStrapGoldFillImg"/>
 				<div class="currentLevelStrapAmountDiv">
-					$1,000,000
+					Rs. 1 CRORE
 				</div>
 			</div>
 			
@@ -567,5 +669,74 @@
 				</div>
 			</div>
 		</div>
+
+		<!-- Host Control Panel for easy play and iframe accessibility -->
+		<div id="hostControlPanel">
+			<div class="panel-title">🎮 Host Controls</div>
+			<button id="btnComm" class="btn-highlight" title="Commercial break toggle (Key: C)">[C] Play / Resume</button>
+			<button id="btnNext" class="btn-highlight" title="Advance question sequence (Key: Right Arrow)">[→] Next Action</button>
+			<button id="btnTree" title="Show / hide money tree (Key: Left Arrow)">[←] Money Tree</button>
+			<button id="btnAnsA" title="Lock in Answer A (Key: 1)">[1] A</button>
+			<button id="btnAnsB" title="Lock in Answer B (Key: 2)">[2] B</button>
+			<button id="btnAnsC" title="Lock in Answer C (Key: 3)">[3] C</button>
+			<button id="btnAnsD" title="Lock in Answer D (Key: 4)">[4] D</button>
+			<button id="btn5050" class="btn-gold" title="50:50 Lifeline (Key: F)">[F] 50:50</button>
+			<button id="btnPAF" class="btn-gold" title="Phone a Friend (Key: P)">[P] Phone-A-Friend</button>
+			<button id="btnATA" class="btn-gold" title="Ask the Audience (Key: A)">[A] Ask Audience</button>
+			<button id="btnTimer" title="Pause / resume timer (Key: 0)">[0] Timer</button>
+			<button id="btnTPM" title="Total prize money (Key: Down Arrow)">[↓] Total Prize</button>
+			<button class="toggle-btn" id="btnTogglePanel" title="Minimize / Expand controls">▼</button>
+		</div>
+
+		<script type="text/javascript">
+			// Responsive stage auto-scaler for 1920x1080 stage
+			function fitStage() {
+				var stage = document.querySelector('.stageContainerDiv');
+				if (!stage) return;
+				var w = window.innerWidth;
+				var h = window.innerHeight;
+				var scale = Math.min(w / 1920, h / 1080);
+				var left = (w - 1920 * scale) / 2;
+				var top = (h - 1080 * scale) / 2;
+				stage.style.transformOrigin = '0 0';
+				stage.style.transform = 'scale(' + scale + ')';
+				stage.style.left = left + 'px';
+				stage.style.top = top + 'px';
+			}
+			window.addEventListener('resize', fitStage);
+			window.addEventListener('DOMContentLoaded', fitStage);
+			window.addEventListener('load', fitStage);
+
+			// Wire Host Control Panel to trigger the keyboard event handlers
+			function pressKey(keyCode) {
+				$(document).trigger($.Event('keydown', { keyCode: keyCode }));
+			}
+
+			document.getElementById('btnComm').addEventListener('click', function() { pressKey(67); });
+			document.getElementById('btnNext').addEventListener('click', function() { pressKey(39); });
+			document.getElementById('btnTree').addEventListener('click', function() { pressKey(37); });
+			document.getElementById('btnAnsA').addEventListener('click', function() { pressKey(49); });
+			document.getElementById('btnAnsB').addEventListener('click', function() { pressKey(50); });
+			document.getElementById('btnAnsC').addEventListener('click', function() { pressKey(51); });
+			document.getElementById('btnAnsD').addEventListener('click', function() { pressKey(52); });
+			document.getElementById('btn5050').addEventListener('click', function() { pressKey(70); });
+			document.getElementById('btnPAF').addEventListener('click', function() { pressKey(80); });
+			document.getElementById('btnATA').addEventListener('click', function() { pressKey(65); });
+			document.getElementById('btnTimer').addEventListener('click', function() { pressKey(48); });
+			document.getElementById('btnTPM').addEventListener('click', function() { pressKey(40); });
+
+			var isPanelMinimized = false;
+			document.getElementById('btnTogglePanel').addEventListener('click', function() {
+				var panel = document.getElementById('hostControlPanel');
+				isPanelMinimized = !isPanelMinimized;
+				if (isPanelMinimized) {
+					panel.classList.add('minimized');
+					this.textContent = '▲';
+				} else {
+					panel.classList.remove('minimized');
+					this.textContent = '▼';
+				}
+			});
+		</script>
 	</body>
 </html>

@@ -15,7 +15,7 @@ table {
 }
 
 .moneyTreeAmountTd {
-	font-family:'Copperplate31bc';
+	font-family:'Copperplate31bc', 'Segoe UI', 'Noto Sans', sans-serif;
 	font-size:38pt;
 	color:#FEAD13;
 	letter-spacing:0px;
@@ -30,7 +30,7 @@ table {
 }
 
 .moneyTreeAmountWhiteTd {
-	font-family:'Copperplate31bc';
+	font-family:'Copperplate31bc', 'Segoe UI', 'Noto Sans', sans-serif;
 	font-size:38pt;
 	color:#FFFFFF;
 	letter-spacing:0px;

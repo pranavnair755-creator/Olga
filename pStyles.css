@@ -106,7 +106,7 @@ p {
 
 .winningsP {
 	color:#FFFFFF;
-	font-family:'Copperplate31bc';
+	font-family:'Copperplate31bc', 'Segoe UI', 'Noto Sans', sans-serif;
 	font-size:94pt;
 	text-align:center;
 	width:1920px;

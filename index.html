@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Who Wants To Be A Millionaire</title>
+		<meta name="description" content="Interactive Who Wants To Be A Millionaire game show simulator with authentic graphics, sound effects, lifelines, money tree, and timers." />
+		<meta property="og:title" content="Who Wants To Be A Millionaire" />
+		<meta property="og:description" content="Interactive Who Wants To Be A Millionaire game show simulator with authentic graphics, sound effects, lifelines, money tree, and timers." />
+
+		<link rel="shortcut icon" href="Images/favicon.ico" type="image/x-icon" />
+		<link rel="icon" href="Images/favicon.ico" type="image/x-icon" />
+
+		<link rel="stylesheet" type="text/css" href="Styles/reset.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/bodyStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/divStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/pStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/imgStyles.css" />
+		<link rel="stylesheet" type="text/css" href="Styles/tableStyles.css" />
+
+		<script type="text/javascript" src="Scripts/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="Scripts/jquery.3d.js"></script>
+		<script type="text/javascript" src="Scripts/accounting.js"></script>
+		<script type="text/javascript" src="Scripts/Variables.js"></script>
+		<script type="text/javascript" src="Scripts/CameraControl.js"></script>
+		<script type="text/javascript" src="Scripts/AudioControl.js"></script>
+		<script type="text/javascript" src="Scripts/FastestFingerControl.js"></script>
+		<script type="text/javascript" src="Scripts/GeneralControl.js"></script>
+		<script type="text/javascript" src="Scripts/QuestionAndAnswerControl.js"></script>
+		<script type="text/javascript" src="Scripts/WinningsControl.js"></script>
+		<script type="text/javascript" src="Scripts/MoneyTreeControl.js"></script>
+		<script type="text/javascript" src="Scripts/LifelineControl.js"></script>
+		<script type="text/javascript" src="Scripts/ContestantsControl.js"></script>
+		<script type="text/javascript" src="Scripts/TimerControl.js"></script>
+		<script type="text/javascript" src="Scripts/KeyboardController.js"></script>
+		<script type="text/javascript" src="Scripts/Init.js"></script>
+
+		<style>
+			html, body {
+				margin: 0;
+				padding: 0;
+				width: 100vw;
+				height: 100vh;
+				overflow: hidden;
+				background-color: #000;
+			}
+			.stageContainerDiv {
+				width: 1920px;
+				height: 1080px;
+				position: absolute;
+				left: 0;
+				top: 0;
+				transform-origin: 0 0;
+			}
+			#hostControlPanel {
+				position: fixed;
+				bottom: 12px;
+				left: 50%;
+				transform: translateX(-50%);
+				z-index: 99999;
+				background: rgba(10, 15, 30, 0.92);
+				border: 1px solid rgba(80, 140, 240, 0.4);
+				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 100, 255, 0.2);
+				backdrop-filter: blur(8px);
+				border-radius: 12px;
+				padding: 8px 14px;
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				align-items: center;
+				justify-content: center;
+				color: #fff;
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+				font-size: 13px;
+				transition: transform 0.3s ease, opacity 0.3s ease;
+				max-width: 95vw;
+			}
+			#hostControlPanel.minimized {
+				transform: translateX(-50%) translateY(calc(100% - 32px));
+				opacity: 0.85;
+			}
+			#hostControlPanel button {
+				background: linear-gradient(180deg, #1e293b, #0f172a);
+				border: 1px solid rgba(148, 163, 184, 0.3);
+				color: #f1f5f9;
+				padding: 5px 10px;
+				border-radius: 6px;
+				cursor: pointer;
+				font-weight: 500;
+				font-size: 12px;
+				display: inline-flex;
+				align-items: center;
+				gap: 4px;
+				transition: all 0.15s ease;
+				user-select: none;
+			}
+			#hostControlPanel button:hover {
+				background: linear-gradient(180deg, #334155, #1e293b);
+				border-color: #60a5fa;
+				color: #fff;
+				transform: translateY(-1px);
+			}
+			#hostControlPanel button:active {
+				transform: translateY(1px);
+			}
+			#hostControlPanel button.btn-highlight {
+				background: linear-gradient(180deg, #1d4ed8, #1e40af);
+				border-color: #93c5fd;
+				font-weight: 600;
+			}
+			#hostControlPanel button.btn-gold {
+				background: linear-gradient(180deg, #b45309, #78350f);
+				border-color: #fbbf24;
+				color: #fef08a;
+			}
+			#hostControlPanel .panel-title {
+				font-size: 12px;
+				font-weight: 700;
+				letter-spacing: 0.5px;
+				color: #93c5fd;
+				text-transform: uppercase;
+				display: flex;
+				align-items: center;
+				gap: 6px;
+			}
+			#hostControlPanel .toggle-btn {
+				background: transparent;
+				border: none;
+				color: #94a3b8;
+				font-size: 14px;
+				padding: 2px 6px;
+				cursor: pointer;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="stageContainerDiv">
+			<video id="video" width="1920" height="1080" autoplay></video>
+			<!-- Stage Background Div -->
+			<div class="stageBackgroundDiv">
+				<img src="Images/Millionaire_Background.png" id="stageBackgroundImg" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+			</div>
+			
+			<!-- Timer Strap Div -->
+			<div class="timerStrapDiv">
+				<div class="timerBaseDiv" id="timerBase">
+					<div class="timerSecondsDiv" id="timerSeconds">
+						<span>0</span>
+						<span>0</span>
+					</div>
+					<img src="Images/timer/timer_base_fill.png" class="timerBarBaseFillImg"/>
+					<!-- Circular Timer Bar -->
+					<img src="Images/timer/bar/clockbar60.png" id="timerBar60Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar59.png" id="timerBar59Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar58.png" id="timerBar58Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar57.png" id="timerBar57Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar56.png" id="timerBar56Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar55.png" id="timerBar55Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar54.png" id="timerBar54Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar53.png" id="timerBar53Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar52.png" id="timerBar52Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar51.png" id="timerBar51Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar50.png" id="timerBar50Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar49.png" id="timerBar49Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar48.png" id="timerBar48Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar47.png" id="timerBar47Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar46.png" id="timerBar46Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar45.png" id="timerBar45Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar44.png" id="timerBar44Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar43.png" id="timerBar43Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar42.png" id="timerBar42Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar41.png" id="timerBar41Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar40.png" id="timerBar40Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar39.png" id="timerBar39Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar38.png" id="timerBar38Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar37.png" id="timerBar37Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar36.png" id="timerBar36Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar35.png" id="timerBar35Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar34.png" id="timerBar34Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar33.png" id="timerBar33Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar32.png" id="timerBar32Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar31.png" id="timerBar31Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar30.png" id="timerBar30Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar29.png" id="timerBar29Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar28.png" id="timerBar28Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar27.png" id="timerBar27Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar26.png" id="timerBar26Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar25.png" id="timerBar25Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar24.png" id="timerBar24Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar23.png" id="timerBar23Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar22.png" id="timerBar22Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar21.png" id="timerBar21Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar20.png" id="timerBar20Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar19.png" id="timerBar19Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar18.png" id="timerBar18Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar17.png" id="timerBar17Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar16.png" id="timerBar16Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar15.png" id="timerBar15Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar14.png" id="timerBar14Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar13.png" id="timerBar13Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar12.png" id="timerBar12Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar11.png" id="timerBar11Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar10.png" id="timerBar10Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar9.png" id="timerBar9Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar8.png" id="timerBar8Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar7.png" id="timerBar7Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar6.png" id="timerBar6Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar5.png" id="timerBar5Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar4.png" id="timerBar4Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar3.png" id="timerBar3Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar2.png" id="timerBar2Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/bar/clockbar1.png" id="timerBar1Img" style="transform:translate(832px, -60px);opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+					<img src="Images/timer/timer_base_gradient.png" class="timerBarBaseGradientImg"/>
+				</div>
+				<div class="timerBarDiv"></div>
+				<div class="timerBarFillDiv"></div>
+				<div class="timerBarGradientDiv"></div>
+			</div>
+			
+			<!-- Question Strap Div -->
+			<div class="questionStrapDiv">
+				<img src="Images/Large_Strap_Gradient.png" />
+				<table class="questionTable">
+					<tr>
+						<td class="questionTd">
+							A sample question will go here...
+						</td>
+					</tr>
+				</table>
+			</div>
+			
+			<div class="answerGroupADiv" style="bottom:0px;" >
+				<!-- Answer Straps A and B Div -->
+				<div class="answerStrapDiv" style="bottom:160px;" >
+					<div class="leftAnswerDiv" id="answerA" >
+						<img src="Images/Normal_Answer_Left_Fill.png" />
+						<img src="Images/Final_Answer_Left_Fill.png" class="finalImg" />
+						<img src="Images/Correct_Answer_Left_Fill.png" class="correctImg" />
+						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
+						<p class="letterP">A:</p>
+						<p class="answerP">Answer for A Goes Here...</p>
+						<div class="ataPercentStrapDiv">
+							<img src="Images/ata_percent_strap.png" />
+							<p class="ataPercentStrapP" id="ataPercentStrapA">100%</p>
+						</div>
+					</div>
+					<div class="rightAnswerDiv" id="answerB">
+						<img src="Images/Normal_Answer_Right_Fill.png" />
+						<img src="Images/Final_Answer_Right_Fill.png" class="finalImg" />
+						<img src="Images/Correct_Answer_Right_Fill.png" class="correctImg" />
+						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
+						<p class="letterP">B:</p>
+						<p class="answerP">Answer for B Goes Here...</p>
+						<div class="ataPercentStrapDiv">
+							<img src="Images/ata_percent_strap.png" />
+							<p class="ataPercentStrapP" id="ataPercentStrapB">100%</p>
+						</div>
+					</div>
+					<img src="Images/Full_Answer_Strap_Gradient.png" />
+				</div>
+			</div>
+			
+			<div class="answerGroupBDiv" style="bottom:0px;" >
+				<!-- Answer Straps C and D Div -->
+				<div class="answerStrapDiv" style="bottom:75px;" >
+					<div class="leftAnswerDiv" id="answerC" >
+						<img src="Images/Normal_Answer_Left_Fill.png" />
+						<img src="Images/Final_Answer_Left_Fill.png" class="finalImg" />
+						<img src="Images/Correct_Answer_Left_Fill.png" class="correctImg" />
+						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
+						<p class="letterP">C:</p>
+						<p class="answerP">Answer for C Goes Here...</p>
+						<div class="ataPercentStrapDiv">
+							<img src="Images/ata_percent_strap.png" />
+							<p class="ataPercentStrapP" id="ataPercentStrapC">100%</p>
+						</div>
+					</div>
+					<div class="rightAnswerDiv" id="answerD">
+						<img src="Images/Normal_Answer_Right_Fill.png" />
+						<img src="Images/Final_Answer_Right_Fill.png" class="finalImg" />
+						<img src="Images/Correct_Answer_Right_Fill.png" class="correctImg" />
+						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
+						<p class="letterP">D:</p>
+						<p class="answerP">Answer for D Goes Here...</p>
+						<div class="ataPercentStrapDiv">
+							<img src="Images/ata_percent_strap.png" />
+							<p class="ataPercentStrapP" id="ataPercentStrapD">100%</p>
+						</div>
+					</div>
+					<img src="Images/Full_Answer_Strap_Gradient.png" />
+				</div>
+			</div>
+			
+			<!-- Answer Straps Life Line Centered Div -->
+			<div class="answerStrapLifeLineCenterDiv">
+				<div class="answerStrapLifeLineCenterContainerDiv">
+					<img src="Images/stq.png" class="lifelineCenterImg" id="stqLifeLineCenterImg"/>
+				</div>
+			</div>
+			
+			<!-- Win Strap Div -->
+			<div class="winStrapDiv">
+				<p class="winningsP">Rs. 25,00,000</p>
+			</div>
+			
+			<!-- Fastest Finger Contestants Div -->
+			<div class="fastestFingerContestantsDiv">
+				<div class="fastestContestantDiv" id="fastestContestant1" style="top:0px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant2" style="top:85px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant3" style="top:170px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant4" style="top:255px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant5" style="top:340px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant6" style="top:425px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant7" style="top:510px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant8" style="top:595px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant9" style="top:680px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+				<div class="fastestContestantDiv" id="fastestContestant10" style="top:765px;">
+					<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+					<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+					<p class="fastestContestantNameP">Contestant Name Here...</p>
+					<p class="fastestContestantTimeP">20.00s</p>
+					<img src="Images/fastest_time_strap_gradient.png" />
+				</div>
+			</div>
+			
+			<!-- Fastest Finger Winner Div -->
+			<div class="fastestContestantWinnerDiv" id="fastestContestant" style="bottom:121px;scale:1.3;opacity:0;-moz-opacity:0;-webkit-opacity:0;left:0px;right:0px;">
+				<img src="Images/fastest_time_strap_fast_fill.png" class="fastestTimeCorrectFillImg"/>
+				<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerLeftGlowImg" />
+				<img src="Images/fastest_finger_strap_glow.png" class="fastestFingerRightGlowImg" />
+				<p class="fastestContestantNameP">Contestant Name Here...</p>
+				<p class="fastestContestantTimeP">20.00s</p>
+				<img src="Images/fastest_time_strap_gradient.png" />
+			</div>
+			
+			<!-- Contestant Name Strap Div -->
+			<div class="contestantNameAndLocationDiv">
+				<p class="contestantNameP">
+					UNNAMED PLAYER
+				</p>
+				<p class="contestantLocationP">
+					UNNAMED LOCATION
+				</p>
+			</div>
+						
+			<!-- Fastest Finger Tree Order Div -->
+			<div class="fastestFingerRevealOrderDiv">
+				<img src="Images/tree_seperator.png" />
+				<div class="fastestFingerTreeQuestionDiv">
+					<p class="fastestFingerTreeQuestionP">The question for fastest finger will go here</p>
+				</div>
+				<div class="fastestFingerTreeAnswerDiv" style="bottom:420px;" id="fastestAnswerOrder1">
+					<img src="Images/orange_diagonal.png" class="fastestTreeAnswerDiagonalImg" />
+					<p class="fastestTreeLetterP">?:</p>
+					<p class="fastestTreeAnswerP">Answer goes here...</p>
+					<img src="Images/fastest_tree_strap.png" />
+				</div>
+				<div class="fastestFingerTreeAnswerDiv" style="bottom:321px;" id="fastestAnswerOrder2">
+					<img src="Images/orange_diagonal.png" class="fastestTreeAnswerDiagonalImg" />
+					<p class="fastestTreeLetterP">?:</p>
+					<p class="fastestTreeAnswerP">Answer goes here...</p>
+					<img src="Images/fastest_tree_strap.png" />
+				</div>
+				<div class="fastestFingerTreeAnswerDiv" style="bottom:222px;" id="fastestAnswerOrder3">
+					<img src="Images/orange_diagonal.png" class="fastestTreeAnswerDiagonalImg" />
+					<p class="fastestTreeLetterP">?:</p>
+					<p class="fastestTreeAnswerP">Answer goes here...</p>
+					<img src="Images/fastest_tree_strap.png" />
+				</div>
+				<div class="fastestFingerTreeAnswerDiv" style="bottom:123px;" id="fastestAnswerOrder4">
+					<img src="Images/orange_diagonal.png" class="fastestTreeAnswerDiagonalImg" />
+					<p class="fastestTreeLetterP">?:</p>
+					<p class="fastestTreeAnswerP">Answer goes here...</p>
+					<img src="Images/fastest_tree_strap.png" />
+				</div>
+			</div>
+			
+			<!-- Money Tree Div -->
+			<div class="moneyTreeDiv">
+				<div class="lifelineTreeHolderDiv" style="top:107px;left:102px;transform:perspective(0px);">
+					<div class="lifelineTreeDiv pafLifeLine">
+						<img src="Images/paf.png" class="lifelineTreeImg"/>
+						<img src="Images/paf_yellow.png" class="lifelineYellowTreeImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedImg"/>
+					</div>
+				</div>
+				<div class="lifelineTreeHolderDiv ffLifeLine" style="top:107px;left:232px;">
+					<div class="lifelineTreeDiv" style="transform:perspective(0px);">
+						<img src="Images/5050.png" class="lifelineTreeImg"/>
+						<img src="Images/5050_yellow.png" class="lifelineYellowTreeImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedImg"/>
+					</div>
+				</div>
+				<div class="lifelineTreeHolderDiv ataLifeLine" style="top:107px;left:362px;">
+					<div class="lifelineTreeDiv" style="transform:perspective(0px);">
+						<img src="Images/ata.png" class="lifelineTreeImg"/>
+						<img src="Images/ata_yellow.png" class="lifelineYellowTreeImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedImg"/>
+					</div>
+				</div>
+				<div class="lifelineTreeHolderDiv stqLifeLine" style="top:107px;left:760px;opacity:0;">
+					<div class="lifelineTreeDiv" style="transform:perspective(0px);">
+						<img src="Images/stq.png" class="lifelineTreeImg"/>
+						<img src="Images/stq_yellow.png" class="lifelineYellowTreeImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedImg"/>
+					</div>
+				</div>
+
+				<table class="moneyTreeTable">
+					
+				</table>
+				<img src="Images/tree_seperator.png" />
+			</div>
+			
+			<!-- Life Lines Left Strap -->
+			<div class="lifeLinesLeftStrapDiv">
+				<div class="lifelineStrapHolderDiv pafStrapLifeLine" style="top:0px;bottom:0px;left:400px;">
+					<div class="lifeLineStrapDiv">
+						<img src="Images/paf.png" class="lifelineStrapImg"/>
+						<img src="Images/paf_yellow.png" class="lifelineYellowStrapImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedStrapImg"/>
+					</div>
+				</div>
+				<div class="lifelineStrapHolderDiv ffStrapLifeLine" style="top:0px;bottom:0px;left:745px;">
+					<div class="lifeLineStrapDiv">
+						<img src="Images/5050.png" class="lifelineStrapImg"/>
+						<img src="Images/5050_yellow.png" class="lifelineYellowStrapImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedStrapImg"/>
+					</div>
+				</div>
+				<div class="lifelineStrapHolderDiv ataStrapLifeLine" style="top:0px;bottom:0px;left:1090px;">
+					<div class="lifeLineStrapDiv">
+						<img src="Images/ata.png" class="lifelineStrapImg"/>
+						<img src="Images/ata_yellow.png" class="lifelineYellowStrapImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedStrapImg"/>
+					</div>
+				</div>
+				<div class="lifelineStrapHolderDiv stqStrapLifeLine" style="top:0px;bottom:0px;left:1870px;">
+					<div class="lifeLineStrapDiv">
+						<img src="Images/stq.png" class="lifelineStrapImg"/>
+						<img src="Images/stq_yellow.png" class="lifelineYellowStrapImg"/>
+						<img src="Images/lifeline_used.png" class="lifelineUsedStrapImg"/>
+					</div>
+				</div>
+			</div>
+			
+			<!-- Ask The Audience Graph Div -->
+			<div class="ataGraphDiv">
+				<div class="ataGraphBarDiv" id="graphBarA" style="left:25px;"></div>
+				<div class="ataGraphBarDiv" id="graphBarB" style="left:105px;"></div>
+				<div class="ataGraphBarDiv" id="graphBarC" style="left:185px;"></div>
+				<div class="ataGraphBarDiv" id="graphBarD" style="left:265px;"></div>
+				<div class="ataGraphPercentDiv" id="graphPercentA" style="left:10px;"></div>
+				<div class="ataGraphPercentDiv" id="graphPercentB" style="left:90px;"></div>
+				<div class="ataGraphPercentDiv" id="graphPercentC" style="left:170px;"></div>
+				<div class="ataGraphPercentDiv" id="graphPercentD" style="left:250px;"></div>
+			</div>
+			
+			<!-- Phone a Friend Clock Div -->
+			<div class="pafClockDiv">
+				<div class="pafAtomDiv">
+					<img src="Images/paf_clock_atom.png" style="top:0px;bottom:0px;" id="pafAtomImg"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_30.png" style="top:0px;bottom:0px;" id="pafBarTimer0Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_29.png" style="top:0px;bottom:0px;" id="pafBarTimer1Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_28.png" style="top:0px;bottom:0px;" id="pafBarTimer2Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_27.png" style="top:0px;bottom:0px;" id="pafBarTimer3Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_26.png" style="top:0px;bottom:0px;" id="pafBarTimer4Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_25.png" style="top:0px;bottom:0px;" id="pafBarTimer5Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_24.png" style="top:0px;bottom:0px;" id="pafBarTimer6Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_23.png" style="top:0px;bottom:0px;" id="pafBarTimer7Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_22.png" style="top:0px;bottom:0px;" id="pafBarTimer8Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_21.png" style="top:0px;bottom:0px;" id="pafBarTimer9Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_20.png" style="top:0px;bottom:0px;" id="pafBarTimer10Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_19.png" style="top:0px;bottom:0px;" id="pafBarTimer11Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_18.png" style="top:0px;bottom:0px;" id="pafBarTimer12Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_17.png" style="top:0px;bottom:0px;" id="pafBarTimer13Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_16.png" style="top:0px;bottom:0px;" id="pafBarTimer14Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_15.png" style="top:0px;bottom:0px;" id="pafBarTimer15Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_14.png" style="top:0px;bottom:0px;" id="pafBarTimer16Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_13.png" style="top:0px;bottom:0px;" id="pafBarTimer17Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_12.png" style="top:0px;bottom:0px;" id="pafBarTimer18Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_11.png" style="top:0px;bottom:0px;" id="pafBarTimer19Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_10.png" style="top:0px;bottom:0px;" id="pafBarTimer20Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_9.png" style="top:0px;bottom:0px;" id="pafBarTimer21Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_8.png" style="top:0px;bottom:0px;" id="pafBarTimer22Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_7.png" style="top:0px;bottom:0px;" id="pafBarTimer23Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_6.png" style="top:0px;bottom:0px;" id="pafBarTimer24Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_5.png" style="top:0px;bottom:0px;" id="pafBarTimer25Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_4.png" style="top:0px;bottom:0px;" id="pafBarTimer26Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_3.png" style="top:0px;bottom:0px;" id="pafBarTimer27Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_2.png" style="top:0px;bottom:0px;" id="pafBarTimer28Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_1.png" style="top:0px;bottom:0px;" id="pafBarTimer29Img" style="opacity:0;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div style="width:400px;height:400px;left:0px;top:0px;bottom:0px;overflow:hidden;">
+					<img src="Images/paf_clock_bar/paf_clock_bar_0.png" style="top:0px;bottom:0px;" id="pafBarTimer30Img" style="opacity:1;-moz-opacity:0;-webkit-opacity:0;"/>
+				</div>
+				<div class="pafGradientDiv">
+					<img src="Images/paf_clock_gradient.png" style="top:0px;bottom:0px;" id="pafGradientImg" style="opacity:1;-moz-opacity:1;-webkit-opacity:1;"/>
+				</div>
+				<div class="pafClockTimeDiv">
+					<span>30</span>
+					<span>30</span>
+				</div>
+			</div>
+			
+			<!-- Millionaire Winner Title Div -->
+			<div class="millionaireWinnerTitleDiv">
+				<img src="Images/Large_TPM_Strap_Gold_Background.png" style="top:182px;"/>
+				<img src="Images/Large_TPM_Strap_Gradient.png" style="top:182px;"/>
+				<img src="Images/Small_TPM_Strap_Background.png" style="top:87px;"/>
+				<img src="Images/Small_TPM_Strap_Gradient.png" style="top:87px;"/>
+				<img src="Images/white_diagonal.png" style="top:240px;left:468px;"/>
+				<img src="Images/white_diagonal.png" style="top:240px;right:468px;"/>
+				<div class="millionaireWinnerNameDiv">Unnamed Player</div>
+				<div class="millionaireWinnerDiv">MILLIONAIRE</div>
+			</div>
+			
+			<!-- Total Prize Money Div -->
+			<div class="totalPrizeMoneyDiv">
+				<img src="Images/Large_TPM_Strap_Background.png" style="top:182px;"/>
+				<img src="Images/Large_TPM_Strap_Gradient.png" style="top:182px;"/>
+				<img src="Images/Small_TPM_Strap_Background.png" style="top:87px;"/>
+				<img src="Images/Small_TPM_Strap_Gradient.png" style="top:87px;"/>
+				<img src="Images/white_diagonal.png" style="top:240px;left:468px;"/>
+				<img src="Images/white_diagonal.png" style="top:240px;right:468px;"/>
+				<div class="totalPrizeDiv">TOTAL PRIZE</div>
+				<div class="totalPrizeMoneyWonDiv">Rs. 0</div>
+			</div>
+			
+			<!-- Current Level Strap Div-->
+			<div class="currentLevelStrapDiv" style="opacity:1;">
+				<img src="Images/small_side_strap.png" />
+				<img src="Images/small_side_strap_gold.png" class="sideStrapGoldImg"/>
+				<img src="Images/small_side_strap_gold_fill.png" class="sideStrapGoldFillImg"/>
+				<div class="currentLevelStrapAmountDiv">
+					Rs. 1 CRORE
+				</div>
+			</div>
+			
+			<div class="logoContainerDiv">
+				<div class="logoDiv">
+					<img src="Images/logo_beam_blue.png" style="top:-400px;bottom:-400px;left:-400px;right:-400px;" id="logoBeam1Img"/>
+					<img src="Images/logo_beam_blue.png" style="top:-400px;bottom:-400px;left:-400px;right:-400px;" id="logoBeam2Img"/>
+					<img src="Images/logo.png" />
+				</div>
+			</div>
+		</div>
+
+		<!-- Host Control Panel for easy play and iframe accessibility -->
+		<div id="hostControlPanel">
+			<div class="panel-title">🎮 Host Controls</div>
+			<button id="btnComm" class="btn-highlight" title="Commercial break toggle (Key: C)">[C] Play / Resume</button>
+			<button id="btnNext" class="btn-highlight" title="Advance question sequence (Key: Right Arrow)">[→] Next Action</button>
+			<button id="btnTree" title="Show / hide money tree (Key: Left Arrow)">[←] Money Tree</button>
+			<button id="btnAnsA" title="Lock in Answer A (Key: 1)">[1] A</button>
+			<button id="btnAnsB" title="Lock in Answer B (Key: 2)">[2] B</button>
+			<button id="btnAnsC" title="Lock in Answer C (Key: 3)">[3] C</button>
+			<button id="btnAnsD" title="Lock in Answer D (Key: 4)">[4] D</button>
+			<button id="btn5050" class="btn-gold" title="50:50 Lifeline (Key: F)">[F] 50:50</button>
+			<button id="btnPAF" class="btn-gold" title="Phone a Friend (Key: P)">[P] Phone-A-Friend</button>
+			<button id="btnATA" class="btn-gold" title="Ask the Audience (Key: A)">[A] Ask Audience</button>
+			<button id="btnTimer" title="Pause / resume timer (Key: 0)">[0] Timer</button>
+			<button id="btnTPM" title="Total prize money (Key: Down Arrow)">[↓] Total Prize</button>
+			<button class="toggle-btn" id="btnTogglePanel" title="Minimize / Expand controls">▼</button>
+		</div>
+
+		<script type="text/javascript">
+			// Responsive stage auto-scaler for 1920x1080 stage
+			function fitStage() {
+				var stage = document.querySelector('.stageContainerDiv');
+				if (!stage) return;
+				var w = window.innerWidth;
+				var h = window.innerHeight;
+				var scale = Math.min(w / 1920, h / 1080);
+				var left = (w - 1920 * scale) / 2;
+				var top = (h - 1080 * scale) / 2;
+				stage.style.transformOrigin = '0 0';
+				stage.style.transform = 'scale(' + scale + ')';
+				stage.style.left = left + 'px';
+				stage.style.top = top + 'px';
+			}
+			window.addEventListener('resize', fitStage);
+			window.addEventListener('DOMContentLoaded', fitStage);
+			window.addEventListener('load', fitStage);
+
+			// Wire Host Control Panel to trigger the keyboard event handlers
+			function pressKey(keyCode) {
+				$(document).trigger($.Event('keydown', { keyCode: keyCode }));
+			}
+
+			document.getElementById('btnComm').addEventListener('click', function() { pressKey(67); });
+			document.getElementById('btnNext').addEventListener('click', function() { pressKey(39); });
+			document.getElementById('btnTree').addEventListener('click', function() { pressKey(37); });
+			document.getElementById('btnAnsA').addEventListener('click', function() { pressKey(49); });
+			document.getElementById('btnAnsB').addEventListener('click', function() { pressKey(50); });
+			document.getElementById('btnAnsC').addEventListener('click', function() { pressKey(51); });
+			document.getElementById('btnAnsD').addEventListener('click', function() { pressKey(52); });
+			document.getElementById('btn5050').addEventListener('click', function() { pressKey(70); });
+			document.getElementById('btnPAF').addEventListener('click', function() { pressKey(80); });
+			document.getElementById('btnATA').addEventListener('click', function() { pressKey(65); });
+			document.getElementById('btnTimer').addEventListener('click', function() { pressKey(48); });
+			document.getElementById('btnTPM').addEventListener('click', function() { pressKey(40); });
+
+			var isPanelMinimized = false;
+			document.getElementById('btnTogglePanel').addEventListener('click', function() {
+				var panel = document.getElementById('hostControlPanel');
+				isPanelMinimized = !isPanelMinimized;
+				if (isPanelMinimized) {
+					panel.classList.add('minimized');
+					this.textContent = '▲';
+				} else {
+					panel.classList.remove('minimized');
+					this.textContent = '▼';
+				}
+			});
+		</script>
+	</body>
+</html>

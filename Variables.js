@@ -1,4 +1,4 @@
-﻿(function(gameVariables) {
+(function(gameVariables) {
 	/* Initialization Variables */
 	gameVariables.IsPAFLifeLineUsed = false;
 	gameVariables.IsFFLifeLineUsed = false;
@@ -15,17 +15,16 @@
 	gameVariables.ContestantLocation = "Location";
 	
 	/* Number Format Settings */
-	gameVariables.LocaleCode = "en";				/* Uses the country's locale code to determine the numbering system that the country uses. See the "List of Locales.txt" file for a list of locale codes. */
+	gameVariables.LocaleCode = "en-IN";				/* Uses the country's locale code to determine the numbering system that the country uses. See the "List of Locales.txt" file for a list of locale codes. */
 	gameVariables.FormatOptions = {
-		style: "currency",							/* The formatting style to use. Use code "decimal" for plain number formatting and "currency" for currency formatting. */
-		currency: "USD",							/* The ISO currency code that is used to identify the currency. If a currency is not in the list of ISO 4217 currency codes, it will not display the symbol of said currency. See the "List of Current Currencies (List One).xml" and "List of Past Currencies (List Three).xml" files for a list of currencies (Look for the three-lettered code between <Ccy> & </Ccy>). */
-		currencyDisplay: "symbol",					/* Use code "symbol" to use a localized currency symbol (A.K.A. the default option), "narrowSymbol" to use a narrow format symbol ("$100" rather than "US$100"), "code" to use the ISO currency code and "name" to use a localized currency name instead of a symbol. */
-		numberingSystem: "latn",					/* The numbering system to be used for the amounts. Possible values include: "adlm", "ahom", "arab", "arabext", "bali", "beng", "bhks", "brah", "cakm", "cham", "deva", "diak", "fullwide", "gong", "gonm", "gujr", "guru", "hanidec", "hmng", "hmnp", "java", "kali", "khmr", "knda", "lana", "lanatham", "laoo", "latn"(Default), "lepc", "limb", "mathbold", "mathdbl", "mathmono", "mathsanb", "mathsans", "mlym", "modi", "mong", "mroo", "mtei", "mymr", "mymrshan", "mymrtlng", "newa", "nkoo", "olck", "orya", "osma", "rohg", "saur", "segment", "shrd", "sind", "sinh", "sora", "sund", "takr", "talu", "tamldec", "telu", "thai", "tibt", "tirh", "vaii", "wara", "wcho". */
+		style: "decimal",							/* The formatting style to use. Use code "decimal" for plain number formatting and "currency" for currency formatting. */
+		numberingSystem: "latn",					/* The numbering system to be used for the amounts. */
 		minimumFractionDigits: 0,					/* Displays the number of Fraction Digits at the end of the amount. */
+		maximumFractionDigits: 0,
 	};
-	gameVariables.ReplaceCharacterBefore = "";		/* Targets the exact character that you want to replace. */
-	gameVariables.ReplaceCharacterAfter = "";		/* Replaces the targeted character with a different one. */
-	gameVariables.NumberPrefix = "";				/* The text that displays before the amount. */
+	gameVariables.ReplaceCharacterBefore = "₹";		/* Targets the exact character that you want to replace. */
+	gameVariables.ReplaceCharacterAfter = "Rs. ";	/* Replaces the targeted character with a different one. */
+	gameVariables.NumberPrefix = "Rs. ";			/* The text that displays before the amount. */
 	gameVariables.NumberSuffix = "";				/* The text that displays after the amount. */
 	gameVariables.LevelNumberingSystem = "latn";	/* The numbering system to be used for the question levels. Uses the same numbering system for the amounts. */
 	gameVariables.PaFNumberingSystem = "latn";		/* The numbering system to be used for the Phone a Friend timer. Uses the same numbering system for the amounts. */
@@ -34,10 +33,10 @@
 	
 	gameVariables.UseTopPrizeText = true;			/* If set to true, the top prize amount(s) will be displayed in text instead of a number. */
 	gameVariables.TopPrizeQuestionNumber = 15;		/* The value where the top prize text(s) are displayed above the level set by this value. */
-	gameVariables.TopPrizeText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","$1 MILLION"];
+	gameVariables.TopPrizeText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Rs. 1 CRORE"];
 	gameVariables.UseTopPrizeLevelStrapText = false;	/* If set to true, the top prize amount shown in the Level Strap will be displayed in text instead of a number. */
 	gameVariables.TopPrizeLevelStrapQuestionNumber = 15;	/* The value where the top prize text in the Level Strap is displayed above the level set by this value. */
-	gameVariables.TopPrizeLevelStrapText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","$1 MILLION"];
+	gameVariables.TopPrizeLevelStrapText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Rs. 1 CRORE"];
 	gameVariables.UseZeronaireText = false;			/* If set to true, when a contestant walks away with nothing, the Zeronaire text is displayed instead of just 0 and a currency. */
 	gameVariables.ZeronaireText = "Nothing";		/* The text that displays when a contestant walks away with nothing. */
 	
@@ -133,7 +132,7 @@
 	gameVariables.QuestionsAndAnswers = [];
 	gameVariables.SwitchQuestionsAndAnswers = [];
 	gameVariables.AskTheAudienceVotingPercents = [];
-	gameVariables.PrizeAmounts = [100,200,300,500,1000,2000,4000,8000,16000,32000,64000,125000,250000,500000,1000000];
+	gameVariables.PrizeAmounts = [1000,2000,3000,5000,10000,20000,40000,80000,160000,320000,640000,1250000,2500000,5000000,10000000];
 	gameVariables.FastestFingerContestantWinners = [false,false,true,false,false,false,true,false,false,false];
 	gameVariables.FastestFingerContestantTimes = [2.541,4.541,5.541,6.541,9.541,13.541,15.541,16.541,7.541,19.541];
 	gameVariables.FastestFingerContestants = []

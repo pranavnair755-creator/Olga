@@ -1,3 +1,17 @@
+function safePlay(audio){
+	if(!audio) return;
+	try{
+		var p = audio.play();
+		if(p && typeof p.catch === 'function'){
+			p.catch(function(e){
+				// Autoplay prevented until first user interaction
+			});
+		}
+	}catch(e){
+		console.log(e);
+	}
+}
+
 /* Stop the long active sound */
 function stopLongActiveSound(){
 	try{
@@ -15,7 +29,7 @@ function startLongActiveSound(filename){
 	try{
 		stopLongActiveSound();
 		window.GameVariables.LongActiveSound = new Audio("Sounds/" + filename);
-		window.GameVariables.LongActiveSound.play();
+		safePlay(window.GameVariables.LongActiveSound);
 		window.GameVariables.RelieveActiveSound = false;
 	}
 	catch(e){
@@ -59,7 +73,7 @@ function startLongPassiveSound(filename){
 	try{
 		stopLongPassiveSound();
 		window.GameVariables.LongPassiveSound = new Audio("Sounds/" + filename);
-		window.GameVariables.LongPassiveSound.play();
+		safePlay(window.GameVariables.LongPassiveSound);
 	}
 	catch(e){
 		console.log(e);
@@ -81,7 +95,7 @@ function startShortActiveSound(filename){
 	try{
 		stopShortActiveSound();
 		window.GameVariables.ShortActiveSound = new Audio("Sounds/" + filename);
-		window.GameVariables.ShortActiveSound.play();
+		safePlay(window.GameVariables.ShortActiveSound);
 	}
 	catch(e){
 		console.log(e);
@@ -103,7 +117,7 @@ function startShortPassiveSound(filename){
 	try{
 		stopShortPassiveSound();
 		window.GameVariables.ShortPassiveSound = new Audio("Sounds/" + filename);
-		window.GameVariables.ShortPassiveSound.play();
+		safePlay(window.GameVariables.ShortPassiveSound);
 	}
 	catch(e){
 		console.log(e);
@@ -125,7 +139,7 @@ function startLifelineActiveSound(filename){
 	try{
 		stopLifelineActiveSound();
 		window.GameVariables.LifelineActiveSound = new Audio("Sounds/" + filename);
-		window.GameVariables.LifelineActiveSound.play();
+		safePlay(window.GameVariables.LifelineActiveSound);
 	}
 	catch(e){
 		console.log(e);
@@ -147,7 +161,7 @@ function startLifelinePassiveSound(filename){
 	try{
 		stopLifelinePassiveSound();
 		window.GameVariables.LifelinePassiveSound = new Audio("Sounds/" + filename);
-		window.GameVariables.LifelinePassiveSound.play();
+		safePlay(window.GameVariables.LifelinePassiveSound);
 	}
 	catch(e){
 		console.log(e);
@@ -158,7 +172,7 @@ function startLifelinePassiveSound(filename){
 function startGeneralSound(filename){
 	try{
 		window.GameVariables.GeneralSound = new Audio("Sounds/" + filename);
-		window.GameVariables.GeneralSound.play();
+		safePlay(window.GameVariables.GeneralSound);
 	}
 	catch(e){
 		console.log(e);
