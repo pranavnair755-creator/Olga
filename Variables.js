@@ -5,6 +5,10 @@
 	gameVariables.IsATALifeLineUsed = false;
 	gameVariables.IsSTQLifeLineUsed = false;
 	gameVariables.IsSTQLifeLineActiveAtStart = false;
+	gameVariables.IsHintHelpUsed = false;
+	gameVariables.HintHelpMessages = [];
+	gameVariables.IsHintHelpOpen = false;
+	gameVariables.hintHelpSequenceCounter = 0;
 	gameVariables.StartingQuestionLevel = 1;
 	
 	gameVariables.TotalPrizeText = "Total Winnings";

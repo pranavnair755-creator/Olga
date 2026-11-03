@@ -1,21 +1,75 @@
+var blockedAudios = [];
+var audioUnlocked = false;
+
+function unlockAudioEngine(){
+	audioUnlocked = true;
+	// Resume Web Audio Context if present
+	try {
+		var AudioContext = window.AudioContext || window.webkitAudioContext;
+		if (AudioContext) {
+			if (!window._globalAudioCtx) {
+				window._globalAudioCtx = new AudioContext();
+			}
+			if (window._globalAudioCtx.state === 'suspended') {
+				window._globalAudioCtx.resume();
+			}
+		}
+	} catch(e) {}
+
+	// Play any blocked audios that were waiting for a user gesture
+	while(blockedAudios.length > 0){
+		var a = blockedAudios.shift();
+		if(a){
+			try {
+				a.play().catch(function(err){
+					console.warn('Playback error after unlock:', err);
+				});
+			} catch(e){}
+		}
+	}
+
+	// Hide sound enable hint if visible
+	var hint = document.getElementById('soundEnableHint');
+	if (hint) {
+		hint.style.display = 'none';
+	}
+}
+
+// Attach user gesture listeners
+if (typeof window !== 'undefined') {
+	['click', 'keydown', 'pointerdown', 'touchstart'].forEach(function(evt){
+		window.addEventListener(evt, function(){
+			unlockAudioEngine();
+		}, { passive: true });
+	});
+}
+
 function safePlay(audio){
 	if(!audio) return;
 	try{
+		audio.volume = 1.0;
 		var p = audio.play();
 		if(p && typeof p.catch === 'function'){
 			p.catch(function(e){
-				// Autoplay prevented until first user interaction
+				// Browser autoplay restriction: queue until user clicks or presses a key
+				if(blockedAudios.indexOf(audio) === -1){
+					blockedAudios.push(audio);
+				}
+				var hint = document.getElementById('soundEnableHint');
+				if (hint) {
+					hint.style.display = 'flex';
+				}
 			});
 		}
 	}catch(e){
-		console.log(e);
+		console.warn('safePlay error:', e);
 	}
 }
 
 /* Stop the long active sound */
 function stopLongActiveSound(){
 	try{
-		if(window.GameVariables.RelieveActiveSound == false){
+		if(window.GameVariables && window.GameVariables.LongActiveSound && window.GameVariables.RelieveActiveSound == false){
 			window.GameVariables.LongActiveSound.pause();
 		}
 	}
@@ -36,11 +90,14 @@ function startLongActiveSound(filename){
 		console.log(e);
 	}
 }
+
 /**********************************************************************************************************/
 /* Stop the long passive sound */
 function stopLongPassiveSound(){
 	try{
-		window.GameVariables.LongPassiveSound.pause();
+		if(window.GameVariables && window.GameVariables.LongPassiveSound){
+			window.GameVariables.LongPassiveSound.pause();
+		}
 	}
 	catch(e){
 		console.log(e);
@@ -48,6 +105,7 @@ function stopLongPassiveSound(){
 }
 
 function fadeOutLongPassiveSound(vol){
+	if(!window.GameVariables || !window.GameVariables.LongPassiveSound) return;
 	if(vol < 0.05){
 		vol = 0;
 	}
@@ -69,21 +127,27 @@ function fadeOutLongPassiveSound(vol){
 }
 
 /* Start the long passive sound with the specified filename */
-function startLongPassiveSound(filename){
+function startLongPassiveSound(filename, loop){
 	try{
 		stopLongPassiveSound();
 		window.GameVariables.LongPassiveSound = new Audio("Sounds/" + filename);
+		if(loop !== false){
+			window.GameVariables.LongPassiveSound.loop = true;
+		}
 		safePlay(window.GameVariables.LongPassiveSound);
 	}
 	catch(e){
 		console.log(e);
 	}
 }
+
 /**********************************************************************************************************/
 /* Stop the short active sound */
 function stopShortActiveSound(){
 	try{
-		window.GameVariables.ShortActiveSound.pause();
+		if(window.GameVariables && window.GameVariables.ShortActiveSound){
+			window.GameVariables.ShortActiveSound.pause();
+		}
 	}
 	catch(e){
 		console.log(e);
@@ -101,11 +165,14 @@ function startShortActiveSound(filename){
 		console.log(e);
 	}
 }
+
 /**********************************************************************************************************/
 /* Stop the short passive sound */
 function stopShortPassiveSound(){
 	try{
-		window.GameVariables.ShortPassiveSound.pause();
+		if(window.GameVariables && window.GameVariables.ShortPassiveSound){
+			window.GameVariables.ShortPassiveSound.pause();
+		}
 	}
 	catch(e){
 		console.log(e);
@@ -123,11 +190,14 @@ function startShortPassiveSound(filename){
 		console.log(e);
 	}
 }
+
 /**********************************************************************************************************/
 /* Stop the lifeline active sound */
 function stopLifelineActiveSound(){
 	try{
-		window.GameVariables.LifelineActiveSound.pause();
+		if(window.GameVariables && window.GameVariables.LifelineActiveSound){
+			window.GameVariables.LifelineActiveSound.pause();
+		}
 	}
 	catch(e){
 		console.log(e);
@@ -145,11 +215,14 @@ function startLifelineActiveSound(filename){
 		console.log(e);
 	}
 }
+
 /**********************************************************************************************************/
 /* Stop the lifeline passive sound */
 function stopLifelinePassiveSound(){
 	try{
-		window.GameVariables.LifelinePassiveSound.pause();
+		if(window.GameVariables && window.GameVariables.LifelinePassiveSound){
+			window.GameVariables.LifelinePassiveSound.pause();
+		}
 	}
 	catch(e){
 		console.log(e);
@@ -167,11 +240,18 @@ function startLifelinePassiveSound(filename){
 		console.log(e);
 	}
 }
+
 /**********************************************************************************************************/
 /* Start the general sound with the specified filename */
-function startGeneralSound(filename){
+function startGeneralSound(filename, loop){
 	try{
+		if(window.GameVariables && window.GameVariables.GeneralSound){
+			try { window.GameVariables.GeneralSound.pause(); } catch(e){}
+		}
 		window.GameVariables.GeneralSound = new Audio("Sounds/" + filename);
+		if(loop === true){
+			window.GameVariables.GeneralSound.loop = true;
+		}
 		safePlay(window.GameVariables.GeneralSound);
 	}
 	catch(e){

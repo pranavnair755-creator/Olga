@@ -1,7 +1,18 @@
 $(document).ready(function(){
 	$(document).on('keydown',function(e)
 	{
-		if(e.keyCode == 37) // key 'left arrow' for fastest-finger / money tree hide and show
+		if($(e.target).is('input, textarea')) {
+			if(e.keyCode == 27) {
+				closeHintHelpLifeline();
+			}
+			return;
+		}
+
+		if(e.keyCode == 27) // Escape closes Hint Help modal
+		{
+			closeHintHelpLifeline();
+		}
+		else if(e.keyCode == 37) // key 'left arrow' for fastest-finger / money tree hide and show
 		{
 			if(window.GameVariables.IsLogoShowing == false && window.GameVariables.IsInCommercial == false)
 			{
@@ -497,6 +508,9 @@ $(document).ready(function(){
 				if(window.GameVariables.QuestionInProgress == false){
 					if(window.GameVariables.IsInCommercial == true){
 						hideMillionaireLogo();
+						if(window.GameVariables.GeneralSound){
+							try { window.GameVariables.GeneralSound.pause(); } catch(e){}
+						}
 						if(window.GameVariables.IsFirstQuestionOfGame == false){
 							startShortActiveSound("commercial_out.mp3");
 						}
@@ -594,18 +608,18 @@ $(document).ready(function(){
 				window.GameVariables.IsFirstQuestionOfGame = true;
 				
 				$('.moneyTreeDiv').transition({perspective:0, opacity:1, right:"-760px"}, 1)
-				
-				/*window.GameVariables.QuestionInProgress = false;
-				hideLifeLineCentered();
-				setTimeout(function(){
-					hideQuestionAndAnswerStraps();
-					resetAnswerStraps();
-				}, 1500);
-				
-				if(window.GameVariables.stqLifeLineSequenceCounter != 0){
-					window.GameVariables.IsSTQLifeLineActiveAtStart = true;
-					window.GameVariables.CannotLockInFinalAnswer = false;
-				}*/
+			}
+		}
+		else if(e.keyCode == 72) // key 'h' for Hint Help lifeline (Gemini AI)
+		{
+			if(window.GameVariables.IsMoneyTreeShowing == true){
+				if(window.GameVariables.IsHintHelpUsed == false){
+					hintHelpPulseLifeLine();
+					startGeneralSound("lifeline_4_on.mp3");
+				}
+			}
+			else if(window.GameVariables.QuestionInProgress == true){
+				openHintHelpLifeline();
 			}
 		}
 		else if(e.keyCode == 76) // key 'l' for life line strap animations

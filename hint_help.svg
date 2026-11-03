@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 162" width="200" height="162">
+  <defs>
+    <!-- Outer Rim Gradient -->
+    <linearGradient id="metalRim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9fc5f8"/>
+      <stop offset="25%" stop-color="#1e3a8a"/>
+      <stop offset="50%" stop-color="#60a5fa"/>
+      <stop offset="75%" stop-color="#172554"/>
+      <stop offset="100%" stop-color="#93c5fd"/>
+    </linearGradient>
+    
+    <!-- Deep Cosmic Blue Background -->
+    <radialGradient id="bgGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="45%" stop-color="#0e2368"/>
+      <stop offset="85%" stop-color="#050e2e"/>
+      <stop offset="100%" stop-color="#020617"/>
+    </radialGradient>
+
+    <!-- Spark Glow -->
+    <radialGradient id="sparkGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="35%" stop-color="#67e8f9"/>
+      <stop offset="70%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    
+    <!-- Text Gradient -->
+    <linearGradient id="textGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#e0f2fe"/>
+      <stop offset="100%" stop-color="#7dd3fc"/>
+    </linearGradient>
+
+    <!-- Shadow filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="3" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Outer Ring / Medallion Body -->
+  <ellipse cx="100" cy="81" rx="88" ry="70" fill="url(#metalRim)" stroke="#38bdf8" stroke-width="2"/>
+  <ellipse cx="100" cy="81" rx="83" ry="65" fill="#020617"/>
+  <ellipse cx="100" cy="81" rx="80" ry="62" fill="url(#bgGlow)"/>
+
+  <!-- Radial Starburst Lines -->
+  <g stroke="#38bdf8" stroke-width="1" opacity="0.35">
+    <line x1="100" y1="21" x2="100" y2="141"/>
+    <line x1="22" y1="81" x2="178" y2="81"/>
+    <line x1="45" y1="38" x2="155" y2="124"/>
+    <line x1="45" y1="124" x2="155" y2="38"/>
+  </g>
+
+  <!-- Central AI Spark / Gemini Diamond Icon -->
+  <g transform="translate(100, 66) scale(0.95)" filter="url(#glow)">
+    <!-- Central diamond spark aura -->
+    <circle cx="0" cy="0" r="26" fill="url(#sparkGlow)" opacity="0.65"/>
+    
+    <!-- 4-point star -->
+    <path d="M 0 -24 Q 0 0 24 0 Q 0 0 0 24 Q 0 0 -24 0 Q 0 0 0 -24 Z" fill="#ffffff"/>
+    <!-- Angled mini star -->
+    <path d="M 0 -13 Q 0 0 13 0 Q 0 0 0 13 Q 0 0 -13 0 Q 0 0 0 -13 Z" fill="#38bdf8" transform="rotate(45)"/>
+    <circle cx="0" cy="0" r="3.5" fill="#ffffff"/>
+  </g>
+
+  <!-- Top Curved / Badge Label -->
+  <text x="100" y="42" text-anchor="middle" font-family="'Copperplate', 'Segoe UI', Arial, sans-serif" font-weight="900" font-size="14" fill="#ffffff" letter-spacing="3" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.9))">HINT</text>
+
+  <!-- Bottom Badge Label -->
+  <text x="100" y="128" text-anchor="middle" font-family="'Copperplate', 'Segoe UI', Arial, sans-serif" font-weight="900" font-size="14" fill="#38bdf8" letter-spacing="3" filter="drop-shadow(0 2px 3px rgba(0,0,0,0.9))">HELP</text>
+  
+  <!-- Subtle border highlight -->
+  <ellipse cx="100" cy="81" rx="80" ry="62" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1"/>
+</svg>

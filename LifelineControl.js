@@ -587,3 +587,257 @@ function slideLifeLineStrapOut(){
 		$('.lifeLinesLeftStrapDiv').transition({perspective:2048, 'bottom':'149px', 'rotateX':'-90deg', opacity:0}, 1, 'linear');
 	});
 }
+
+/****************************************************************************************************************/
+/* Hint Help (Gemini Chatbot) Life Line Functions */
+/****************************************************************************************************************/
+
+function hintHelpPulseLifeLine(){
+	$('.hintHelpLifeLine').transition({perspective:0, scale:[1.25,1.25]}, 250, 'ease-out', function(){
+		$('.hintHelpLifeLine').transition({perspective:0, scale:[1,1]}, 500, 'ease-in');
+	});
+	$('.hintHelpLifeLine .lifelineYellowTreeImg').transition({perspective:0, opacity: 1}, 250, 'ease-out', function(){
+		$('.hintHelpLifeLine .lifelineYellowTreeImg').transition({perspective:0, opacity: 0}, 500, 'ease-in');
+	});
+	$('.hintHelpStrapLifeLine').transition({perspective:0, scale:[1.25,1.25]}, 250, 'ease-out', function(){
+		$('.hintHelpStrapLifeLine').transition({perspective:0, scale:[1,1]}, 500, 'ease-in');
+	});
+	$('.hintHelpStrapLifeLine .lifelineYellowStrapImg').transition({perspective:0, opacity: 1}, 250, 'ease-out', function(){
+		$('.hintHelpStrapLifeLine .lifelineYellowStrapImg').transition({perspective:0, opacity: 0}, 500, 'ease-in');
+	});
+}
+
+function hintHelpLifeLineDisable(){
+	$('.hintHelpLifeLine .lifelineUsedImg').css('opacity', 1);
+	$('.hintHelpLifeLine .lifelineTreeImg').css('opacity', 1);
+	$('.hintHelpStrapLifeLine .lifelineUsedStrapImg').css('opacity', 1);
+	$('.hintHelpStrapLifeLine .lifelineStrapImg').css('opacity', 1);
+	$('#hostBtnHintHelp').addClass('btn-used').attr('title', 'Hint Help already used');
+}
+
+function hintHelpLifeLineReset(){
+	window.GameVariables.IsHintHelpUsed = false;
+	window.GameVariables.HintHelpMessages = [];
+	window.GameVariables.IsHintHelpOpen = false;
+	$('.hintHelpLifeLine .lifelineUsedImg').css('opacity', 0);
+	$('.hintHelpStrapLifeLine .lifelineUsedStrapImg').css('opacity', 0);
+	$('#hostBtnHintHelp').removeClass('btn-used').attr('title', 'Use Hint Help Lifeline (Gemini AI)');
+	$('#hintHelpModal').removeClass('flex').addClass('hidden');
+}
+
+function queryOption(letter){
+	var level = window.GameVariables.QuestionLevel || 1;
+	var q = window.GameVariables.QuestionsAndAnswers[level - 1] || {};
+	var text = q['Answer' + letter] || '';
+	var input = $('#hintHelpInput');
+	input.val('What is your tactical assessment of Option ' + letter + ' ("' + text + '")?');
+	input.focus();
+}
+
+function openHintHelpLifeline(){
+	if(window.GameVariables.IsHintHelpUsed == true && !window.GameVariables.IsHintHelpOpen){
+		showToastNotification("Hint Help lifeline has already been used in this game!");
+		return;
+	}
+
+	if(window.GameVariables.QuestionInProgress == false){
+		showToastNotification("Hint Help can only be used when a question is active!");
+		return;
+	}
+
+	// Trigger audio & visual pulses
+	startLifelineActiveSound("lifeline_4_on.mp3");
+	hintHelpPulseLifeLine();
+
+	// Mark used
+	window.GameVariables.IsHintHelpUsed = true;
+	hintHelpLifeLineDisable();
+	window.GameVariables.IsHintHelpOpen = true;
+
+	// Populate question info in modal
+	var level = window.GameVariables.QuestionLevel || 1;
+	var targetQuestion = window.GameVariables.QuestionsAndAnswers[level - 1] || {};
+	var prize = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts[level - 1]) 
+		? "Rs. " + (window.GameVariables.PrizeAmounts[level - 1] >= 10000000 ? "1 CRORE" : new Intl.NumberFormat('en-IN').format(window.GameVariables.PrizeAmounts[level - 1])) 
+		: "Rs. 1,000";
+
+	$('#hintHelpModalLevelBadge').html('<span class="badge-qnum">QUESTION #' + level + '</span><span class="badge-divider">|</span><span class="badge-prize">' + prize + '</span>');
+	$('#hintHelpModalQuestionText').html(targetQuestion.Question || "Loading question...");
+
+	function setOptionData(selector, letter, text, isOut){
+		var $el = $(selector);
+		$el.find('.opt-diamond').text(letter + ':');
+		$el.find('.opt-label').text(text || '');
+		if(isOut){
+			$el.addClass('opt-eliminated');
+			$el.find('.opt-status').text('[50:50 ELIMINATED]');
+		} else {
+			$el.removeClass('opt-eliminated');
+			$el.find('.opt-status').text('');
+		}
+	}
+
+	setOptionData('#hintHelpOptA', 'A', targetQuestion.AnswerA, window.GameVariables.AnswerAIsOut);
+	setOptionData('#hintHelpOptB', 'B', targetQuestion.AnswerB, window.GameVariables.AnswerBIsOut);
+	setOptionData('#hintHelpOptC', 'C', targetQuestion.AnswerC, window.GameVariables.AnswerCIsOut);
+	setOptionData('#hintHelpOptD', 'D', targetQuestion.AnswerD, window.GameVariables.AnswerDIsOut);
+
+	// Show modal
+	$('#hintHelpModal').removeClass('hidden').addClass('flex');
+	
+	// If messages thread is empty, fetch initial welcome hint
+	if(window.GameVariables.HintHelpMessages.length === 0){
+		renderHintHelpThread();
+		sendHintHelpMessage("I have activated the Hint Help lifeline! Please give me a strategic overview and a hint for this question.");
+	} else {
+		renderHintHelpThread();
+		setTimeout(function(){
+			$('#hintHelpInput').focus();
+		}, 100);
+	}
+}
+
+function closeHintHelpLifeline(){
+	window.GameVariables.IsHintHelpOpen = false;
+	$('#hintHelpModal').removeClass('flex').addClass('hidden');
+}
+
+function formatTacticalText(rawText){
+	if(!rawText) return '';
+	var escaped = escapeHtml(rawText);
+
+	// Transform **bold** to highlighted text
+	escaped = escaped.replace(/\*\*(.*?)\*\*/g, '<strong class="hint-highlight">$1</strong>');
+
+	// Transform [Option A] or Option A / B / C / D mentions
+	escaped = escaped.replace(/\b(Option [ABCD]|Choice [ABCD]|\[[ABCD]\])\b/gi, '<span class="hint-opt-mention">$1</span>');
+
+	// Process lines for bullets
+	var lines = escaped.split('\n');
+	var result = [];
+	lines.forEach(function(line){
+		var trimmed = line.trim();
+		if(trimmed.indexOf('* ') === 0 || trimmed.indexOf('- ') === 0){
+			result.push('<div class="hint-bullet-row"><span class="bullet-diamond">◆</span><span>' + trimmed.substring(2) + '</span></div>');
+		} else if(trimmed.length > 0) {
+			result.push('<p style="margin:4px 0;">' + line + '</p>');
+		}
+	});
+
+	return result.join('');
+}
+
+function renderHintHelpThread(){
+	var container = $('#hintHelpMessagesContainer');
+	container.empty();
+
+	if(window.GameVariables.HintHelpMessages.length === 0){
+		container.html('<div style="text-align:center;color:#64748b;padding:36px 12px;font-style:italic;font-size:13px;display:flex;flex-direction:column;align-items:center;gap:10px;"><div class="radar-pulse-ring" style="width:28px;height:28px;"></div><span>Establishing encrypted link to Hint Help Tactical AI Neural Core...</span></div>');
+		return;
+	}
+
+	window.GameVariables.HintHelpMessages.forEach(function(msg){
+		var isUser = (msg.role === 'user');
+		var card = $('<div>').addClass(isUser ? 'chat-card-user' : 'chat-card-ai');
+		
+		var metaBar = $('<div>').addClass('chat-meta-bar');
+		var metaTitle = $('<div>').addClass('chat-meta-title')
+			.html(isUser ? '<span>🎙</span> CONTESTANT HOT SEAT' : '<span>✦</span> HINT HELP TACTICAL ADVISOR');
+		var metaTag = $('<div>').addClass('chat-meta-tag')
+			.text(isUser ? 'TRANSMITTED' : 'INTELLIGENCE BRIEF');
+
+		metaBar.append(metaTitle, metaTag);
+
+		var body = $('<div>').addClass('chat-card-body')
+			.html(formatTacticalText(msg.text));
+
+		card.append(metaBar, body);
+		container.append(card);
+	});
+
+	// Scroll to bottom smoothly
+	container.scrollTop(container[0].scrollHeight);
+}
+
+function sendHintHelpMessage(userText){
+	var text = userText || $('#hintHelpInput').val().trim();
+	if(!text) return;
+
+	$('#hintHelpInput').val('');
+
+	// Add user message to history
+	window.GameVariables.HintHelpMessages.push({ role: 'user', text: text });
+	renderHintHelpThread();
+
+	// Show thinking indicator
+	var container = $('#hintHelpMessagesContainer');
+	var thinkingDiv = $('<div id="hintHelpThinkingIndicator" class="chat-card-ai thinking-radar"><div class="thinking-radar-content"><div class="radar-pulse-ring"></div><div>✦ Hint Help is decoding contextual patterns, distractor structures, and clues...</div></div></div>');
+	container.append(thinkingDiv);
+	container.scrollTop(container[0].scrollHeight);
+
+	var level = window.GameVariables.QuestionLevel || 1;
+	var targetQuestion = window.GameVariables.QuestionsAndAnswers[level - 1] || {};
+	var prize = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts[level - 1]) 
+		? "Rs. " + new Intl.NumberFormat('en-IN').format(window.GameVariables.PrizeAmounts[level - 1]) 
+		: "Rs. 1,000";
+
+	$.ajax({
+		type: "POST",
+		url: "/api/chat",
+		data: JSON.stringify({
+			messages: window.GameVariables.HintHelpMessages,
+			currentQuestion: {
+				question: targetQuestion.Question,
+				a: targetQuestion.AnswerA,
+				b: targetQuestion.AnswerB,
+				c: targetQuestion.AnswerC,
+				d: targetQuestion.AnswerD,
+				category: targetQuestion.Category,
+				correct: targetQuestion.CorrectAnswer
+			},
+			questionLevel: level,
+			prizeAmount: prize
+		}),
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function(res){
+			$('#hintHelpThinkingIndicator').remove();
+			var reply = res.reply || "Hint Help: Analyze the distinct time periods and phrasing of each choice before committing your final answer.";
+			window.GameVariables.HintHelpMessages.push({ role: 'model', text: reply });
+			renderHintHelpThread();
+		},
+		error: function(){
+			$('#hintHelpThinkingIndicator').remove();
+			var fallbackReply = "Hint Help: Notice whether any of the options stand apart in specificity or geographic alignment. Trust your intuition!";
+			window.GameVariables.HintHelpMessages.push({ role: 'model', text: fallbackReply });
+			renderHintHelpThread();
+		}
+	});
+}
+
+function escapeHtml(string) {
+	var entityMap = {
+		'&': '&amp;',
+		'<': '&lt;',
+		'>': '&gt;',
+		'"': '&quot;',
+		"'": '&#39;',
+		'/': '&#x2F;'
+	};
+	return String(string).replace(/[&<>"'\/]/g, function (s) {
+		return entityMap[s];
+	});
+}
+
+function showToastNotification(text){
+	var toast = $('#gameToast');
+	if(toast.length === 0){
+		$('body').append('<div id="gameToast" style="position:fixed;top:24px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,0.95);border:1px solid #38bdf8;box-shadow:0 0 20px rgba(56,189,248,0.4);color:#fff;padding:10px 20px;border-radius:8px;font-family:sans-serif;font-size:14px;z-index:999999;transition:opacity 0.3s ease;pointer-events:none;"></div>');
+		toast = $('#gameToast');
+	}
+	toast.text(text).css('opacity', 1);
+	clearTimeout(window.__toastTimeout);
+	window.__toastTimeout = setTimeout(function(){
+		toast.css('opacity', 0);
+	}, 3000);
+}

@@ -36,6 +36,10 @@ function init(){
 	if(window.GameVariables.IsATALifeLineUsed == true){
 		ataLifeLineDisable();
 	}
+
+	if(window.GameVariables.IsHintHelpUsed == true){
+		hintHelpLifeLineDisable();
+	}
 	
 	if(window.GameVariables.IsSTQLifeLineUsed == true || window.GameVariables.IsSTQLifeLineActiveAtStart == true){
 		stqLifeLineSlideIn();
@@ -64,7 +68,7 @@ function init(){
 	
 	pafPulseLifeLine();
 	
-	startGeneralSound("main_theme.mp3");
+	startGeneralSound("main_theme.mp3", true);
 }
 
 function QuestionAndAnswer(){
@@ -82,16 +86,66 @@ function setStartingQuestionLevel(level){
 }
 
 function getAllQuestionsForGame(){
+	fetchAndLoadQuestions(function(){
+		setQuestion(false);
+	});
+}
+
+function fetchAndLoadQuestions(callback){
+	$.ajax({
+		type: "POST",
+		url: "/api/generate-questions",
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		success: function(data){
+			if(data && Array.isArray(data.questions) && data.questions.length >= 15){
+				window.GameVariables.QuestionsAndAnswers = data.questions.map(function(q){
+					var qAndA = new QuestionAndAnswer();
+					qAndA.Category = q.category || "General Knowledge";
+					qAndA.Question = (q.question || "").replace(/\\n/g, "<br />");
+					qAndA.AnswerA = q.a || "";
+					qAndA.AnswerB = q.b || "";
+					qAndA.AnswerC = q.c || "";
+					qAndA.AnswerD = q.d || "";
+					qAndA.CorrectAnswer = (q.correct || "a").toLowerCase();
+					return qAndA;
+				});
+
+				if(Array.isArray(data.switchQuestions) && data.switchQuestions.length >= 15){
+					window.GameVariables.SwitchQuestionsAndAnswers = data.switchQuestions.map(function(q){
+						var qAndA = new QuestionAndAnswer();
+						qAndA.Category = q.category || "General Knowledge";
+						qAndA.Question = (q.question || "").replace(/\\n/g, "<br />");
+						qAndA.AnswerA = q.a || "";
+						qAndA.AnswerB = q.b || "";
+						qAndA.AnswerC = q.c || "";
+						qAndA.AnswerD = q.d || "";
+						qAndA.CorrectAnswer = (q.correct || "a").toLowerCase();
+						return qAndA;
+					});
+				}
+			} else {
+				getAllQuestionsFromXmlFallback();
+			}
+			if(typeof callback === 'function') callback();
+		},
+		error: function(){
+			getAllQuestionsFromXmlFallback();
+			if(typeof callback === 'function') callback();
+		}
+	});
+}
+
+function getAllQuestionsFromXmlFallback(){
 	$.ajax({
         type: "GET",
         url: "Questions/questions.xml",
         dataType: "xml",
 		async: false,
         success: function(xml) {
+			window.GameVariables.QuestionsAndAnswers = [];
 			$(xml).find('question').each(function(){
-				
 				var qAndA = new QuestionAndAnswer();
-				
 				qAndA.Category = $(this).find('category')[0].textContent;
 				qAndA.Question = $(this).find('text')[0].textContent.replace("++++","<br />");
 				qAndA.AnswerA = $(this).find('a')[0].textContent;
@@ -111,18 +165,9 @@ function getAllQuestionsForGame(){
 				else if($(this).find('d')[0].attributes[0].value == "yes"){
 					qAndA.CorrectAnswer = "d";
 				}
-				
 				window.GameVariables.QuestionsAndAnswers.push(qAndA);
 			});
-			
-			/*for(var i = 0; i < 15; i++){
-				var targetCategoryP = ".categoryP" + (i+1);
-				$(targetCategoryP).html(window.GameVariables.QuestionsCategoriesAndAnswers[i].Category);
-			}*/
-        },
-		error: function(e){
-			var error = e;
-		}
+        }
     });
 	
 	$.ajax({
@@ -131,10 +176,9 @@ function getAllQuestionsForGame(){
         dataType: "xml",
 		async: false,
         success: function(xml) {
+			window.GameVariables.SwitchQuestionsAndAnswers = [];
 			$(xml).find('question').each(function(){
-				
 				var qAndA = new QuestionAndAnswer();
-				
 				qAndA.Category = $(this).find('category')[0].textContent;
 				qAndA.Question = $(this).find('text')[0].textContent.replace("++++","<br />");
 				qAndA.AnswerA = $(this).find('a')[0].textContent;
@@ -154,40 +198,72 @@ function getAllQuestionsForGame(){
 				else if($(this).find('d')[0].attributes[0].value == "yes"){
 					qAndA.CorrectAnswer = "d";
 				}
-				
 				window.GameVariables.SwitchQuestionsAndAnswers.push(qAndA);
 			});
-			
-			/*for(var i = 0; i < 15; i++){
-				var targetCategoryP = ".categoryP" + (i+1);
-				$(targetCategoryP).html(window.GameVariables.QuestionsCategoriesAndAnswers[i].Category);
-			}*/
         }
     });
+}
 
-	/*
-	* The commented out section of code is use to call to a server to obtain a dataset of questions.
-	* You must know how to do this own your own. There is no perfect way that I can develope code (nor will I)
-	* that obtains your questions for you from a server. If you are unsure on how to do this then you will have to
-	* stick with the original method above using XML files.
-	*/
-	/*$.ajax({
-		type: "POST",
-		url: "",
-		data: data,
-		async: true,
-		contentType: "application/json; charset=utf-8",
-        dataType: "json",
-		success: function(response){
-			
-		},
-		error: function(e){
-			if(e.message === null || e.message === undefined){
-				alert(e.Message);
-			}
-			else{
-				alert(e.message);
-			}
-		}
-	});*/
+function resetAndStartNewGame(onComplete){
+	showToastNotification("🔄 Generating new questions with Gemini AI & resetting game...");
+	
+	// Reset question levels & game state counters
+	window.GameVariables.QuestionLevel = 1;
+	window.GameVariables.StartingQuestionLevel = 1;
+	window.GameVariables.QuestionSequenceCounter = 0;
+	window.GameVariables.MoneyTreeSequenceCounter = 0;
+	window.GameVariables.RevealAnswerCounter = 0;
+	window.GameVariables.commericalSequenceCounter = 0;
+	window.GameVariables.pafLifeLineSequenceCounter = 0;
+	window.GameVariables.ataLifeLineSequenceCounter = 0;
+	window.GameVariables.stqLifeLineSequenceCounter = 0;
+	window.GameVariables.hintHelpSequenceCounter = 0;
+	window.GameVariables.walkAwaySequenceCounter = 0;
+	window.GameVariables.IsWalkingAway = false;
+	window.GameVariables.QuestionInProgress = false;
+	window.GameVariables.IsInCommercial = false;
+	window.GameVariables.IsFirstQuestionOfGame = true;
+	window.GameVariables.CannotLockInFinalAnswer = false;
+	window.GameVariables.CurrentTargetAnswer = "";
+	window.GameVariables.CurrentCorrectAnswer = "";
+
+	window.GameVariables.AnswerAIsOut = false;
+	window.GameVariables.AnswerBIsOut = false;
+	window.GameVariables.AnswerCIsOut = false;
+	window.GameVariables.AnswerDIsOut = false;
+
+	// Reset all lifelines
+	window.GameVariables.IsPAFLifeLineUsed = false;
+	window.GameVariables.IsFFLifeLineUsed = false;
+	window.GameVariables.IsATALifeLineUsed = false;
+	window.GameVariables.IsSTQLifeLineUsed = false;
+	window.GameVariables.IsSTQLifeLineActiveAtStart = false;
+	window.GameVariables.IsHintHelpUsed = false;
+	window.GameVariables.HintHelpMessages = [];
+	window.GameVariables.IsHintHelpOpen = false;
+
+	// Reset lifeline visuals
+	$('.lifelineUsedImg').css('opacity', 0);
+	$('.lifelineUsedStrapImg').css('opacity', 0);
+	$('#hostBtnHintHelp').removeClass('btn-used').attr('title', 'Use Hint Help Lifeline (Gemini AI)');
+	$('#hintHelpModal').removeClass('flex').addClass('hidden');
+
+	// Reset money tree & winnings
+	renderMoneyTreeTable();
+	setLevelOnMoneyTree(1);
+	$('.totalPrizeMoneyWonDiv').html(accounting.formatMoney(0, "Rs. ", 0));
+	$('.winningsP').html("Rs. 0");
+	hideLevelStrap();
+	hideQuestionAndAnswerStraps();
+	resetAnswerStraps();
+	hideLifeLineCentered();
+	showMillionaireLogo();
+
+	// Fetch fresh questions from Gemini API
+	fetchAndLoadQuestions(function(){
+		setQuestion(false);
+		showToastNotification("✨ New game loaded with fresh questions! Ready for Question 1 (Rs. 1,000)");
+		startGeneralSound("main_theme.mp3", true);
+		if(typeof onComplete === 'function') onComplete();
+	});
 }
