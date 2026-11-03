@@ -1,0 +1,119 @@
+p {
+	margin:auto;
+	position:absolute;
+	letter-spacing:0px;
+}
+
+.answerP {
+	font-size:30pt;
+	font-family:Verdana;
+	color:#FFFFFF;
+	text-shadow:2px 2px 0px black;
+	left:140px;
+	top:24px;
+	opacity:0;
+	-moz-opacity:0;
+	-webkit-opacity:0;
+}
+
+.ataPercentStrapP { 
+	width:146px;
+	text-align:center;
+	font-size:25pt;
+	font-family:Verdana;
+	color:white;
+	top:18px;
+}
+
+.contestantNameP {
+	font-size:30pt;
+	font-family:Verdana;
+	color:white;
+	text-align:center;
+	width:900px;
+	left:0px;
+	right:0px;
+	top:52px;
+	text-shadow:2px 2px 0px black;
+}
+
+.contestantLocationP {
+	font-size:27pt;
+	font-family:Verdana;
+	color:#EA932C;
+	text-align:center;
+	width:900px;
+	left:0px;
+	right:0px;
+	bottom:107px;
+	text-shadow:2px 2px 0px black;
+}
+
+.fastestContestantNameP {
+	font-size:38pt;
+	font-family:Verdana;
+	color:#FFFFFF;
+	top:19px;
+	left:558px;
+	text-shadow:2px 2px 0px black;
+}
+
+.fastestContestantTimeP {
+	font-size:38pt;
+	font-family:Verdana;
+	color:#FFFFFF;
+	top:19px;
+	right:558px;
+	text-shadow:2px 2px 0px black;
+}
+
+.fastestFingerTreeQuestionP {
+	color:white;
+	font-family:Verdana;
+	font-size:29pt;
+	text-shadow:2px 2px 0px black;
+}
+
+.fastestTreeLetterP {
+	font-size:25pt;
+	font-family:Verdana;
+	color:#DFAA14;
+	left:62px;
+	top:29px;
+	text-shadow:2px 2px 0px black;
+}
+
+.fastestTreeAnswerP{
+	font-size:25pt;
+	font-family:Verdana;
+	color:#FFFFFF;
+	left:108px;
+	top:29px;
+	text-shadow:2px 2px 0px black;
+}
+
+.letterP {
+	font-size:30pt;
+	font-family:Verdana;
+	color:#DFAA14;
+	text-shadow:2px 2px 0px black;
+	left:86px;
+	top:24px;
+	opacity:0;
+	-moz-opacity:0;
+	-webkit-opacity:0;
+}
+
+.winningsP {
+	color:#FFFFFF;
+	font-family:'Copperplate31bc';
+	font-size:94pt;
+	text-align:center;
+	width:1920px;
+	left:-12px;
+	right:0px;
+	top:32px;
+	text-shadow:4px 3px 0px black;
+	letter-spacing:-3px;
+	scale:100% 100%;
+}

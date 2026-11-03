@@ -1,0 +1,137 @@
+@font-face {
+	font-family: Conduit;
+	src: url('../Fonts/ConduitITCPro-Bold.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Interstate;
+	src: url('../Fonts/Interstate.eot');
+	src: url('../Fonts/Interstate.eot?#iefix') format('embedded-opentype'),
+	url('../Fonts/Interstate.woff') format('woff'),
+	url('../Fonts/Interstate.svg') format('svg'),
+	url('../Fonts/Interstate.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Copperplate;
+	src: url('../Fonts/Copperplate.eot');
+	src: url('../Fonts/Copperplate.eot?#iefix') format('embedded-opentype'),
+	url('../Fonts/Copperplate.woff') format('woff'),
+	url('../Fonts/Copperplate.svg#IcoMoon') format('svg'),
+	url('../Fonts/Copperplate.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: CopperplateBold;
+	src: url('../Fonts/CopperplateBold.eot');
+	src: url('../Fonts/CopperplateBold.eot?#iefix') format('embedded-opentype'),
+	url('../Fonts/CopperplateBold.woff') format('woff'),
+	url('../Fonts/CopperplateBold.svg#IcoMoon') format('svg'),
+	url('../Fonts/CopperplateBold.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Copperplate31ab;
+	src: url('../Fonts/Copperplate Gothic 31 AB.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Copperplate31bc;
+	src: url('../Fonts/Copperplate Gothic Std 31 BC.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Copperplate31bc-Celador01;
+	src: url('../Fonts/Copperplate-ThirtyOneBC-Celador01.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Copperplate Gothic Regular;
+	src: url('../Fonts/Copperplate Gothic Regular.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Copperplate Gothic Thirty BC Regular;
+	src: url('../Fonts/Copperplate Gothic Thirty BC Regular.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: Copperplate Gothic Std 31 AB;
+	src: url('../Fonts/CopperplateGothicStd 31AB.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: ITC Conduit Cyrillic;
+	src: url('../Fonts/ITC Conduit.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: SVN-Conduit;
+	src: url('../Fonts/SVN-CONDUIT BOLD.OTF') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: UTM Copperplate;
+	src: url('../Fonts/utm-copperplateb.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: VacansiaLightC;
+	src: url('../Fonts/VACANSIALIGHTC.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: VacansiaC;
+	src: url('../Fonts/VACANSIAC.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: VacansiaC-Bold;
+	src: url('../Fonts/VACANSIAC-BOLD.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: VacansiaExtendedC-Bold;
+	src: url('../Fonts/VACANSIAEXTENDEDC-BOLD.otf') format('opentype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+body{
+	overflow:hidden;
+	width:1920px;
+	height:1080px;
+	background-color:black;
+}
