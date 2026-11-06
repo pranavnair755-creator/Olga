@@ -52,49 +52,61 @@
 				top: 0;
 				transform-origin: 0 0;
 			}
+			#hostControlPanel,
+			#hostControlPanel * {
+				box-sizing: border-box;
+			}
 			#hostControlPanel {
 				position: fixed;
-				bottom: 10px;
+				bottom: 12px;
 				left: 50%;
 				transform: translateX(-50%);
 				z-index: 99999;
-				background: linear-gradient(180deg, rgba(13, 22, 45, 0.96) 0%, rgba(5, 10, 25, 0.98) 100%);
-				border: 1px solid rgba(56, 189, 248, 0.35);
-				box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 16px rgba(14, 165, 233, 0.25);
+				background: linear-gradient(180deg, rgba(10, 20, 42, 0.96) 0%, rgba(4, 9, 22, 0.98) 100%);
+				border: 1px solid rgba(56, 189, 248, 0.4);
+				box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 18px rgba(14, 165, 233, 0.25);
 				backdrop-filter: blur(14px);
-				border-radius: 14px;
-				padding: 6px 14px;
+				-webkit-backdrop-filter: blur(14px);
+				border-radius: 12px;
+				padding: 8px 16px;
 				display: flex;
 				flex-direction: column;
-				gap: 6px;
+				gap: 8px;
 				color: #fff;
 				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 				font-size: 12px;
 				transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
 				max-width: 98vw;
-				box-sizing: border-box;
+			}
+			#hostControlPanel div {
+				position: static !important;
+				margin: 0 !important;
+			}
+			#hostControlPanel span {
+				position: static;
+				margin: 0;
 			}
 			#hostControlPanel.minimized {
-				transform: translateX(-50%) translateY(calc(100% - 28px));
-				opacity: 0.88;
+				transform: translateX(-50%) translateY(calc(100% - 32px));
+				opacity: 0.9;
 			}
 			.hcp-header {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				width: 100%;
-				padding-bottom: 4px;
-				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+				display: flex !important;
+				align-items: center !important;
+				justify-content: space-between !important;
+				width: 100% !important;
+				padding-bottom: 5px !important;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 			}
 			.hcp-header .panel-title {
-				font-size: 10.5px;
+				font-size: 11px;
 				font-weight: 800;
 				letter-spacing: 1px;
 				color: #7dd3fc;
 				text-transform: uppercase;
-				display: flex;
-				align-items: center;
-				gap: 6px;
+				display: flex !important;
+				align-items: center !important;
+				gap: 7px;
 				font-family: 'Copperplate', 'Conduit', sans-serif;
 			}
 			.pulse-dot {
@@ -104,63 +116,68 @@
 				background: #38bdf8;
 				box-shadow: 0 0 8px #38bdf8;
 				animation: radarPulse 1.8s infinite;
+				display: inline-block !important;
 			}
 			.hcp-header .toggle-btn {
-				background: rgba(255, 255, 255, 0.05);
-				border: 1px solid rgba(255, 255, 255, 0.1);
-				color: #94a3b8;
+				background: rgba(255, 255, 255, 0.08);
+				border: 1px solid rgba(255, 255, 255, 0.15);
+				color: #cbd5e1;
 				font-size: 11px;
-				padding: 2px 8px;
+				padding: 2px 10px;
 				border-radius: 4px;
 				cursor: pointer;
 				transition: all 0.15s ease;
 			}
 			.hcp-header .toggle-btn:hover {
-				background: rgba(255, 255, 255, 0.15);
+				background: rgba(56, 189, 248, 0.2);
+				border-color: #38bdf8;
 				color: #fff;
 			}
 			.hcp-body {
-				display: flex;
-				flex-wrap: wrap;
-				align-items: center;
-				justify-content: center;
-				gap: 10px;
+				display: flex !important;
+				flex-wrap: wrap !important;
+				align-items: center !important;
+				justify-content: center !important;
+				gap: 12px !important;
 			}
 			.hcp-group {
-				display: flex;
-				flex-direction: column;
-				gap: 3px;
-				padding: 2px 8px;
-				border-right: 1px solid rgba(255, 255, 255, 0.08);
+				display: flex !important;
+				flex-direction: column !important;
+				gap: 4px !important;
+				padding: 2px 10px !important;
+				border-right: 1px solid rgba(255, 255, 255, 0.1) !important;
 			}
 			.hcp-group:last-child {
-				border-right: none;
-				padding-right: 0;
+				border-right: none !important;
+				padding-right: 0 !important;
 			}
 			.group-label {
-				font-size: 9px;
+				font-size: 9.5px;
 				font-weight: 800;
 				letter-spacing: 0.8px;
 				color: #94a3b8;
 				text-transform: uppercase;
 			}
 			.group-buttons {
-				display: flex;
-				align-items: center;
-				gap: 5px;
+				display: flex !important;
+				align-items: center !important;
+				gap: 6px !important;
 			}
 			#hostControlPanel button {
+				position: relative !important;
+				margin: 0 !important;
 				background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-				border: 1px solid rgba(148, 163, 184, 0.3);
+				border: 1px solid rgba(148, 163, 184, 0.35);
 				color: #f1f5f9;
-				padding: 5px 9px;
+				padding: 6px 11px;
 				border-radius: 6px;
 				cursor: pointer;
 				font-weight: 600;
 				font-size: 11.5px;
-				display: inline-flex;
-				align-items: center;
-				gap: 4px;
+				display: inline-flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				gap: 5px;
 				transition: all 0.15s ease;
 				user-select: none;
 				white-space: nowrap;
@@ -224,23 +241,29 @@
 				box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
 			}
 			.btn-key {
-				display: inline-block;
-				background: rgba(0, 0, 0, 0.45);
-				border: 1px solid rgba(255, 255, 255, 0.15);
+				display: inline-flex !important;
+				align-items: center !important;
+				justify-content: center !important;
+				background: rgba(0, 0, 0, 0.5);
+				border: 1px solid rgba(255, 255, 255, 0.2);
 				color: #94a3b8;
 				font-size: 9.5px;
 				font-weight: 700;
-				padding: 1px 4px;
+				padding: 2px 5px;
 				border-radius: 3px;
 				line-height: 1;
+				min-width: 15px;
 			}
 			.btn-opt {
 				font-weight: 800;
 				color: #38bdf8;
 				font-size: 13px;
+				line-height: 1;
 			}
 			.answer-keys button {
-				padding: 4px 10px;
+				padding: 5px 12px;
+				min-width: 44px;
+				justify-content: center;
 			}
 			#hostControlPanel button.btn-used {
 				opacity: 0.45;
@@ -896,7 +919,6 @@
 						<img src="Images/Normal_Answer_Left_Fill.png" />
 						<img src="Images/Final_Answer_Left_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Left_Fill.png" class="correctImg" />
-						<div class="optionLozengeGlint leftOptionGlint"><div class="optionLozengeGlintBeam leftOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">A:</p>
 						<p class="answerP">Answer for A Goes Here...</p>
@@ -909,7 +931,6 @@
 						<img src="Images/Normal_Answer_Right_Fill.png" />
 						<img src="Images/Final_Answer_Right_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Right_Fill.png" class="correctImg" />
-						<div class="optionLozengeGlint rightOptionGlint"><div class="optionLozengeGlintBeam rightOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">B:</p>
 						<p class="answerP">Answer for B Goes Here...</p>
@@ -918,6 +939,7 @@
 							<p class="ataPercentStrapP" id="ataPercentStrapB">100%</p>
 						</div>
 					</div>
+					<div class="answerRowGlint"><div class="answerRowGlintBeam"></div></div>
 					<img src="Images/Full_Answer_Strap_Gradient.png" />
 				</div>
 			</div>
@@ -929,7 +951,6 @@
 						<img src="Images/Normal_Answer_Left_Fill.png" />
 						<img src="Images/Final_Answer_Left_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Left_Fill.png" class="correctImg" />
-						<div class="optionLozengeGlint leftOptionGlint"><div class="optionLozengeGlintBeam leftOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">C:</p>
 						<p class="answerP">Answer for C Goes Here...</p>
@@ -942,7 +963,6 @@
 						<img src="Images/Normal_Answer_Right_Fill.png" />
 						<img src="Images/Final_Answer_Right_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Right_Fill.png" class="correctImg" />
-						<div class="optionLozengeGlint rightOptionGlint"><div class="optionLozengeGlintBeam rightOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">D:</p>
 						<p class="answerP">Answer for D Goes Here...</p>
@@ -951,6 +971,7 @@
 							<p class="ataPercentStrapP" id="ataPercentStrapD">100%</p>
 						</div>
 					</div>
+					<div class="answerRowGlint"><div class="answerRowGlintBeam"></div></div>
 					<img src="Images/Full_Answer_Strap_Gradient.png" />
 				</div>
 			</div>
