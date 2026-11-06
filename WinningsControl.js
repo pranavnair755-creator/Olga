@@ -1,19 +1,11 @@
 function showAmountWon(){
-	if(window.GameVariables.UseTopPrizeText == true){
-		if(window.GameVariables.QuestionLevel >= window.GameVariables.TopPrizeQuestionNumber){
-			$('.winningsP').html(window.GameVariables.TopPrizeText[window.GameVariables.QuestionLevel - 1]);
-			$('.totalPrizeMoneyWonDiv').html(window.GameVariables.TopPrizeText[window.GameVariables.QuestionLevel - 1]);
-		}
-		else{
-			$('.winningsP').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 1]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-			$('.totalPrizeMoneyWonDiv').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 1]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-		}
-	}
-	else{
-		$('.winningsP').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 1]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-		$('.totalPrizeMoneyWonDiv').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 1]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-	}
+	var level = window.GameVariables.QuestionLevel || 1;
+	var amount = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts[level - 1]) ? window.GameVariables.PrizeAmounts[level - 1] : 1000;
+	var text = "Rs. " + (amount >= 10000000 ? "1 CRORE" : new Intl.NumberFormat('en-IN').format(amount));
+	$('.winningsP').html(text);
+	$('.totalPrizeMoneyWonDiv').html(text);
 	$('.winStrapDiv').css('opacity', 1);
+	return text;
 }
 
 function hideAmountWon(){
@@ -21,40 +13,20 @@ function hideAmountWon(){
 }
 
 function reduceAmountWon(){
-	if(window.GameVariables.QuestionLevel < 6){
-		if(window.GameVariables.UseZeronaireText == true){
-			$('.totalPrizeMoneyWonDiv').html(window.GameVariables.ZeronaireText);
-		}
-		else{
-			$('.totalPrizeMoneyWonDiv').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(0).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-		}
+	var level = window.GameVariables.QuestionLevel || 1;
+	var wonText = "Rs. 0";
+	if(level <= 5){
+		wonText = "Rs. 0";
 	}
-	else if(window.GameVariables.QuestionLevel < 11){
-		if(window.GameVariables.UseTopPrizeText == true){
-			if(window.GameVariables.TopPrizeQuestionNumber > 5){
-				$('.totalPrizeMoneyWonDiv').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[4]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-			}
-			else{
-				$('.totalPrizeMoneyWonDiv').html(window.GameVariables.TopPrizeText[4]);
-			}
-		}
-		else{
-			$('.totalPrizeMoneyWonDiv').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[4]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-		}
+	else if(level <= 10){
+		wonText = "Rs. 10,000";
 	}
 	else {
-		if(window.GameVariables.UseTopPrizeText == true){
-			if(window.GameVariables.TopPrizeQuestionNumber > 10){
-				$('.totalPrizeMoneyWonDiv').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[9]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-			}
-			else{
-				$('.totalPrizeMoneyWonDiv').html(window.GameVariables.TopPrizeText[9]);
-			}
-		}
-		else{
-			$('.totalPrizeMoneyWonDiv').html(window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[9]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix);
-		}
+		wonText = "Rs. 3,20,000";
 	}
+	$('.totalPrizeMoneyWonDiv').html(wonText);
+	$('.winningsP').html(wonText);
+	return wonText;
 }
 
 function showMillionaireTitleStrap(){
@@ -66,9 +38,11 @@ function hideMillionaireTitleStrap(){
 }
 
 function showTotalPrizeMoneyStrap(){
-	$('.totalPrizeMoneyDiv').transition({perspective:0, 'bottom':'0px'}, 500, 'ease-out');
+	window.GameVariables.IsTotalPrizeMoneyShowing = true;
+	$('.totalPrizeMoneyDiv').css({'display': 'block', 'visibility': 'visible'}).transition({perspective:0, 'bottom':'0px'}, 500, 'ease-out');
 }
 
 function hideTotalPrizeMoneyStrap(){
-	$('.totalPrizeMoneyDiv').transition({perspective:0, 'bottom':'-300px'}, 500, 'ease-in');
+	window.GameVariables.IsTotalPrizeMoneyShowing = false;
+	$('.totalPrizeMoneyDiv').transition({perspective:0, 'bottom':'-450px'}, 500, 'ease-in');
 }

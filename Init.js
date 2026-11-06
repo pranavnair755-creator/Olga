@@ -94,7 +94,7 @@ function getAllQuestionsForGame(){
 function fetchAndLoadQuestions(callback){
 	$.ajax({
 		type: "POST",
-		url: "/api/generate-questions",
+		url: "/api/generate-questions?t=" + new Date().getTime(),
 		contentType: "application/json; charset=utf-8",
 		dataType: "json",
 		success: function(data){
@@ -205,7 +205,11 @@ function getAllQuestionsFromXmlFallback(){
 }
 
 function resetAndStartNewGame(onComplete){
-	showToastNotification("🔄 Generating new questions with Gemini AI & resetting game...");
+	showToastNotification("🔄 Generating brand new questions & resetting game...");
+	
+	try {
+		stopGeneralSound();
+	} catch(e) {}
 	
 	// Reset question levels & game state counters
 	window.GameVariables.QuestionLevel = 1;
@@ -226,6 +230,8 @@ function resetAndStartNewGame(onComplete){
 	window.GameVariables.CannotLockInFinalAnswer = false;
 	window.GameVariables.CurrentTargetAnswer = "";
 	window.GameVariables.CurrentCorrectAnswer = "";
+	window.GameVariables.IsTotalPrizeMoneyShowing = false;
+	window.GameVariables.IsLevelStrapShowing = false;
 
 	window.GameVariables.AnswerAIsOut = false;
 	window.GameVariables.AnswerBIsOut = false;
@@ -249,17 +255,20 @@ function resetAndStartNewGame(onComplete){
 	$('#hintHelpModal').removeClass('flex').addClass('hidden');
 
 	// Reset money tree & winnings
+	if(typeof slideOutMoneyTree === 'function') slideOutMoneyTree();
 	renderMoneyTreeTable();
 	setLevelOnMoneyTree(1);
-	$('.totalPrizeMoneyWonDiv').html(accounting.formatMoney(0, "Rs. ", 0));
+	$('.totalPrizeMoneyWonDiv').html("Rs. 0");
 	$('.winningsP').html("Rs. 0");
+	hideTotalPrizeMoneyStrap();
+	hideMillionaireTitleStrap();
 	hideLevelStrap();
 	hideQuestionAndAnswerStraps();
 	resetAnswerStraps();
 	hideLifeLineCentered();
 	showMillionaireLogo();
 
-	// Fetch fresh questions from Gemini API
+	// Fetch fresh questions from backend API
 	fetchAndLoadQuestions(function(){
 		setQuestion(false);
 		showToastNotification("✨ New game loaded with fresh questions! Ready for Question 1 (Rs. 1,000)");

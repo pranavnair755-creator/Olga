@@ -45,7 +45,23 @@ function renderMoneyTreeTable(){
 }
 
 function slideInMoneyTree(){
+	$('.moneyTreeDiv').css('opacity', 1);
 	$('.moneyTreeDiv').transition({perspective:0, 'right': '-52px'}, 750, 'ease-out');
+	window.GameVariables.IsMoneyTreeShowing = true;
+}
+
+function slideOutMoneyTree(){
+	$('.moneyTreeDiv').transition({perspective:0, 'right': '-760px', opacity: 0}, 600, 'ease-in');
+	window.GameVariables.IsMoneyTreeShowing = false;
+}
+
+function toggleMoneyTreeDisplay(){
+	if(window.GameVariables.IsMoneyTreeShowing){
+		slideOutMoneyTree();
+	} else {
+		setLevelOnMoneyTree(window.GameVariables.QuestionLevel || 1);
+		slideInMoneyTree();
+	}
 }
 
 function setLevelOnMoneyTree(level){

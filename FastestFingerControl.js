@@ -101,3 +101,120 @@ function showTheFastestFingerWinner(){
 function hideTheFastestFingerWinner(){
 	$('#fastestContestant').css('opacity', 0);
 }
+
+var fastestFingerQuestionsList = [
+	{
+		question: "Starting with the earliest, arrange these historic Indian milestones in chronological order:",
+		a: "Battle of Plassey",
+		b: "First War of Independence",
+		c: "Quit India Movement",
+		d: "India's Independence",
+		order: [
+			{ letter: "A:", text: "Battle of Plassey (1757)" },
+			{ letter: "B:", text: "First War of Independence (1857)" },
+			{ letter: "C:", text: "Quit India Movement (1942)" },
+			{ letter: "D:", text: "India's Independence (1947)" }
+		]
+	},
+	{
+		question: "Arrange these Indian monuments from North to South by geographic location:",
+		a: "India Gate",
+		b: "Taj Mahal",
+		c: "Charminar",
+		d: "Meenakshi Temple",
+		order: [
+			{ letter: "A:", text: "India Gate (New Delhi)" },
+			{ letter: "B:", text: "Taj Mahal (Agra)" },
+			{ letter: "C:", text: "Charminar (Hyderabad)" },
+			{ letter: "D:", text: "Meenakshi Temple (Madurai)" }
+		]
+	},
+	{
+		question: "Starting with the closest to the Sun, arrange these planets in order of orbital distance:",
+		a: "Earth",
+		b: "Venus",
+		c: "Mercury",
+		d: "Mars",
+		order: [
+			{ letter: "C:", text: "Mercury" },
+			{ letter: "B:", text: "Venus" },
+			{ letter: "A:", text: "Earth" },
+			{ letter: "D:", text: "Mars" }
+		]
+	},
+	{
+		question: "Starting from the smallest, arrange these units of computer digital storage in ascending order:",
+		a: "Gigabyte",
+		b: "Kilobyte",
+		c: "Terabyte",
+		d: "Megabyte",
+		order: [
+			{ letter: "B:", text: "Kilobyte" },
+			{ letter: "D:", text: "Megabyte" },
+			{ letter: "A:", text: "Gigabyte" },
+			{ letter: "C:", text: "Terabyte" }
+		]
+	}
+];
+
+function prepareFastestFingerQuestion(){
+	var q = fastestFingerQuestionsList[Math.floor(Math.random() * fastestFingerQuestionsList.length)];
+	window.GameVariables.CurrentFastestFingerQ = q;
+
+	// Populate question strap
+	$('.questionTd').html(q.question);
+	$('#answerA .answerP').html(q.a);
+	$('#answerB .answerP').html(q.b);
+	$('#answerC .answerP').html(q.c);
+	$('#answerD .answerP').html(q.d);
+
+	// Populate reveal answer tree
+	$('.fastestFingerTreeQuestionP').html(q.question);
+	for(var i = 0; i < 4; i++){
+		var item = q.order[i];
+		var orderDiv = '#fastestAnswerOrder' + (i + 1);
+		$(orderDiv + ' .fastestTreeLetterP').html(item.letter);
+		$(orderDiv + ' .fastestTreeAnswerP').html(item.text);
+	}
+}
+
+function activateFastestFinger(){
+	try { stopGeneralSound(); } catch(e){}
+	try { stopLongPassiveSound(); } catch(e){}
+	try { stopShortPassiveSound(); } catch(e){}
+
+	window.GameVariables.IsPlayingFasestFinger = true;
+	window.GameVariables.FastestFingerSequenceCounter = 0;
+	window.GameVariables.RevealFastestFingerContestantCounter = 0;
+	window.GameVariables.FastestFingerRevealAnswerCounter = 0;
+	window.GameVariables.RevealFastestFingerWinnersCounter = 0;
+	window.GameVariables.IsLogoShowing = false;
+	window.GameVariables.IsInCommercial = false;
+	window.GameVariables.QuestionInProgress = false;
+	window.GameVariables.IsMoneyTreeShowing = false;
+
+	getContestantsForGame();
+	prepareFastestFingerQuestion();
+
+	hideMillionaireLogo();
+	hideLevelStrap();
+	hideQuestionAndAnswerStraps();
+	hideTotalPrizeMoneyStrap();
+	hideFastestFingerContestants();
+	hideFastestFingerAnswerTree();
+	hideTheFastestFingerWinner();
+	hideContestantNameAndLocation();
+
+	if(typeof showToastNotification === 'function'){
+		showToastNotification("⚡ Fastest Finger First Activated! Click [Step FFF] or press [←] to reveal contestants (Step 1/28)");
+	}
+}
+
+function stepFastestFinger(){
+	if(!window.GameVariables.IsPlayingFasestFinger){
+		activateFastestFinger();
+	} else {
+		// Trigger left arrow event to step through sequence
+		$(document).trigger($.Event('keydown', { keyCode: 37 }));
+	}
+}

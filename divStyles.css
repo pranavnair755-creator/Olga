@@ -359,6 +359,198 @@ div {
 	-webkit-opacity:0;
 }
 
+.questionLozengeGlint {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 1920px;
+	height: 192px;
+	pointer-events: none;
+	overflow: hidden;
+	-webkit-mask-image: url('../Images/Large_Strap_Fill.png');
+	mask-image: url('../Images/Large_Strap_Fill.png');
+	-webkit-mask-size: 1920px 192px;
+	mask-size: 1920px 192px;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	z-index: 2;
+}
+
+.questionLozengeGlintBeam {
+	position: absolute;
+	top: -20px;
+	left: 0;
+	width: 340px;
+	height: 232px;
+	pointer-events: none;
+	background: linear-gradient(
+		108deg,
+		transparent 0%,
+		transparent 15%,
+		rgba(255, 255, 255, 0.01) 25%,
+		rgba(180, 215, 255, 0.08) 36%,
+		rgba(255, 255, 255, 0.22) 45%,
+		rgba(255, 255, 255, 0.52) 50%,
+		rgba(210, 235, 255, 0.28) 54%,
+		rgba(255, 255, 255, 0.12) 60%,
+		rgba(180, 215, 255, 0.04) 70%,
+		transparent 82%,
+		transparent 100%
+	);
+	transform: translateX(-380px) skewX(-20deg);
+	animation: questionLozengeGlintSweep 12s cubic-bezier(0.35, 0.0, 0.25, 1) infinite;
+	mix-blend-mode: screen;
+	filter: blur(0.5px) drop-shadow(0 0 12px rgba(190, 230, 255, 0.45));
+}
+
+@keyframes questionLozengeGlintSweep {
+	0% {
+		transform: translateX(-380px) skewX(-20deg);
+		opacity: 0;
+	}
+	2% {
+		opacity: 0.12;
+	}
+	7% {
+		opacity: 0.8;
+	}
+	40% {
+		opacity: 0.8;
+	}
+	45% {
+		opacity: 0.12;
+		transform: translateX(1900px) skewX(-20deg);
+	}
+	47% {
+		transform: translateX(1960px) skewX(-20deg);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(1960px) skewX(-20deg);
+		opacity: 0;
+	}
+}
+
+/* Option Lozenge Glint Effects */
+.optionLozengeGlint {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 859px;
+	height: 96px;
+	pointer-events: none;
+	overflow: hidden;
+	z-index: 2;
+}
+
+.leftOptionGlint {
+	-webkit-mask-image: url('../Images/Normal_Answer_Left_Fill.png');
+	mask-image: url('../Images/Normal_Answer_Left_Fill.png');
+	-webkit-mask-size: 859px 96px;
+	mask-size: 859px 96px;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+}
+
+.rightOptionGlint {
+	-webkit-mask-image: url('../Images/Normal_Answer_Right_Fill.png');
+	mask-image: url('../Images/Normal_Answer_Right_Fill.png');
+	-webkit-mask-size: 859px 96px;
+	mask-size: 859px 96px;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+}
+
+.optionLozengeGlintBeam {
+	position: absolute;
+	top: -20px;
+	left: 0;
+	width: 260px;
+	height: 136px;
+	pointer-events: none;
+	background: linear-gradient(
+		108deg,
+		transparent 0%,
+		transparent 15%,
+		rgba(255, 255, 255, 0.01) 25%,
+		rgba(180, 215, 255, 0.08) 36%,
+		rgba(255, 255, 255, 0.22) 45%,
+		rgba(255, 255, 255, 0.52) 50%,
+		rgba(210, 235, 255, 0.28) 54%,
+		rgba(255, 255, 255, 0.12) 60%,
+		rgba(180, 215, 255, 0.04) 70%,
+		transparent 82%,
+		transparent 100%
+	);
+	transform: translateX(-280px) skewX(-20deg);
+	mix-blend-mode: screen;
+	filter: blur(0.5px) drop-shadow(0 0 8px rgba(190, 230, 255, 0.4));
+}
+
+.leftOptionBeam {
+	animation: leftOptionGlintSweep 12s cubic-bezier(0.35, 0.0, 0.25, 1) infinite;
+}
+
+.rightOptionBeam {
+	animation: rightOptionGlintSweep 12s cubic-bezier(0.35, 0.0, 0.25, 1) infinite;
+}
+
+@keyframes leftOptionGlintSweep {
+	0%, 2% {
+		transform: translateX(-280px) skewX(-20deg);
+		opacity: 0;
+	}
+	4% {
+		opacity: 0.12;
+	}
+	8% {
+		opacity: 0.8;
+	}
+	20% {
+		opacity: 0.8;
+	}
+	24% {
+		opacity: 0.12;
+		transform: translateX(870px) skewX(-20deg);
+	}
+	26% {
+		transform: translateX(920px) skewX(-20deg);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(920px) skewX(-20deg);
+		opacity: 0;
+	}
+}
+
+@keyframes rightOptionGlintSweep {
+	0%, 20% {
+		transform: translateX(-280px) skewX(-20deg);
+		opacity: 0;
+	}
+	22% {
+		opacity: 0.12;
+	}
+	26% {
+		opacity: 0.8;
+	}
+	38% {
+		opacity: 0.8;
+	}
+	42% {
+		opacity: 0.12;
+		transform: translateX(870px) skewX(-20deg);
+	}
+	44% {
+		transform: translateX(920px) skewX(-20deg);
+		opacity: 0;
+	}
+	100% {
+		transform: translateX(920px) skewX(-20deg);
+		opacity: 0;
+	}
+}
+
 .stageBackgroundDiv {
 	width:1920px;
 	height:1080px;

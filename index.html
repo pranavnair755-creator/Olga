@@ -54,89 +54,193 @@
 			}
 			#hostControlPanel {
 				position: fixed;
-				bottom: 12px;
+				bottom: 10px;
 				left: 50%;
 				transform: translateX(-50%);
 				z-index: 99999;
-				background: rgba(10, 15, 30, 0.92);
-				border: 1px solid rgba(80, 140, 240, 0.4);
-				box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), 0 0 12px rgba(0, 100, 255, 0.2);
-				backdrop-filter: blur(8px);
-				border-radius: 12px;
-				padding: 8px 14px;
+				background: linear-gradient(180deg, rgba(13, 22, 45, 0.96) 0%, rgba(5, 10, 25, 0.98) 100%);
+				border: 1px solid rgba(56, 189, 248, 0.35);
+				box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 16px rgba(14, 165, 233, 0.25);
+				backdrop-filter: blur(14px);
+				border-radius: 14px;
+				padding: 6px 14px;
 				display: flex;
-				flex-wrap: wrap;
-				gap: 8px;
-				align-items: center;
-				justify-content: center;
+				flex-direction: column;
+				gap: 6px;
 				color: #fff;
 				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-				font-size: 13px;
-				transition: transform 0.3s ease, opacity 0.3s ease;
-				max-width: 95vw;
+				font-size: 12px;
+				transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+				max-width: 98vw;
+				box-sizing: border-box;
 			}
 			#hostControlPanel.minimized {
-				transform: translateX(-50%) translateY(calc(100% - 32px));
-				opacity: 0.85;
+				transform: translateX(-50%) translateY(calc(100% - 28px));
+				opacity: 0.88;
+			}
+			.hcp-header {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				padding-bottom: 4px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+			}
+			.hcp-header .panel-title {
+				font-size: 10.5px;
+				font-weight: 800;
+				letter-spacing: 1px;
+				color: #7dd3fc;
+				text-transform: uppercase;
+				display: flex;
+				align-items: center;
+				gap: 6px;
+				font-family: 'Copperplate', 'Conduit', sans-serif;
+			}
+			.pulse-dot {
+				width: 7px;
+				height: 7px;
+				border-radius: 50%;
+				background: #38bdf8;
+				box-shadow: 0 0 8px #38bdf8;
+				animation: radarPulse 1.8s infinite;
+			}
+			.hcp-header .toggle-btn {
+				background: rgba(255, 255, 255, 0.05);
+				border: 1px solid rgba(255, 255, 255, 0.1);
+				color: #94a3b8;
+				font-size: 11px;
+				padding: 2px 8px;
+				border-radius: 4px;
+				cursor: pointer;
+				transition: all 0.15s ease;
+			}
+			.hcp-header .toggle-btn:hover {
+				background: rgba(255, 255, 255, 0.15);
+				color: #fff;
+			}
+			.hcp-body {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: center;
+				justify-content: center;
+				gap: 10px;
+			}
+			.hcp-group {
+				display: flex;
+				flex-direction: column;
+				gap: 3px;
+				padding: 2px 8px;
+				border-right: 1px solid rgba(255, 255, 255, 0.08);
+			}
+			.hcp-group:last-child {
+				border-right: none;
+				padding-right: 0;
+			}
+			.group-label {
+				font-size: 9px;
+				font-weight: 800;
+				letter-spacing: 0.8px;
+				color: #94a3b8;
+				text-transform: uppercase;
+			}
+			.group-buttons {
+				display: flex;
+				align-items: center;
+				gap: 5px;
 			}
 			#hostControlPanel button {
-				background: linear-gradient(180deg, #1e293b, #0f172a);
+				background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
 				border: 1px solid rgba(148, 163, 184, 0.3);
 				color: #f1f5f9;
-				padding: 5px 10px;
+				padding: 5px 9px;
 				border-radius: 6px;
 				cursor: pointer;
-				font-weight: 500;
-				font-size: 12px;
+				font-weight: 600;
+				font-size: 11.5px;
 				display: inline-flex;
 				align-items: center;
 				gap: 4px;
 				transition: all 0.15s ease;
 				user-select: none;
+				white-space: nowrap;
 			}
 			#hostControlPanel button:hover {
-				background: linear-gradient(180deg, #334155, #1e293b);
-				border-color: #60a5fa;
+				background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+				border-color: #38bdf8;
 				color: #fff;
 				transform: translateY(-1px);
+				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 			}
 			#hostControlPanel button:active {
 				transform: translateY(1px);
 			}
-			#hostControlPanel button.btn-highlight {
-				background: linear-gradient(180deg, #1d4ed8, #1e40af);
-				border-color: #93c5fd;
-				font-weight: 600;
-			}
 			#hostControlPanel button.btn-gold {
-				background: linear-gradient(180deg, #b45309, #78350f);
-				border-color: #fbbf24;
-				color: #fef08a;
-			}
-			#hostControlPanel .panel-title {
-				font-size: 12px;
+				background: linear-gradient(180deg, #d97706 0%, #92400e 100%);
+				border-color: #f59e0b;
+				color: #fffbeb;
 				font-weight: 700;
-				letter-spacing: 0.5px;
-				color: #93c5fd;
-				text-transform: uppercase;
-				display: flex;
-				align-items: center;
-				gap: 6px;
+				box-shadow: 0 2px 10px rgba(245, 158, 11, 0.3);
 			}
-			#hostControlPanel .toggle-btn {
-				background: transparent;
-				border: none;
-				color: #94a3b8;
-				font-size: 14px;
-				padding: 2px 6px;
-				cursor: pointer;
+			#hostControlPanel button.btn-gold:hover {
+				background: linear-gradient(180deg, #f59e0b 0%, #b45309 100%);
+				border-color: #fef08a;
+				box-shadow: 0 4px 16px rgba(245, 158, 11, 0.5);
+			}
+			#hostControlPanel button.btn-primary {
+				background: linear-gradient(180deg, #0284c7 0%, #1d4ed8 100%);
+				border-color: #60a5fa;
+				color: #ffffff;
+				font-weight: 700;
+				box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35);
+			}
+			#hostControlPanel button.btn-primary:hover {
+				background: linear-gradient(180deg, #0369a1 0%, #1e40af 100%);
+				border-color: #93c5fd;
+				box-shadow: 0 4px 16px rgba(56, 189, 248, 0.5);
 			}
 			#hostControlPanel button.btn-cyan {
-				background: linear-gradient(180deg, #0284c7, #0369a1);
+				background: linear-gradient(180deg, #0284c7 0%, #0369a1 100%);
 				border-color: #38bdf8;
 				color: #f0f9ff;
-				font-weight: 600;
-				box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+				font-weight: 700;
+				box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
+			}
+			#hostControlPanel button.btn-cyan:hover {
+				background: linear-gradient(180deg, #0369a1 0%, #075985 100%);
+				border-color: #7dd3fc;
+				box-shadow: 0 0 18px rgba(56, 189, 248, 0.6);
+			}
+			#hostControlPanel button.btn-winnings {
+				background: linear-gradient(180deg, #059669 0%, #065f46 100%);
+				border-color: #34d399;
+				color: #ecfdf5;
+				font-weight: 700;
+				box-shadow: 0 2px 10px rgba(5, 150, 105, 0.3);
+			}
+			#hostControlPanel button.btn-winnings:hover {
+				background: linear-gradient(180deg, #10b981 0%, #047857 100%);
+				border-color: #6ee7b7;
+				box-shadow: 0 4px 16px rgba(16, 185, 129, 0.5);
+			}
+			.btn-key {
+				display: inline-block;
+				background: rgba(0, 0, 0, 0.45);
+				border: 1px solid rgba(255, 255, 255, 0.15);
+				color: #94a3b8;
+				font-size: 9.5px;
+				font-weight: 700;
+				padding: 1px 4px;
+				border-radius: 3px;
+				line-height: 1;
+			}
+			.btn-opt {
+				font-weight: 800;
+				color: #38bdf8;
+				font-size: 13px;
+			}
+			.answer-keys button {
+				padding: 4px 10px;
 			}
 			#hostControlPanel button.btn-used {
 				opacity: 0.45;
@@ -171,102 +275,34 @@
 			}
 			.hint-help-window {
 				position: relative;
-				width: 900px;
+				width: 860px;
 				max-width: 94vw;
-				height: 670px;
+				height: 680px;
 				max-height: 90vh;
-				background: radial-gradient(120% 100% at 50% 0%, #0d2257 0%, #061230 45%, #020718 100%);
-				border: 2px solid rgba(56, 189, 248, 0.55);
-				border-radius: 14px;
-				box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9), 0 0 35px rgba(56, 189, 248, 0.35), 0 30px 80px rgba(0, 0, 0, 0.95);
+				background: linear-gradient(180deg, #071536 0%, #030a1c 100%);
+				border: 1.5px solid rgba(56, 189, 248, 0.45);
+				border-radius: 16px;
+				box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.8), 0 0 35px rgba(56, 189, 248, 0.25), 0 30px 80px rgba(0, 0, 0, 0.95);
 				display: flex;
 				flex-direction: column;
 				overflow: hidden;
 				color: #f8fafc;
-				animation: hintModalSlideIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+				animation: hintModalSlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 			}
 			@keyframes hintModalSlideIn {
-				from { transform: scale(0.93) translateY(24px); opacity: 0; }
+				from { transform: scale(0.95) translateY(20px); opacity: 0; }
 				to { transform: scale(1) translateY(0); opacity: 1; }
-			}
-
-			/* Top Telemetry Studio Bar */
-			.hint-help-top-telemetry {
-				height: 28px;
-				background: linear-gradient(90deg, #020617 0%, #0b1836 50%, #020617 100%);
-				border-bottom: 1px solid rgba(56, 189, 248, 0.25);
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				padding: 0 16px;
-				font-size: 10px;
-				letter-spacing: 1.2px;
-				font-weight: 700;
-				text-transform: uppercase;
-				color: #94a3b8;
-			}
-			.telemetry-left {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-			}
-			.telemetry-beacon {
-				width: 7px;
-				height: 7px;
-				border-radius: 50%;
-				background: #22c55e;
-				box-shadow: 0 0 8px #22c55e;
-				animation: beaconPulse 1.6s infinite ease-in-out;
-			}
-			@keyframes beaconPulse {
-				0%, 100% { opacity: 1; transform: scale(1); }
-				50% { opacity: 0.35; transform: scale(0.85); }
-			}
-			.telemetry-label {
-				color: #38bdf8;
-			}
-			.telemetry-status {
-				color: #4ade80;
-			}
-			.telemetry-right {
-				display: flex;
-				align-items: center;
-				gap: 12px;
-			}
-			.telemetry-eq {
-				display: inline-flex;
-				align-items: flex-end;
-				gap: 2px;
-				height: 10px;
-			}
-			.eq-bar {
-				width: 2.5px;
-				background: #38bdf8;
-				border-radius: 1px;
-				animation: eqBounce 1s infinite ease-in-out;
-			}
-			.bar-1 { height: 40%; animation-delay: 0.1s; }
-			.bar-2 { height: 90%; animation-delay: 0.25s; }
-			.bar-3 { height: 60%; animation-delay: 0.4s; }
-			.bar-4 { height: 100%; animation-delay: 0.15s; }
-			@keyframes eqBounce {
-				0%, 100% { transform: scaleY(0.4); }
-				50% { transform: scaleY(1); }
-			}
-			.telemetry-secure {
-				color: #64748b;
-				font-size: 9.5px;
 			}
 
 			/* Main Header */
 			.hint-help-header {
 				padding: 12px 20px;
-				background: linear-gradient(180deg, rgba(15, 29, 64, 0.85) 0%, rgba(7, 16, 40, 0.9) 100%);
-				border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+				background: linear-gradient(180deg, rgba(14, 28, 64, 0.95) 0%, rgba(6, 15, 38, 0.98) 100%);
+				border-bottom: 1.5px solid rgba(56, 189, 248, 0.3);
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
-				position: relative;
+				flex-shrink: 0;
 			}
 			.hint-help-brand {
 				display: flex;
@@ -274,20 +310,19 @@
 				gap: 14px;
 			}
 			.hint-help-badge-wrapper {
-				position: relative;
 				width: 48px;
 				height: 48px;
 				display: flex;
 				align-items: center;
 				justify-content: center;
 				background: radial-gradient(circle, #0e3077 0%, #061536 75%);
-				border: 1.5px solid rgba(56, 189, 248, 0.7);
-				border-radius: 10px;
-				box-shadow: 0 0 16px rgba(56, 189, 248, 0.4), inset 0 0 12px rgba(56, 189, 248, 0.2);
+				border: 1.5px solid #38bdf8;
+				border-radius: 50%;
+				box-shadow: 0 0 16px rgba(56, 189, 248, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.3);
 			}
 			.hint-help-badge-icon {
-				width: 36px;
-				height: 36px;
+				width: 40px;
+				height: 40px;
 				object-fit: contain;
 			}
 			.hint-help-title-col {
@@ -844,6 +879,7 @@
 			<!-- Question Strap Div -->
 			<div class="questionStrapDiv">
 				<img src="Images/Large_Strap_Gradient.png" />
+				<div class="questionLozengeGlint"><div class="questionLozengeGlintBeam"></div></div>
 				<table class="questionTable">
 					<tr>
 						<td class="questionTd">
@@ -860,6 +896,7 @@
 						<img src="Images/Normal_Answer_Left_Fill.png" />
 						<img src="Images/Final_Answer_Left_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Left_Fill.png" class="correctImg" />
+						<div class="optionLozengeGlint leftOptionGlint"><div class="optionLozengeGlintBeam leftOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">A:</p>
 						<p class="answerP">Answer for A Goes Here...</p>
@@ -872,6 +909,7 @@
 						<img src="Images/Normal_Answer_Right_Fill.png" />
 						<img src="Images/Final_Answer_Right_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Right_Fill.png" class="correctImg" />
+						<div class="optionLozengeGlint rightOptionGlint"><div class="optionLozengeGlintBeam rightOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">B:</p>
 						<p class="answerP">Answer for B Goes Here...</p>
@@ -891,6 +929,7 @@
 						<img src="Images/Normal_Answer_Left_Fill.png" />
 						<img src="Images/Final_Answer_Left_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Left_Fill.png" class="correctImg" />
+						<div class="optionLozengeGlint leftOptionGlint"><div class="optionLozengeGlintBeam leftOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">C:</p>
 						<p class="answerP">Answer for C Goes Here...</p>
@@ -903,6 +942,7 @@
 						<img src="Images/Normal_Answer_Right_Fill.png" />
 						<img src="Images/Final_Answer_Right_Fill.png" class="finalImg" />
 						<img src="Images/Correct_Answer_Right_Fill.png" class="correctImg" />
+						<div class="optionLozengeGlint rightOptionGlint"><div class="optionLozengeGlintBeam rightOptionBeam"></div></div>
 						<img src="Images/orange_diagonal.png" class="diagonalImg"/>
 						<p class="letterP">D:</p>
 						<p class="answerP">Answer for D Goes Here...</p>
@@ -1065,6 +1105,7 @@
 			
 			<!-- Money Tree Div -->
 			<div class="moneyTreeDiv">
+				<button type="button" onclick="slideOutMoneyTree();" title="Close Money Tree" style="position:absolute;top:28px;right:40px;background:rgba(10,14,35,0.85);border:1.5px solid #FEAD13;color:#FEAD13;width:36px;height:36px;border-radius:50%;font-size:18px;font-weight:bold;cursor:pointer;z-index:99;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(0,0,0,0.8);" onmouseover="this.style.background='#FEAD13';this.style.color='#000';" onmouseout="this.style.background='rgba(10,14,35,0.85)';this.style.color='#FEAD13';">✕</button>
 				<div class="lifelineTreeHolderDiv pafLifeLine" style="top:107px;left:102px;transform:perspective(0px);cursor:pointer;" title="Phone A Friend" onclick="if(window.GameVariables.QuestionInProgress){$(document).trigger($.Event('keydown', {keyCode: 80}));}else{pafPulseLifeLine();startGeneralSound('lifeline_1_on.mp3');}">
 					<div class="lifelineTreeDiv">
 						<img src="Images/paf.png" class="lifelineTreeImg"/>
@@ -1317,55 +1358,37 @@
 		<div id="hintHelpModal" class="hidden">
 			<div class="hint-help-backdrop" onclick="closeHintHelpLifeline()"></div>
 			<div class="hint-help-window">
-				<!-- Top Telemetry Studio Bar -->
-				<div class="hint-help-top-telemetry">
-					<div class="telemetry-left">
-						<span class="telemetry-beacon"></span>
-						<span class="telemetry-label">CH-04 // TACTICAL COMM LINK</span>
-						<span class="telemetry-status">● LIVE NEURAL FEED</span>
-					</div>
-					<div class="telemetry-right">
-						<span class="telemetry-eq">
-							<span class="eq-bar bar-1"></span>
-							<span class="eq-bar bar-2"></span>
-							<span class="eq-bar bar-3"></span>
-							<span class="eq-bar bar-4"></span>
-						</span>
-						<span class="telemetry-secure">SECURE STUDIO HUD</span>
-					</div>
-				</div>
-
-				<!-- Header -->
+				<!-- 1. Unified Header -->
 				<div class="hint-help-header">
 					<div class="hint-help-brand">
 						<div class="hint-help-badge-wrapper">
 							<img src="Images/hint_help.svg" class="hint-help-badge-icon" alt="Hint Help Lifeline" />
 						</div>
 						<div class="hint-help-title-col">
-							<div class="hint-help-title">HINT HELP <span class="title-accent">// TACTICAL ADVISOR</span></div>
-							<div class="hint-help-subtitle">✦ GEMINI COGNITIVE INTELLIGENCE • TV BROADCAST HUD</div>
+							<div class="hint-help-title">HINT HELP LIFELINE</div>
+							<div class="hint-help-subtitle">✦ OFFICIAL AI TACTICAL ADVICE • GEMINI INTELLIGENCE</div>
 						</div>
 					</div>
 					<div class="hint-help-header-actions">
 						<div id="hintHelpModalLevelBadge" class="hint-help-level-badge">
 							<span class="badge-qnum">QUESTION #1</span>
-							<span class="badge-divider">|</span>
+							<span class="badge-divider">•</span>
 							<span class="badge-prize">Rs. 1,000</span>
 						</div>
-						<button class="hint-help-close-btn" onclick="closeHintHelpLifeline()" title="Close Lifeline HUD (Esc)">
+						<button class="hint-help-close-btn" onclick="closeHintHelpLifeline()" title="Close Hint Help (Esc)">
 							<span class="close-icon">✕</span>
 							<span class="close-hint">ESC</span>
 						</button>
 					</div>
 				</div>
 
-				<!-- Question Reference Strap inside modal -->
+				<!-- 2. Current Question & Options Card -->
 				<div class="hint-help-qstrap">
 					<div class="qstrap-header">
 						<span class="qstrap-tag">CURRENT QUESTION IN PLAY</span>
-						<span class="qstrap-hint">Tap any option to ask tactical advice specifically about it</span>
+						<span class="qstrap-hint">Tap any option to ask specific advice</span>
 					</div>
-					<div id="hintHelpModalQuestionText" class="hint-help-qtext">Current Question Text Here...</div>
+					<div id="hintHelpModalQuestionText" class="hint-help-qtext">Loading question...</div>
 					<div class="hint-help-options-grid">
 						<div id="hintHelpOptA" class="hint-opt-strap" onclick="queryOption('A')">
 							<span class="opt-diamond">A:</span>
@@ -1390,14 +1413,14 @@
 					</div>
 				</div>
 
-				<!-- Scrollable Multi-turn Message Thread -->
+				<!-- 3. AI Dialogue & Advice Feed -->
 				<div id="hintHelpMessagesContainer" class="hint-help-messages">
-					<!-- Chat messages render dynamically -->
+					<!-- Advice cards rendered dynamically -->
 				</div>
 
-				<!-- Tactical Quick Action Command Deck -->
+				<!-- 4. Quick Action Protocol Chips -->
 				<div class="hint-help-chips-dock">
-					<div class="chips-label">TACTICAL PROTOCOLS:</div>
+					<div class="chips-label">QUICK PROMPT:</div>
 					<div class="hint-help-chips">
 						<button type="button" class="hint-chip" onclick="sendHintHelpMessage('Eliminate 2 wrong options with logical rationale.')">
 							<span class="chip-icon">✂</span>
@@ -1418,21 +1441,21 @@
 					</div>
 				</div>
 
-				<!-- Input Console Bay -->
+				<!-- 5. Transmit Input Bar -->
 				<form id="hintHelpForm" onsubmit="event.preventDefault(); sendHintHelpMessage();" class="hint-help-input-bar">
 					<div class="input-glow-wrapper">
 						<div class="input-icon">✦</div>
 						<input type="text" id="hintHelpInput" placeholder="Ask Hint Help for clues, eliminations, or strategic advice..." autocomplete="off" />
 					</div>
 					<button type="submit" id="hintHelpSendBtn" class="hint-help-send-btn">
-						<span>TRANSMIT</span>
+						<span>ASK ADVICE</span>
 						<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 2L11 13M22 2L15 22L11 13L2 9L22 2Z"/></svg>
 					</button>
 				</form>
 
-				<!-- Sub-bar footer -->
+				<!-- 6. Footer -->
 				<div class="hint-help-footer-bar">
-					<span>[ESC] CLOSE HUD</span>
+					<span>[ESC] CLOSE</span>
 					<span>•</span>
 					<span>[ENTER] TRANSMIT</span>
 					<span>•</span>
@@ -1443,25 +1466,116 @@
 			</div>
 		</div>
 
-		<!-- Host Control Panel for easy play and iframe accessibility -->
+		<!-- Host Control Panel for easy play and broadcast control -->
 		<div id="hostControlPanel">
-			<div class="panel-title">🎮 Host Controls</div>
-			<button id="btnNewGame" class="btn-gold" title="Start a fresh game with new AI questions">[🔄] New Game</button>
-			<button id="btnPlayTheme" class="btn-highlight" title="Play / Loop Main Theme Music">[🎵] Theme Music</button>
-			<button id="btnComm" class="btn-highlight" title="Commercial break toggle (Key: C)">[C] Play / Resume</button>
-			<button id="btnNext" class="btn-highlight" title="Advance question sequence (Key: Right Arrow)">[→] Next Action</button>
-			<button id="btnTree" title="Show / hide money tree (Key: Left Arrow)">[←] Money Tree</button>
-			<button id="btnAnsA" title="Lock in Answer A (Key: 1)">[1] A</button>
-			<button id="btnAnsB" title="Lock in Answer B (Key: 2)">[2] B</button>
-			<button id="btnAnsC" title="Lock in Answer C (Key: 3)">[3] C</button>
-			<button id="btnAnsD" title="Lock in Answer D (Key: 4)">[4] D</button>
-			<button id="btn5050" class="btn-gold" title="50:50 Lifeline (Key: F)">[F] 50:50</button>
-			<button id="btnPAF" class="btn-gold" title="Phone a Friend (Key: P)">[P] Phone-A-Friend</button>
-			<button id="btnATA" class="btn-gold" title="Ask the Audience (Key: A)">[A] Ask Audience</button>
-			<button id="btnHintHelp" class="btn-cyan" title="Hint Help Lifeline - Gemini AI (Key: H)">[H] Hint Help</button>
-			<button id="btnTimer" title="Pause / resume timer (Key: 0)">[0] Timer</button>
-			<button id="btnTPM" title="Total prize money (Key: Down Arrow)">[↓] Total Prize</button>
-			<button class="toggle-btn" id="btnTogglePanel" title="Minimize / Expand controls">▼</button>
+			<div class="hcp-header">
+				<div class="panel-title">
+					<span class="pulse-dot"></span>
+					<span>BROADCAST CONTROL DECK</span>
+				</div>
+				<button class="toggle-btn" id="btnTogglePanel" title="Minimize / Expand controls">▼</button>
+			</div>
+			
+			<div class="hcp-body">
+				<!-- Group: Game Flow -->
+				<div class="hcp-group">
+					<span class="group-label">GAME</span>
+					<div class="group-buttons">
+						<button id="btnNewGame" class="btn-gold" title="Start a fresh game with brand new questions">
+							<span class="btn-icon">🔄</span>
+							<span class="btn-text">New Game</span>
+						</button>
+						<button id="btnFastestFinger" class="btn-gold" title="Activate or Step Fastest Finger First (Key: X)">
+							<span class="btn-icon">⚡</span>
+							<span class="btn-text">Fastest Finger</span>
+						</button>
+						<button id="btnPlayTheme" class="btn-primary" title="Play or loop Main Theme Music">
+							<span class="btn-icon">🎵</span>
+							<span class="btn-text">Theme</span>
+						</button>
+						<button id="btnComm" title="Toggle commercial break (Key: C)">
+							<span class="btn-key">C</span>
+							<span class="btn-text">Resume</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Group: Progression -->
+				<div class="hcp-group">
+					<span class="group-label">STEP</span>
+					<div class="group-buttons">
+						<button id="btnNext" class="btn-primary" title="Advance question sequence (Key: Right Arrow)">
+							<span class="btn-key">→</span>
+							<span class="btn-text">Next Action</span>
+						</button>
+						<button id="btnTree" title="Show or hide money tree (Key: Left Arrow)">
+							<span class="btn-key">←</span>
+							<span class="btn-text">Tree</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Group: Answer Choices -->
+				<div class="hcp-group">
+					<span class="group-label">LOCK ANSWER</span>
+					<div class="group-buttons answer-keys">
+						<button id="btnAnsA" title="Lock in Option A (Key: 1)">
+							<span class="btn-key">1</span>
+							<span class="btn-opt">A</span>
+						</button>
+						<button id="btnAnsB" title="Lock in Option B (Key: 2)">
+							<span class="btn-key">2</span>
+							<span class="btn-opt">B</span>
+						</button>
+						<button id="btnAnsC" title="Lock in Option C (Key: 3)">
+							<span class="btn-key">3</span>
+							<span class="btn-opt">C</span>
+						</button>
+						<button id="btnAnsD" title="Lock in Option D (Key: 4)">
+							<span class="btn-key">4</span>
+							<span class="btn-opt">D</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Group: Lifelines -->
+				<div class="hcp-group">
+					<span class="group-label">LIFELINES</span>
+					<div class="group-buttons">
+						<button id="btn5050" class="btn-gold" title="50:50 Lifeline (Key: F)">
+							<span class="btn-key">F</span>
+							<span class="btn-text">50:50</span>
+						</button>
+						<button id="btnPAF" class="btn-gold" title="Phone-A-Friend (Key: P)">
+							<span class="btn-key">P</span>
+							<span class="btn-text">PAF</span>
+						</button>
+						<button id="btnATA" class="btn-gold" title="Ask The Audience (Key: A)">
+							<span class="btn-key">A</span>
+							<span class="btn-text">ATA</span>
+						</button>
+						<button id="btnHintHelp" class="btn-cyan" title="Hint Help Lifeline (Gemini AI) (Key: H)">
+							<span class="btn-icon">💡</span>
+							<span class="btn-text">Hint Help</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Group: Displays -->
+				<div class="hcp-group">
+					<span class="group-label">DISPLAYS</span>
+					<div class="group-buttons">
+						<button id="btnTimer" title="Pause or resume timer (Key: 0)">
+							<span class="btn-key">0</span>
+							<span class="btn-text">Timer</span>
+						</button>
+						<button id="btnTPM" class="btn-winnings" title="Total prize money strap (Key: Down Arrow)">
+							<span class="btn-key">↓</span>
+							<span class="btn-text">Total Prize</span>
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<script type="text/javascript">
@@ -1493,12 +1607,27 @@
 					resetAndStartNewGame();
 				}
 			});
+			document.getElementById('btnFastestFinger').addEventListener('click', function() {
+				if(typeof stepFastestFinger === 'function'){
+					stepFastestFinger();
+				} else if(typeof activateFastestFinger === 'function'){
+					activateFastestFinger();
+				} else {
+					pressKey(88);
+				}
+			});
 			document.getElementById('btnPlayTheme').addEventListener('click', function() {
 				startGeneralSound("main_theme.mp3", true);
 			});
 			document.getElementById('btnComm').addEventListener('click', function() { pressKey(67); });
 			document.getElementById('btnNext').addEventListener('click', function() { pressKey(39); });
-			document.getElementById('btnTree').addEventListener('click', function() { pressKey(37); });
+			document.getElementById('btnTree').addEventListener('click', function() {
+				if(typeof toggleMoneyTreeDisplay === 'function') {
+					toggleMoneyTreeDisplay();
+				} else {
+					pressKey(37);
+				}
+			});
 			document.getElementById('btnAnsA').addEventListener('click', function() { pressKey(49); });
 			document.getElementById('btnAnsB').addEventListener('click', function() { pressKey(50); });
 			document.getElementById('btnAnsC').addEventListener('click', function() { pressKey(51); });

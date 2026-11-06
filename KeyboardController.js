@@ -26,16 +26,25 @@ $(document).ready(function(){
 						}
 						// reveal contestants one at a time
 						revealFastestFingerContestants();
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Contestant " + (window.GameVariables.FastestFingerSequenceCounter + 1) + "/10 revealed! [←] Next");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 10)
 					{
 						hideContestantNameAndLocation();
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ All 10 Contestants introduced. [←] Read Question");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 11)
 					{
 						startGeneralSound("game_resume_stop.mp3");
 						setTimeout(stopLongPassiveSound, 10);
 						setTimeout(startShortPassiveSound("fastest_finger_read_question.mp3"), 250);
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Lights down & reading question... [←] Reveal Question");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 12)
 					{
@@ -44,11 +53,17 @@ $(document).ready(function(){
 						$('.questionStrapDiv').transition({perspective:4096, 'bottom':'-192px', 'rotateX':'0deg'}, 0);
 						revealFastestFingerQuestion();
 						$('.questionStrapDiv').transition({perspective:4096, 'bottom':'62px'}, 700, 'cubic-bezier(0.5, 2, 0.5, 1)');
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Question displayed. [←] Reveal 3 Stabs");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 13)
 					{
 						startShortActiveSound("fastest_finger_3_stabs.mp3");
 						setTimeout(stopShortPassiveSound, 200);
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ 3 Stabs! Options ready. [←] Start Think Countdown");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 14)
 					{
@@ -63,18 +78,30 @@ $(document).ready(function(){
 						}, 50);
 						revealAllAnswersAtOnce();
 						startShortPassiveSound("fastest_finger_think.mp3");
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Think countdown running! [←] Lock out question");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 15)
 					{
 						hideFastestFingerQuestionAndAnswers();
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Time up! [←] Read correct order");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 16)
 					{
 						startShortPassiveSound("fastest_finger_read_answer_order.mp3");
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Reading answer order... [←] Show answer tree");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 17)
 					{
 						showFastestFingerAnswerTree();
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Correct order tree displayed. [←] Reveal 1st Answer");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter <= 21)
 					{
@@ -96,35 +123,56 @@ $(document).ready(function(){
 						}
 						
 						startGeneralSound(soundToPlay);
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Correct order " + (window.GameVariables.FastestFingerSequenceCounter - 17) + "/4 revealed! [←] Next");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 22)
 					{
 						hideFastestFingerAnswerTree();
 						showFastestFingerContestants();
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Contestants board shown. [←] Reveal Times");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 23)
 					{
 						revealFastestFingerWinnersAndTimes();
 						startGeneralSound("fastest_finger_reveal_times.mp3");
 						setTimeout(stopShortPassiveSound, 200);
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Response times revealed! [←] Highlight Winner");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 24)
 					{
 						flashFastestTimeStep1();
 						startGeneralSound("fastest_finger_winner.mp3");
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("🏆 Winner is flashing in gold! [←] Show Winner Spotlight");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 25)
 					{
 						showTheFastestFingerWinner();
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("🏆 Winner spotlight strap! [←] Clear strap");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 26)
 					{
 						hideTheFastestFingerWinner();
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("⚡ Welcome to the Hot Seat! [←] Invite to Hot Seat");
+						}
 					}
 					else if(window.GameVariables.FastestFingerSequenceCounter == 27)
 					{
 						startShortActiveSound("hello_long.mp3");
 						window.GameVariables.IsPlayingFasestFinger = false;
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("🎉 Contestant in Hot Seat! Press [→ Next Action] to play Question 1 (Rs. 1,000)");
+						}
 					}
 					
 					window.GameVariables.FastestFingerSequenceCounter++;
@@ -176,6 +224,10 @@ $(document).ready(function(){
 		}
 		else if(e.keyCode == 39) // key 'right arrow' for question navigation
 		{
+			if(window.GameVariables.QuestionSequenceCounter == 99){
+				showToastNotification("Game Over! Click [🔄 New Game] to start a brand new game.");
+				return;
+			}
 			if(window.GameVariables.IsPlayingFasestFinger == false && window.GameVariables.IsMoneyTreeShowing == false && window.GameVariables.IsExplainingRules == false && window.GameVariables.IsInCommercial == false && window.GameVariables.IsNameStrapShowing == false && window.GameVariables.IsTotalPrizeMoneyShowing == false){
 				if(window.GameVariables.QuestionSequenceCounter == -1){
 					return;
@@ -285,11 +337,28 @@ $(document).ready(function(){
 					}
 					else if(window.GameVariables.CurrentTargetAnswer != window.GameVariables.CurrentCorrectAnswer){
 						revealNormalToCorrectAnswerStep1(window.GameVariables.CurrentCorrectAnswer.toUpperCase());
-						window.GameVariables.QuestionSequenceCounter = 8;
 						playWrongAnswerSound();
 						$('.timerStrapDiv').transition({perspective:0, 'bottom':'269px'}, 125, 'linear', function(){
 							$('.timerStrapDiv').transition({perspective:0, opacity: 0, 'bottom':'269px'}, 0);
 						});
+
+						// Calculate guaranteed milestone winnings (Rs. 0, Rs. 10,000, or Rs. 3,20,000)
+						var finalWonText = reduceAmountWon();
+						window.GameVariables.QuestionInProgress = false;
+						window.GameVariables.IsWalkingAway = true;
+						window.GameVariables.QuestionSequenceCounter = 99;
+
+						// After dramatic pause (1800ms), slide question straps away and show Total Winnings strap
+						setTimeout(function(){
+							$('.answerGroupBDiv').transition({perspective:4096, 'bottom':'-412px'}, 400, 'linear');
+							$('.answerGroupADiv').transition({perspective:4096, 'bottom':'-412px'}, 400, 'linear');
+							$('.questionStrapDiv').transition({perspective:4096, 'bottom':'-192px'}, 400, 'linear', function(){
+								hideQuestionAndAnswerStraps();
+								resetAnswerStraps();
+							});
+							showTotalPrizeMoneyStrap();
+							showToastNotification("Game Over! Total Winnings: " + finalWonText + " • Press [🔄 New Game] to restart");
+						}, 1800);
 					}
 					
 					hideLifeLineCentered();
@@ -345,42 +414,37 @@ $(document).ready(function(){
 					/* END OF CORRECT ANSWER GIVEN CONTROL */
 				}
 				else if(window.GameVariables.QuestionSequenceCounter == 10){
-					/* START OF WRONG ANSWER GIVEN CONTROL */
-					reduceAmountWon();
-					$('.answerGroupBDiv').transition({perspective:4096, 'bottom':'-412px'}, 375, 'linear');
-					$('.answerGroupADiv').transition({perspective:4096, 'bottom':'-412px'}, 375, 'linear');
-					$('.questionStrapDiv').transition({perspective:4096, 'bottom':'-192px'}, 375, 'linear');
-					$('.timerStrapDiv').transition({perspective:0, 'bottom':'-111px'}, 375, 'linear', function(){
-						$('.timerStrapDiv').transition({perspective:0, opacity: 0, 'bottom':'241px'}, 0);
-						hideQuestionAndAnswerStraps();
-					});
-					window.GameVariables.QuestionInProgress = false;
-					window.GameVariables.IsWalkingAway = true;
-					window.GameVariables.QuestionSequenceCounter = 0;
-				}
-				else if(window.GameVariables.QuestionSequenceCounter == 10){
 					/* START OF TIME UP GIVEN CONTROL */
 					revealNormalToCorrectAnswerStep1(window.GameVariables.CurrentCorrectAnswer.toUpperCase());
 					playWrongAnswerSound();
-				}
-				else if(window.GameVariables.QuestionSequenceCounter == 11){
-					if(window.GameVariables.ReduceAmountAfterTimeUp == true){
-						reduceAmountWon();
-					}
-					$('.answerGroupBDiv').transition({perspective:4096, 'bottom':'-412px'}, 375, 'linear');
-					$('.answerGroupADiv').transition({perspective:4096, 'bottom':'-412px'}, 375, 'linear');
-					$('.questionStrapDiv').transition({perspective:4096, 'bottom':'-290px'}, 375, 'linear');
-					$('.timerStrapDiv').transition({perspective:0, 'bottom':'-111px'}, 375, 'linear', function(){
-						$('.timerStrapDiv').transition({perspective:0, opacity: 0, 'bottom':'241px'}, 0);
-						hideQuestionAndAnswerStraps();
-					});
+					var finalWonTimeUp = reduceAmountWon();
 					window.GameVariables.QuestionInProgress = false;
 					window.GameVariables.IsWalkingAway = true;
-					window.GameVariables.QuestionSequenceCounter = 0;
-					/* END OF TIME UP GIVEN CONTROL */
+					window.GameVariables.QuestionSequenceCounter = 99;
+					setTimeout(function(){
+						$('.answerGroupBDiv').transition({perspective:4096, 'bottom':'-412px'}, 400, 'linear');
+						$('.answerGroupADiv').transition({perspective:4096, 'bottom':'-412px'}, 400, 'linear');
+						$('.questionStrapDiv').transition({perspective:4096, 'bottom':'-290px'}, 400, 'linear', function(){
+							hideQuestionAndAnswerStraps();
+							resetAnswerStraps();
+						});
+						showTotalPrizeMoneyStrap();
+						showToastNotification("Time's Up! Game Over. Total Winnings: " + finalWonTimeUp);
+					}, 1800);
+				}
+				else if(window.GameVariables.QuestionSequenceCounter == 99){
+					/* GAME OVER STATE: Toggle Total Winnings Strap */
+					if(window.GameVariables.IsTotalPrizeMoneyShowing == true){
+						hideTotalPrizeMoneyStrap();
+					} else {
+						showTotalPrizeMoneyStrap();
+					}
+					return;
 				}
 				
-				window.GameVariables.QuestionSequenceCounter++;
+				if(window.GameVariables.QuestionSequenceCounter !== 99){
+					window.GameVariables.QuestionSequenceCounter++;
+				}
 			}
 		}
 		else if(e.keyCode == 40) // key 'down arrow' for total prize money
@@ -833,6 +897,14 @@ $(document).ready(function(){
 				}
 				
 				window.GameVariables.walkAwaySequenceCounter++;
+			}
+		}
+		else if(e.keyCode == 88) // key 'x' to activate / step Fastest Finger First
+		{
+			if(typeof stepFastestFinger === 'function'){
+				stepFastestFinger();
+			} else if(typeof activateFastestFinger === 'function'){
+				activateFastestFinger();
 			}
 		}
 	});
