@@ -34,6 +34,7 @@
 		<script type="text/javascript" src="Scripts/TimerControl.js"></script>
 		<script type="text/javascript" src="Scripts/KeyboardController.js"></script>
 		<script type="text/javascript" src="Scripts/Init.js"></script>
+		<script type="text/javascript" src="MillionaireFeatures.js"></script>
 
 		<style>
 			html, body {
@@ -270,6 +271,154 @@
 				text-decoration: line-through;
 				cursor: not-allowed;
 			}
+			.user-avatar-mini {
+				width: 18px;
+				height: 18px;
+				border-radius: 50%;
+				vertical-align: middle;
+				border: 1px solid #38bdf8;
+			}
+			.pulse-red {
+				width: 8px;
+				height: 8px;
+				border-radius: 50%;
+				background: #ef4444;
+				display: inline-block;
+				animation: pulseRedAnim 1s infinite alternate;
+			}
+			@keyframes pulseRedAnim {
+				0% { opacity: 0.35; transform: scale(0.85); }
+				100% { opacity: 1; transform: scale(1.25); }
+			}
+			#btnVoiceAnswer.recording {
+				background: linear-gradient(180deg, #dc2626 0%, #991b1b 100%) !important;
+				border-color: #f87171 !important;
+				box-shadow: 0 0 14px rgba(239, 68, 68, 0.7) !important;
+				color: #fff !important;
+			}
+			.custom-modal-overlay {
+				display: none;
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: rgba(4, 8, 20, 0.85);
+				backdrop-filter: blur(8px);
+				z-index: 9999999;
+				align-items: center;
+				justify-content: center;
+			}
+			.custom-modal-card {
+				background: linear-gradient(180deg, #0b1329 0%, #030712 100%);
+				border: 1px solid rgba(56, 189, 248, 0.45);
+				box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.25);
+				border-radius: 14px;
+				padding: 22px 26px;
+				max-width: 760px;
+				width: 92%;
+				max-height: 88vh;
+				overflow-y: auto;
+				color: #f8fafc;
+				font-family: system-ui, -apple-system, sans-serif;
+			}
+			.remix-now-playing {
+				background: linear-gradient(90deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.7) 100%);
+				border: 1px solid rgba(56, 189, 248, 0.35);
+				border-radius: 10px;
+				padding: 12px 16px;
+				margin-bottom: 14px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				gap: 14px;
+			}
+			.eq-visualizer {
+				display: flex;
+				align-items: flex-end;
+				gap: 3px;
+				height: 22px;
+			}
+			.eq-bar {
+				width: 4px;
+				background: #38bdf8;
+				border-radius: 2px;
+				height: 6px;
+				transition: height 0.15s ease;
+			}
+			.eq-visualizer.active .eq-bar:nth-child(1) { animation: eqBounce 0.8s infinite 0.1s ease-in-out; }
+			.eq-visualizer.active .eq-bar:nth-child(2) { animation: eqBounce 0.6s infinite 0.25s ease-in-out; }
+			.eq-visualizer.active .eq-bar:nth-child(3) { animation: eqBounce 0.9s infinite 0.05s ease-in-out; }
+			.eq-visualizer.active .eq-bar:nth-child(4) { animation: eqBounce 0.7s infinite 0.2s ease-in-out; }
+			.eq-visualizer.active .eq-bar:nth-child(5) { animation: eqBounce 0.85s infinite 0.15s ease-in-out; }
+			@keyframes eqBounce {
+				0%, 100% { height: 4px; background: #0284c7; }
+				50% { height: 20px; background: #38bdf8; }
+			}
+			.remix-card-grid {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 10px;
+				margin: 12px 0;
+			}
+			.remix-card {
+				background: rgba(15, 23, 42, 0.7);
+				border: 1px solid rgba(148, 163, 184, 0.25);
+				padding: 12px 14px;
+				border-radius: 10px;
+				color: #f1f5f9;
+				cursor: pointer;
+				text-align: left;
+				transition: all 0.2s ease;
+				position: relative;
+			}
+			.remix-card:hover {
+				background: rgba(30, 41, 59, 0.85);
+				border-color: #38bdf8;
+				transform: translateY(-2px);
+				box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2);
+			}
+			.remix-card.active {
+				background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(15, 23, 42, 0.9) 100%);
+				border-color: #f59e0b;
+				box-shadow: 0 0 16px rgba(245, 158, 11, 0.35);
+			}
+			.remix-card-title {
+				font-weight: 700;
+				font-size: 13px;
+				color: #f8fafc;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 4px;
+			}
+			.remix-card.active .remix-card-title {
+				color: #fef08a;
+			}
+			.remix-card-desc {
+				font-size: 11px;
+				color: #94a3b8;
+				line-height: 1.35;
+			}
+			.remix-tag {
+				font-size: 9.5px;
+				padding: 2px 7px;
+				border-radius: 4px;
+				background: rgba(56, 189, 248, 0.15);
+				color: #38bdf8;
+				font-weight: 700;
+			}
+			.remix-card.active .remix-tag {
+				background: rgba(245, 158, 11, 0.2);
+				color: #f59e0b;
+			}
+			.lyria-composer-panel {
+				background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.95) 100%);
+				border: 1px solid rgba(56, 189, 248, 0.4);
+				border-radius: 10px;
+				padding: 14px 16px;
+				margin-top: 12px;
+			}
 		</style>
 	</head>
 	<body>
@@ -356,6 +505,20 @@
 				<div class="timerBarGradientDiv"></div>
 			</div>
 			
+			<!-- Picture Question Broadcast Screen (Symmetrically aligned in upper arena) -->
+			<div id="questionImageFrame" style="display:none;position:absolute;top:150px;left:50%;transform:translateX(-50%);z-index:85;width:640px;background:radial-gradient(ellipse at center, rgba(15,23,42,0.96) 0%, rgba(2,6,23,0.99) 100%);border:2px solid #0284c7;box-shadow:0 0 35px rgba(2,132,199,0.5), 0 20px 50px rgba(0,0,0,0.85);border-radius:12px;padding:10px;text-align:center;">
+				<div style="font-family:'Copperplate31bc', 'Copperplate Gothic', sans-serif;font-size:13px;font-weight:700;color:#38bdf8;letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:1px solid rgba(56,189,248,0.25);padding-bottom:6px;">
+					<span style="display:inline-flex;align-items:center;gap:6px;">
+						<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#38bdf8;box-shadow:0 0 8px #38bdf8;"></span>
+						PICTURE QUESTION
+					</span>
+					<span style="font-size:11px;color:#94a3b8;cursor:pointer;background:rgba(255,255,255,0.08);padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);letter-spacing:0.5px;" onclick="$('#pictureZoomModal').fadeIn(200);$('#zoomImageElem').attr('src',$('#questionImageElement').attr('src'));">🔍 Expand View</span>
+				</div>
+				<div style="position:relative;width:100%;height:310px;border-radius:8px;overflow:hidden;background:#000;border:1px solid rgba(56,189,248,0.3);box-shadow:inset 0 0 20px rgba(0,0,0,0.9);">
+					<img id="questionImageElement" src="" style="width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.3s ease;" onclick="$('#pictureZoomModal').fadeIn(200);$('#zoomImageElem').attr('src',this.src);" title="Click to view full size" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+				</div>
+			</div>
+
 			<!-- Question Strap Div -->
 			<div class="questionStrapDiv">
 				<img src="Images/Large_Strap_Gradient.png" />
@@ -818,6 +981,20 @@
 			🔊 Click anywhere to enable sound & music
 		</div>
 
+		<!-- Top Bar: Cloud Save & Audio Controls -->
+		<div id="topAppBar" style="position:fixed;top:14px;right:20px;z-index:99999;display:flex;align-items:center;gap:10px;font-family:system-ui,-apple-system,sans-serif;">
+			<div id="userStatusBadge" style="background:rgba(15,23,42,0.85);border:1px solid rgba(148,163,184,0.35);color:#94a3b8;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;backdrop-filter:blur(6px);">
+				<span style="width:7px;height:7px;border-radius:50%;background:#10b981;display:inline-block;"></span>
+				<span>Cloud Ready</span>
+			</div>
+			<button id="btnOpenHistory" style="background:linear-gradient(180deg,#1e293b 0%,#0f172a 100%);border:1px solid #38bdf8;color:#f0f9ff;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:flex;align-items:center;gap:6px;box-shadow:0 0 10px rgba(56,189,248,0.25);">
+				<span>🏆 Cloud History</span>
+			</button>
+			<button id="userAuthBtn" style="background:linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%);border:1px solid #60a5fa;color:#ffffff;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(37,99,235,0.4);">
+				<span>🔑 Sign in with Google</span>
+			</button>
+		</div>
+
 		<!-- Host Control Panel for easy play and broadcast control -->
 		<div id="hostControlPanel">
 			<div class="hcp-header">
@@ -923,6 +1100,211 @@
 						</button>
 					</div>
 				</div>
+
+				<!-- Group: Audio & AI Features -->
+				<div class="hcp-group">
+					<span class="group-label">AUDIO & AI</span>
+					<div class="group-buttons">
+						<button id="btnOpenRemixStudio" class="btn-primary" title="Open Soundtrack Remix Studio & Jukebox (Lyria)">
+							<span class="btn-icon">🎧</span>
+							<span class="btn-text">Remix Studio</span>
+						</button>
+						<button id="btnVoiceAnswer" title="Speak to answer or command (Gemini 3.5 Transcribe)">
+							<span class="btn-icon">🎙️</span>
+							<span class="btn-text">Voice Input</span>
+						</button>
+						<button id="btnAIPictureQ" class="btn-cyan" title="Generate AI Picture Question (Gemini Nano Banana)">
+							<span class="btn-icon">🖼️</span>
+							<span class="btn-text">Picture Q</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Soundtrack Remix Studio & Jukebox Modal -->
+		<div id="remixStudioModal" class="custom-modal-overlay">
+			<div class="custom-modal-card">
+				<!-- Header -->
+				<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(148,163,184,0.2);padding-bottom:14px;margin-bottom:16px;">
+					<div style="display:flex;align-items:center;gap:10px;">
+						<div style="width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg, #0284c7, #6366f1);display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 0 15px rgba(2,132,199,0.5);">🎧</div>
+						<div>
+							<h3 style="margin:0;font-size:18px;color:#f8fafc;font-weight:700;letter-spacing:0.5px;">Soundtrack Remix Studio & Jukebox</h3>
+							<p style="margin:2px 0 0;font-size:12px;color:#94a3b8;">Transform the Millionaire game show atmosphere with electronic, orchestral, or AI Lyria music</p>
+						</div>
+					</div>
+					<button onclick="$('#remixStudioModal').fadeOut(200);" style="background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);color:#cbd5e1;font-size:16px;width:32px;height:32px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;" onmouseover="this.style.background='rgba(239,68,68,0.2)';this.style.borderColor='#ef4444';" onmouseout="this.style.background='rgba(255,255,255,0.06)';this.style.borderColor='rgba(255,255,255,0.15)';">✕</button>
+				</div>
+
+				<!-- Now Playing Deck -->
+				<div class="remix-now-playing">
+					<div style="display:flex;align-items:center;gap:14px;">
+						<div class="eq-visualizer active" id="waveformVisualizer">
+							<div class="eq-bar"></div>
+							<div class="eq-bar"></div>
+							<div class="eq-bar"></div>
+							<div class="eq-bar"></div>
+							<div class="eq-bar"></div>
+						</div>
+						<div>
+							<div style="font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:#38bdf8;font-weight:700;">CURRENT ARRANGEMENT</div>
+							<div id="nowPlayingTitle" style="font-size:15px;font-weight:700;color:#f8fafc;">Classic Orchestral (Original 1998)</div>
+							<div id="nowPlayingMeta" style="font-size:11.5px;color:#94a3b8;">96 BPM • Keith Strachan Iconic Suspense Theme</div>
+						</div>
+					</div>
+					<div style="display:flex;align-items:center;gap:12px;">
+						<!-- Play / Pause -->
+						<button id="btnToggleRemixPlay" onclick="window.toggleSoundtrackPlayback();" style="background:#0284c7;color:#fff;border:none;padding:8px 16px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:6px;box-shadow:0 0 12px rgba(2,132,199,0.4);">
+							<span>⏸️ Pause</span>
+						</button>
+						<!-- Volume Control -->
+						<div style="display:flex;align-items:center;gap:8px;background:rgba(0,0,0,0.3);padding:6px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.08);">
+							<span style="font-size:13px;color:#94a3b8;">🔊</span>
+							<input id="remixMasterVolume" type="range" min="0" max="1" step="0.05" value="0.85" style="width:75px;cursor:pointer;accent-color:#38bdf8;" oninput="window.setRemixMasterVolume(this.value);" />
+							<span id="volumeDisplayVal" style="font-size:11px;color:#cbd5e1;font-weight:600;min-width:32px;">85%</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Track Presets Grid -->
+				<div style="font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px;">Select Track Arrangement</div>
+				<div class="remix-card-grid">
+					<!-- Track 1: Classic -->
+					<div class="remix-card active" data-style="classic" onclick="window.setSoundtrackRemix('classic');">
+						<div class="remix-card-title">🎻 Classic Orchestral (1998)</div>
+						<div class="remix-card-desc">The iconic Keith Strachan suspenseful arrangement with heartbeat pulse and brass crescendos.</div>
+						<div class="remix-card-footer">
+							<span class="remix-tag">Original</span>
+							<span style="font-size:11px;color:#64748b;">96 BPM</span>
+						</div>
+					</div>
+
+					<!-- Track 2: Synthwave -->
+					<div class="remix-card" data-style="synthwave" onclick="window.setSoundtrackRemix('synthwave');">
+						<div class="remix-card-title">🌆 80s Synthwave Retrowave</div>
+						<div class="remix-card-desc">Neon analog synth arpeggios, pulsing LinnDrum beats, and driving retro electronic atmosphere.</div>
+						<div class="remix-card-footer">
+							<span class="remix-tag" style="background:rgba(236,72,153,0.15);color:#f472b6;border-color:rgba(236,72,153,0.3);">Electronic</span>
+							<span style="font-size:11px;color:#64748b;">108 BPM</span>
+						</div>
+					</div>
+
+					<!-- Track 3: Cyberpunk -->
+					<div class="remix-card" data-style="cyberpunk" onclick="window.setSoundtrackRemix('cyberpunk');">
+						<div class="remix-card-title">⚡ Cyberpunk 2077 Bass Pulse</div>
+						<div class="remix-card-desc">High-tempo aggressive dark-synth bassline, metallic percussion, and tense futuristic countdowns.</div>
+						<div class="remix-card-footer">
+							<span class="remix-tag" style="background:rgba(234,179,8,0.15);color:#facc15;border-color:rgba(234,179,8,0.3);">Industrial</span>
+							<span style="font-size:11px;color:#64748b;">116 BPM</span>
+						</div>
+					</div>
+
+					<!-- Track 4: Cinematic -->
+					<div class="remix-card" data-style="cinematic" onclick="window.setSoundtrackRemix('cinematic');">
+						<div class="remix-card-title">🎬 Cinematic Hybrid Orchestral</div>
+						<div class="remix-card-desc">Hollywood-grade sub-bass hits, Taiko thunder drums, and tension brass risers.</div>
+						<div class="remix-card-footer">
+							<span class="remix-tag" style="background:rgba(168,85,247,0.15);color:#c084fc;border-color:rgba(168,85,247,0.3);">Epic Cinema</span>
+							<span style="font-size:11px;color:#64748b;">92 BPM</span>
+						</div>
+					</div>
+
+					<!-- Track 5: Desi Fusion -->
+					<div class="remix-card" data-style="desi_fusion" onclick="window.setSoundtrackRemix('desi_fusion');">
+						<div class="remix-card-title">🪕 Desi Sitar & Tabla Fusion</div>
+						<div class="remix-card-desc">Indian classical drone featuring acoustic tabla rhythms and haunting sitar harmonic tension.</div>
+						<div class="remix-card-footer">
+							<span class="remix-tag" style="background:rgba(249,115,22,0.15);color:#fb923c;border-color:rgba(249,115,22,0.3);">World Music</span>
+							<span style="font-size:11px;color:#64748b;">102 BPM</span>
+						</div>
+					</div>
+
+					<!-- Track 6: Slowed & Reverb -->
+					<div class="remix-card" data-style="slowed_reverb" onclick="window.setSoundtrackRemix('slowed_reverb');">
+						<div class="remix-card-title">🌌 Slowed + Atmospheric Reverb</div>
+						<div class="remix-card-desc">Dreamy, ultra-tense low-frequency echo chamber with spatial suspense and deep sub tones.</div>
+						<div class="remix-card-footer">
+							<span class="remix-tag" style="background:rgba(99,102,241,0.15);color:#818cf8;border-color:rgba(99,102,241,0.3);">Spatial</span>
+							<span style="font-size:11px;color:#64748b;">82 BPM</span>
+						</div>
+					</div>
+				</div>
+
+				<!-- AI Lyria Music Composer Panel -->
+				<div class="lyria-composer-panel">
+					<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+						<div style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#38bdf8;">
+							<span>✨</span> Google Lyria AI Music Generator (30s Dynamic Loop)
+						</div>
+						<span style="font-size:11px;color:#94a3b8;background:rgba(56,189,248,0.1);padding:2px 8px;border-radius:4px;border:1px solid rgba(56,189,248,0.25);">Lyria Real-Time Audio</span>
+					</div>
+					<div style="display:flex;gap:10px;">
+						<input id="lyriaPromptInput" type="text" value="Epic dramatic modern electronic orchestral remix of Who Wants To Be A Millionaire with intense heartbeat pulse and soaring brass" placeholder="Describe the remix style, instruments, tempo, and vibe..." style="flex:1;background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.3);border-radius:6px;padding:9px 12px;color:#f8fafc;font-size:12px;outline:none;" onfocus="this.style.borderColor='#38bdf8';" onblur="this.style.borderColor='rgba(56,189,248,0.3)';" />
+						<button id="btnGenerateLyria" onclick="window.generateLyriaMusicRemix();" style="background:linear-gradient(135deg, #0284c7, #6366f1);color:#fff;border:none;padding:9px 16px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;white-space:nowrap;box-shadow:0 0 15px rgba(2,132,199,0.4);display:flex;align-items:center;gap:6px;">
+							<span>✨ Generate with Lyria</span>
+						</button>
+					</div>
+				</div>
+
+				<!-- Footer -->
+				<div style="display:flex;justify-content:flex-end;margin-top:16px;">
+					<button onclick="$('#remixStudioModal').fadeOut(200);" style="background:#0284c7;color:#fff;border:none;padding:8px 22px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;box-shadow:0 0 12px rgba(2,132,199,0.3);">Done</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Cloud Gameplay History Modal -->
+		<div id="gameHistoryModal" class="custom-modal-overlay">
+			<div class="custom-modal-card" style="max-width:700px;">
+				<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(148,163,184,0.2);padding-bottom:12px;margin-bottom:16px;">
+					<div style="display:flex;align-items:center;gap:8px;">
+						<span style="font-size:22px;">🏆</span>
+						<div>
+							<h3 style="margin:0;font-size:17px;color:#f8fafc;font-weight:700;">Cloud Gameplay Records & History</h3>
+							<p style="margin:2px 0 0;font-size:11.5px;color:#94a3b8;">Stored sessions, prize milestones, and cloud sync via Firebase Firestore</p>
+						</div>
+					</div>
+					<button onclick="$('#gameHistoryModal').fadeOut(200);" style="background:transparent;border:none;color:#94a3b8;font-size:18px;cursor:pointer;">✕</button>
+				</div>
+
+				<div style="background:rgba(30,41,59,0.5);border:1px solid rgba(148,163,184,0.2);border-radius:8px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;">
+					<div>
+						<div style="font-size:13px;font-weight:700;color:#f8fafc;">Cloud Sync: <span style="color:#10b981;">Active</span></div>
+						<div style="font-size:11px;color:#94a3b8;">Every game session and score is automatically saved to your profile.</div>
+					</div>
+					<button onclick="MillionaireFeatures.loginWithGoogle();" style="background:#2563eb;color:#fff;border:none;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:600;font-size:11.5px;">Google Account</button>
+				</div>
+
+				<div style="max-height:260px;overflow-y:auto;border:1px solid rgba(148,163,184,0.2);border-radius:8px;">
+					<table style="width:100%;border-collapse:collapse;font-size:12px;text-align:left;">
+						<thead>
+							<tr style="background:rgba(30,41,59,0.8);color:#94a3b8;border-bottom:1px solid rgba(148,163,184,0.2);">
+								<th style="padding:8px 12px;">#</th>
+								<th style="padding:8px 12px;">Prize Won</th>
+								<th style="padding:8px 12px;">Level Reached</th>
+								<th style="padding:8px 12px;">Date</th>
+							</tr>
+						</thead>
+						<tbody id="historyTableBody">
+							<tr><td colspan="4" style="text-align:center;padding:16px;color:#94a3b8;">Loading stored gameplay records...</td></tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div style="display:flex;justify-content:flex-end;margin-top:16px;">
+					<button onclick="$('#gameHistoryModal').fadeOut(200);" style="background:#0284c7;color:#fff;border:none;padding:8px 18px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;">Close</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Picture Zoom Modal -->
+		<div id="pictureZoomModal" class="custom-modal-overlay" onclick="$(this).fadeOut(200);">
+			<div style="max-width:85vw;max-height:85vh;text-align:center;" onclick="event.stopPropagation();">
+				<img id="zoomImageElem" src="" style="max-width:100%;max-height:80vh;border-radius:10px;border:2px solid #38bdf8;box-shadow:0 0 40px rgba(56,189,248,0.6);" />
+				<div style="margin-top:10px;">
+					<button onclick="$('#pictureZoomModal').fadeOut(200);" style="background:#0284c7;color:#fff;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-weight:700;">Close View</button>
+				</div>
 			</div>
 		</div>
 
@@ -985,6 +1367,35 @@
 			document.getElementById('btnATA').addEventListener('click', function() { pressKey(65); });
 			document.getElementById('btnTimer').addEventListener('click', function() { pressKey(48); });
 			document.getElementById('btnTPM').addEventListener('click', function() { pressKey(40); });
+
+			// Audio & AI Listeners
+			document.getElementById('btnOpenRemixStudio').addEventListener('click', function() {
+				$('#remixStudioModal').css('display', 'flex').hide().fadeIn(200);
+			});
+
+			document.getElementById('btnVoiceAnswer').addEventListener('click', function() {
+				if (typeof toggleVoiceRecognition === 'function') {
+					toggleVoiceRecognition();
+				}
+			});
+
+			document.getElementById('btnAIPictureQ').addEventListener('click', function() {
+				if (typeof generateAIPictureQuestion === 'function') {
+					generateAIPictureQuestion();
+				}
+			});
+
+			document.getElementById('btnOpenHistory').addEventListener('click', function() {
+				$('#gameHistoryModal').css('display', 'flex').hide().fadeIn(200);
+			});
+
+			document.getElementById('userAuthBtn').addEventListener('click', function() {
+				if (window.MillionaireFeatures && window.MillionaireFeatures.firebase && window.MillionaireFeatures.firebase.user && !window.MillionaireFeatures.firebase.user.isAnonymous) {
+					$('#gameHistoryModal').css('display', 'flex').hide().fadeIn(200);
+				} else if (typeof loginWithGoogle === 'function') {
+					loginWithGoogle();
+				}
+			});
 
 			// On user click anywhere, unlock audio and start main theme if in start screen
 			document.addEventListener('click', function() {

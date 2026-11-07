@@ -15,6 +15,10 @@ function setQuestion(isSettingSwitchQuestion){
 	$('#answerB .answerP').html(targetQuestion.AnswerB);
 	$('#answerC .answerP').html(targetQuestion.AnswerC);
 	$('#answerD .answerP').html(targetQuestion.AnswerD);
+
+	if(typeof window.displayQuestionImage === 'function'){
+		window.displayQuestionImage(targetQuestion.ImageUrl);
+	}
 }
 
 function revealQuestionAndAnswerStraps(){
@@ -31,6 +35,10 @@ function hideQuestionAndAnswerStraps(){
 	$('.answerStrapDiv').css('opacity', 0);
 	$('.questionStrapDiv').css('opacity', 0);
 	clearTimeout(window.GameVariables.ShowAnswerTimeout);
+
+	if(typeof window.hideQuestionImage === 'function'){
+		window.hideQuestionImage();
+	}
 }
 
 function revealAnswersOneByOne(){

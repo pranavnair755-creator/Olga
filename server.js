@@ -41,13 +41,22 @@ function serveFileWithMime(res, filePath) {
   return res.sendFile(filePath);
 }
 
-const ai = new GoogleGenAI();
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+  httpOptions: {
+    headers: {
+      'User-Agent': 'aistudio-build',
+    }
+  }
+});
 
-app.use(express.json());
+app.use(express.json({ limit: '25mb' }));
 
 // Rich multi-tier curated trivia bank
 const tier1Pool = [
   { category: "Indian Geography", question: "Which city is known as the 'Pink City' of India?", a: "Udaipur", b: "Jaipur", c: "Jodhpur", d: "Bikaner", correct: "b" },
+  { category: "World Heritage (Picture Question)", question: "Which iconic white marble mausoleum, built by Emperor Shah Jahan in Agra, is depicted in this image?", imageUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&auto=format&fit=crop&q=80", a: "Taj Mahal", b: "Red Fort", c: "Humayun's Tomb", d: "Qutub Minar", correct: "a" },
+  { category: "Astronomy (Picture Question)", question: "Which planet in our solar system, captured here with its prominent ring system, is shown?", imageUrl: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800&auto=format&fit=crop&q=80", a: "Jupiter", b: "Saturn", c: "Uranus", d: "Neptune", correct: "b" },
   { category: "Science", question: "What chemical element is represented by the symbol 'Au' on the periodic table?", a: "Silver", b: "Aluminum", c: "Gold", d: "Argon", correct: "c" },
   { category: "Indian Cinema", question: "Which song from the movie RRR won the Academy Award for Best Original Song in 2023?", a: "Jai Ho", b: "Naatu Naatu", c: "Chaiyya Chaiyya", d: "Kesariya", correct: "b" },
   { category: "Sports", question: "In cricket, how many runs are scored if a batsman hits the ball over the boundary rope without it touching the ground?", a: "4 runs", b: "5 runs", c: "6 runs", d: "8 runs", correct: "c" },
@@ -70,6 +79,8 @@ const tier1Pool = [
 ];
 
 const tier2Pool = [
+  { category: "Archaeology (Picture Question)", question: "Which ancient Incan citadel set high in the Andes Mountains of Peru is depicted in this image?", imageUrl: "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&auto=format&fit=crop&q=80", a: "Chichen Itza", b: "Machu Picchu", c: "Tikal", d: "Teotihuacan", correct: "b" },
+  { category: "Wildlife (Picture Question)", question: "Which majestic animal, recognized as the national animal of India, is shown in this picture?", imageUrl: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&auto=format&fit=crop&q=80", a: "Asiatic Lion", b: "Royal Bengal Tiger", c: "Indian Leopard", d: "Snow Leopard", correct: "b" },
   { category: "World Heritage", question: "The ancient rock-cut caves of Ajanta and Ellora are situated in which district of Maharashtra?", a: "Pune", b: "Chhatrapati Sambhaji Nagar (Aurangabad)", c: "Nashik", d: "Kolhapur", correct: "b" },
   { category: "Space Science", question: "What was the name of the landing site near the South Pole of the Moon chosen for Chandrayaan-3's Vikram lander?", a: "Tiranga Point", b: "Shiv Shakti Point", c: "Jawahar Point", d: "Aryabhata Point", correct: "b" },
   { category: "Literature", question: "Who was the first Asian and Indian to be awarded the Nobel Prize in Literature in 1913?", a: "C. V. Raman", b: "Rabindranath Tagore", c: "Sarojini Naidu", d: "Sri Aurobindo", correct: "b" },
@@ -93,6 +104,8 @@ const tier2Pool = [
 ];
 
 const tier3Pool = [
+  { category: "Deep Space (Picture Question)", question: "Which spiral galaxy, the nearest major galactic neighbor to our Milky Way, is captured here by astrophotography?", imageUrl: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=800&auto=format&fit=crop&q=80", a: "Triangulum Galaxy", b: "Andromeda Galaxy", c: "Whirlpool Galaxy", d: "Sombrero Galaxy", correct: "b" },
+  { category: "Architecture (Picture Question)", question: "Which historic Roman amphitheatre, known worldwide for gladiatorial contests, is depicted in this photo?", imageUrl: "https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=800&auto=format&fit=crop&q=80", a: "The Colosseum", b: "The Pantheon", c: "Roman Forum", d: "Circus Maximus", correct: "a" },
   { category: "1 CRORE Grand Finale", question: "In 1911, which historic British monarch visited India and laid the foundation stone of New Delhi during the Delhi Durbar?", a: "King George V", b: "King Edward VII", c: "Queen Victoria", d: "King George VI", correct: "a" },
   { category: "Aviation History", question: "Who was the first licensed pilot in India, obtaining commercial license No. 1 in 1929?", a: "J. R. D. Tata", b: "Subroto Mukherjee", c: "Air Marshal Aspy Engineer", d: "Rakesh Sharma", correct: "a" },
   { category: "Fine Arts", question: "Who painted the iconic Indian national portrait 'Bharat Mata' depicting her as a four-armed saffron goddess in 1905?", a: "Raja Ravi Varma", b: "Abanindranath Tagore", c: "Nandalal Bose", d: "Amrita Sher-Gil", correct: "b" },
@@ -161,6 +174,7 @@ function randomizeQuestionOptions(rawQ) {
   const newQ = {
     category: rawQ.category,
     question: rawQ.question,
+    imageUrl: rawQ.imageUrl || null,
   };
   let newCorrect = 'a';
   keys.forEach((k, idx) => {
@@ -249,6 +263,218 @@ Return JSON:
       questions: dynamicGame.questions,
       switchQuestions: dynamicGame.switchQuestions
     });
+  }
+});
+
+
+// POST /api/remix-soundtrack - Generate music remixes using lyria-3-clip-preview / lyria-3-pro-preview
+app.post('/api/remix-soundtrack', async (req, res) => {
+  try {
+    const { style = "synthwave", track = "main_theme" } = req.body;
+    const prompt = `A 30-second tense and dramatic ${style} remix of the iconic Who Wants To Be A Millionaire ${track} soundtrack, featuring driving bass pulses, atmospheric synth arpeggios, and suspenseful game show orchestral tension.`;
+
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const response = await ai.models.generateContentStream({
+          model: "lyria-3-clip-preview",
+          contents: prompt,
+        });
+
+        const audioChunks = [];
+        let mimeType = "audio/mpeg";
+
+        for await (const chunk of response) {
+          const parts = chunk.candidates?.[0]?.content?.parts;
+          if (!parts) continue;
+          for (const part of parts) {
+            if (part.inlineData?.data) {
+              if (audioChunks.length === 0 && part.inlineData.mimeType) {
+                mimeType = part.inlineData.mimeType;
+              }
+              audioChunks.push(Buffer.from(part.inlineData.data, "base64"));
+            }
+          }
+        }
+
+        if (audioChunks.length > 0) {
+          const audioBase64 = Buffer.concat(audioChunks).toString("base64");
+          return res.json({
+            success: true,
+            audioDataUrl: `data:${mimeType};base64,${audioBase64}`,
+            source: 'lyria-3-clip-preview',
+            style: style
+          });
+        }
+      } catch (lyriaErr) {
+        console.warn("Lyria generation notice:", lyriaErr.message);
+      }
+    }
+
+    return res.json({
+      success: true,
+      source: 'preset_remix',
+      style: style,
+      message: `Activated ${style} sound profile`
+    });
+  } catch (err) {
+    console.error("Remix endpoint error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/generate-image-question - Generate picture question with gemini-nano-banana-2.1 or gemini-3.1-flash-lite-image
+app.post('/api/generate-image-question', async (req, res) => {
+  try {
+    const { topic = "world monuments and astronomy" } = req.body;
+
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const textPrompt = `Generate a high-stakes Picture Question for Who Wants to Be a Millionaire about ${topic}.
+Provide a vivid image generation prompt, question text referring directly to the image ("Which... is shown in this image?"), four distinct options a, b, c, d, and the correct option letter ('a','b','c', or 'd').
+Return JSON:
+{
+  "imagePrompt": "A photorealistic detailed shot of...",
+  "question": "Which...",
+  "category": "Picture Question",
+  "a": "...", "b": "...", "c": "...", "d": "...",
+  "correct": "a"
+}`;
+        const textRes = await ai.models.generateContent({
+          model: 'gemini-3.8-flash',
+          contents: textPrompt,
+          config: { responseMimeType: 'application/json' }
+        });
+
+        const qData = JSON.parse(textRes.text || "{}");
+        let generatedImageUrl = null;
+
+        if (qData.imagePrompt) {
+          try {
+            const imgRes = await ai.models.generateContent({
+              model: 'gemini-nano-banana-2.1',
+              contents: { parts: [{ text: qData.imagePrompt }] },
+              config: { imageConfig: { aspectRatio: "16:9", imageSize: "1K" } }
+            });
+            for (const part of imgRes.candidates?.[0]?.content?.parts ?? []) {
+              if (part.inlineData?.data) {
+                generatedImageUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+                break;
+              }
+            }
+          } catch (nanoErr) {
+            try {
+              const imgRes2 = await ai.models.generateContent({
+                model: 'gemini-3.1-flash-lite-image',
+                contents: { parts: [{ text: qData.imagePrompt }] },
+                config: { imageConfig: { aspectRatio: "16:9" } }
+              });
+              for (const part of imgRes2.candidates?.[0]?.content?.parts ?? []) {
+                if (part.inlineData?.data) {
+                  generatedImageUrl = `data:${part.inlineData.mimeType || 'image/png'};base64,${part.inlineData.data}`;
+                  break;
+                }
+              }
+            } catch (liteImgErr) {
+              console.warn("Flash lite image fallback notice:", liteImgErr.message);
+            }
+          }
+        }
+
+        if (generatedImageUrl && qData.question) {
+          qData.imageUrl = generatedImageUrl;
+          return res.json({
+            success: true,
+            source: 'gemini-nano-banana',
+            question: qData
+          });
+        }
+      } catch (aiImgQErr) {
+        console.warn("AI image question notice:", aiImgQErr.message);
+      }
+    }
+
+    const curatedBackup = [
+      {
+        category: "World Heritage (Picture Question)",
+        question: "Which iconic white marble mausoleum, built by Emperor Shah Jahan in Agra, is depicted in this image?",
+        imageUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&auto=format&fit=crop&q=80",
+        a: "Taj Mahal", b: "Red Fort", c: "Humayun's Tomb", d: "Qutub Minar",
+        correct: "a"
+      },
+      {
+        category: "Astronomy (Picture Question)",
+        question: "Which planet in our solar system, captured here with its prominent ring system, is shown?",
+        imageUrl: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?w=800&auto=format&fit=crop&q=80",
+        a: "Jupiter", b: "Saturn", c: "Uranus", d: "Neptune",
+        correct: "b"
+      },
+      {
+        category: "Archaeology (Picture Question)",
+        question: "Which ancient Incan citadel set high in the Andes Mountains of Peru is depicted in this image?",
+        imageUrl: "https://images.unsplash.com/photo-1526392060635-9d6019884377?w=800&auto=format&fit=crop&q=80",
+        a: "Chichen Itza", b: "Machu Picchu", c: "Tikal", d: "Teotihuacan",
+        correct: "b"
+      },
+      {
+        category: "Wildlife (Picture Question)",
+        question: "Which majestic animal, recognized as the national animal of India, is shown in this picture?",
+        imageUrl: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800&auto=format&fit=crop&q=80",
+        a: "Asiatic Lion", b: "Royal Bengal Tiger", c: "Indian Leopard", d: "Snow Leopard",
+        correct: "b"
+      }
+    ];
+
+    const pick = curatedBackup[Math.floor(Math.random() * curatedBackup.length)];
+    return res.json({
+      success: true,
+      source: 'curated_picture_library',
+      question: pick
+    });
+  } catch (err) {
+    console.error("Image question error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// POST /api/transcribe - Audio speech-to-text using gemini-3.5-transcribe
+app.post('/api/transcribe', async (req, res) => {
+  try {
+    const { base64Audio, mimeType = "audio/webm" } = req.body;
+    if (!base64Audio) {
+      return res.status(400).json({ error: "Missing base64Audio parameter" });
+    }
+
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const audioPart = {
+          inlineData: {
+            mimeType: mimeType,
+            data: base64Audio,
+          },
+        };
+
+        const response = await ai.models.generateContent({
+          model: "gemini-3.5-transcribe",
+          contents: { parts: [audioPart, { text: "Transcribe this audio precisely. Extract any mention of choice A, B, C, or D, 'final answer', 'lock in', or lifelines like '50:50', 'phone a friend', or 'ask the audience'." }] },
+        });
+
+        return res.json({
+          success: true,
+          transcript: (response.text || "").trim(),
+          source: 'gemini-3.5-transcribe'
+        });
+      } catch (transcribeErr) {
+        console.warn("Gemini transcribe notice:", transcribeErr.message);
+      }
+    }
+
+    return res.json({
+      success: false,
+      error: "Transcription unavailable, check API key"
+    });
+  } catch (err) {
+    console.error("Transcribe error:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 

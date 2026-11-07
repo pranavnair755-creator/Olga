@@ -1,0 +1,46 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile and statistics",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 100 },
+        "email": { "type": "string", "maxLength": 100 },
+        "photoURL": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string" },
+        "gamesPlayed": { "type": "number" },
+        "highestPrize": { "type": "number" }
+      },
+      "required": ["userId", "displayName"]
+    },
+    "GameSession": {
+      "title": "GameSession",
+      "description": "Recorded gameplay sessions and progress",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "maxLength": 128 },
+        "userName": { "type": "string", "maxLength": 100 },
+        "currentQuestionIndex": { "type": "number" },
+        "currentPrize": { "type": "number" },
+        "isGameOver": { "type": "boolean" },
+        "isWalkAway": { "type": "boolean" },
+        "score": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userId", "currentQuestionIndex", "currentPrize", "isGameOver"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profiles indexed by userId"
+    },
+    "/games/{gameId}": {
+      "schema": "GameSession",
+      "description": "Recorded games indexed by gameId"
+    }
+  }
+}

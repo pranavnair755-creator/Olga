@@ -75,6 +75,7 @@ function QuestionAndAnswer(){
 	this.AnswerC = null;
 	this.AnswerD = null;
 	this.CorrectAnswer = null;
+	this.ImageUrl = null;
 }
 
 function setStartingQuestionLevel(level){
@@ -104,6 +105,7 @@ function fetchAndLoadQuestions(callback){
 					qAndA.AnswerC = q.c || "";
 					qAndA.AnswerD = q.d || "";
 					qAndA.CorrectAnswer = (q.correct || "a").toLowerCase();
+					qAndA.ImageUrl = q.imageUrl || null;
 					return qAndA;
 				});
 
@@ -117,6 +119,7 @@ function fetchAndLoadQuestions(callback){
 						qAndA.AnswerC = q.c || "";
 						qAndA.AnswerD = q.d || "";
 						qAndA.CorrectAnswer = (q.correct || "a").toLowerCase();
+						qAndA.ImageUrl = q.imageUrl || null;
 						return qAndA;
 					});
 				}

@@ -324,6 +324,9 @@ $(document).ready(function(){
 					if(window.GameVariables.CurrentCorrectAnswer == window.GameVariables.CurrentTargetAnswer){
 						showFinalToCorrectAnswerStep1(window.GameVariables.CurrentTargetAnswer.toUpperCase());
 						playCorrectAnswerSound();
+						if(typeof window.saveGameplaySession === 'function'){
+							window.saveGameplaySession(false, false);
+						}
 						$('.timerStrapDiv').transition({perspective:0, 'bottom':'269px'}, 125, 'linear', function(){
 							$('.timerStrapDiv').transition({perspective:0, opacity: 0, 'bottom':'269px'}, 0);
 						});
@@ -340,6 +343,10 @@ $(document).ready(function(){
 						window.GameVariables.QuestionInProgress = false;
 						window.GameVariables.IsWalkingAway = true;
 						window.GameVariables.QuestionSequenceCounter = 99;
+
+						if(typeof window.saveGameplaySession === 'function'){
+							window.saveGameplaySession(true, false);
+						}
 
 						// After dramatic pause (1800ms), slide question straps away and show Total Winnings strap
 						setTimeout(function(){
@@ -363,6 +370,9 @@ $(document).ready(function(){
 				}
 				else if(window.GameVariables.QuestionSequenceCounter == 8){
 					if(window.GameVariables.QuestionLevel == 15){
+						if(typeof window.saveGameplaySession === 'function'){
+							window.saveGameplaySession(true, false);
+						}
 						$('.answerGroupBDiv').transition({perspective:4096, 'bottom':'-412px'}, 375, 'linear');
 						$('.answerGroupADiv').transition({perspective:4096, 'bottom':'-412px'}, 375, 'linear');
 						$('.questionStrapDiv').transition({perspective:4096, 'bottom':'-192px'}, 375, 'linear', function(){
