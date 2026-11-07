@@ -36,10 +36,6 @@ function init(){
 	if(window.GameVariables.IsATALifeLineUsed == true){
 		ataLifeLineDisable();
 	}
-
-	if(window.GameVariables.IsHintHelpUsed == true){
-		hintHelpLifeLineDisable();
-	}
 	
 	if(window.GameVariables.IsSTQLifeLineUsed == true || window.GameVariables.IsSTQLifeLineActiveAtStart == true){
 		stqLifeLineSlideIn();
@@ -221,7 +217,6 @@ function resetAndStartNewGame(onComplete){
 	window.GameVariables.pafLifeLineSequenceCounter = 0;
 	window.GameVariables.ataLifeLineSequenceCounter = 0;
 	window.GameVariables.stqLifeLineSequenceCounter = 0;
-	window.GameVariables.hintHelpSequenceCounter = 0;
 	window.GameVariables.walkAwaySequenceCounter = 0;
 	window.GameVariables.IsWalkingAway = false;
 	window.GameVariables.QuestionInProgress = false;
@@ -244,15 +239,10 @@ function resetAndStartNewGame(onComplete){
 	window.GameVariables.IsATALifeLineUsed = false;
 	window.GameVariables.IsSTQLifeLineUsed = false;
 	window.GameVariables.IsSTQLifeLineActiveAtStart = false;
-	window.GameVariables.IsHintHelpUsed = false;
-	window.GameVariables.HintHelpMessages = [];
-	window.GameVariables.IsHintHelpOpen = false;
 
 	// Reset lifeline visuals
 	$('.lifelineUsedImg').css('opacity', 0);
 	$('.lifelineUsedStrapImg').css('opacity', 0);
-	$('#hostBtnHintHelp').removeClass('btn-used').attr('title', 'Use Hint Help Lifeline (Gemini AI)');
-	$('#hintHelpModal').removeClass('flex').addClass('hidden');
 
 	// Reset money tree & winnings
 	if(typeof slideOutMoneyTree === 'function') slideOutMoneyTree();
