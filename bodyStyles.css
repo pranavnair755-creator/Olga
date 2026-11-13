@@ -6,23 +6,12 @@
 }
 
 @font-face {
-	font-family: Interstate;
-	src: url('../Fonts/Interstate.eot');
-	src: url('../Fonts/Interstate.eot?#iefix') format('embedded-opentype'),
-	url('../Fonts/Interstate.woff') format('woff'),
-	url('../Fonts/Interstate.svg') format('svg'),
-	url('../Fonts/Interstate.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
-
-@font-face {
 	font-family: Copperplate;
 	src: url('../Fonts/Copperplate.eot');
 	src: url('../Fonts/Copperplate.eot?#iefix') format('embedded-opentype'),
 	url('../Fonts/Copperplate.woff') format('woff'),
 	url('../Fonts/Copperplate.svg#IcoMoon') format('svg'),
-	url('../Fonts/Copperplate.ttf') format('truetype');
+	url('../Fonts/Copperplate.TTF') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -32,7 +21,6 @@
 	src: url('../Fonts/CopperplateBold.eot');
 	src: url('../Fonts/CopperplateBold.eot?#iefix') format('embedded-opentype'),
 	url('../Fonts/CopperplateBold.woff') format('woff'),
-	url('../Fonts/CopperplateBold.svg#IcoMoon') format('svg'),
 	url('../Fonts/CopperplateBold.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;

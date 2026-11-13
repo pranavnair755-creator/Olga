@@ -1,12 +1,15 @@
 function setQuestion(isSettingSwitchQuestion){
 	var targetQuestion = null;
+	var idx = (window.GameVariables.QuestionLevel || 1) - 1;
 	
 	if(isSettingSwitchQuestion == false){
-		targetQuestion = window.GameVariables.QuestionsAndAnswers[window.GameVariables.QuestionLevel - 1];
+		targetQuestion = window.GameVariables.QuestionsAndAnswers[idx];
 	}
 	else{
-		targetQuestion = window.GameVariables.SwitchQuestionsAndAnswers[window.GameVariables.QuestionLevel - 1];
+		targetQuestion = window.GameVariables.SwitchQuestionsAndAnswers[idx];
 	}
+	
+	if(!targetQuestion) return;
 	
 	window.GameVariables.CurrentCorrectAnswer = targetQuestion.CorrectAnswer;
 	
@@ -167,6 +170,7 @@ function revealNormalToCorrectAnswerStep5(answer){
 }
 
 function resetAnswerStraps(){
+	$('#answerA, #answerB, #answerC, #answerD').css({'pointer-events': 'auto', 'opacity': 1});
 	$('#answerA .letterP, #answerA .answerP').css('opacity', 0);
 	$('#answerB .letterP, #answerB .answerP').css('opacity', 0);
 	$('#answerC .letterP, #answerC .answerP').css('opacity', 0);

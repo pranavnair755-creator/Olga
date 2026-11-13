@@ -1,11 +1,15 @@
 function hideMillionaireLogo(){
 	window.GameVariables.IsLogoShowing = false;
-	$('.logoContainerDiv').transition({perspective:0,opacity:0}, 1000, 'linear');
+	$('.logoContainerDiv').stop(true, true).transition({perspective:0,opacity:0}, 400, 'linear', function(){
+		if(!window.GameVariables.IsLogoShowing){
+			$(this).hide();
+		}
+	});
 }
 
 function showMillionaireLogo(){
 	window.GameVariables.IsLogoShowing = true;
-	$('.logoContainerDiv').transition({perspective:0,opacity:1}, 1000, 'linear');
+	$('.logoContainerDiv').stop(true, true).show().transition({perspective:0,opacity:1}, 600, 'linear');
 	animateLogoBeams();
 }
 
@@ -58,34 +62,45 @@ function playFinalAnswerSound(){
 }
 
 function playCorrectAnswerSound(){
-	if(window.GameVariables.QuestionLevel < 6){
-		startGeneralSound(window.GameVariables.CorrectAnswerSounds[window.GameVariables.QuestionLevel - 1]);
-		
-		if(window.GameVariables.QuestionLevel == 5){
-			setTimeout(stopLongPassiveSound, 1000);
-		}
+	// Stop any active suspense bed, active tension sound, or remix audio
+	stopLongPassiveSound();
+	stopLongActiveSound();
+	stopShortActiveSound();
+	if(window.MillionaireFeatures && window.MillionaireFeatures.currentRemixAudio){
+		try { window.MillionaireFeatures.currentRemixAudio.pause(); } catch(e){}
 	}
-	else if(window.GameVariables.QuestionLevel == 10 || window.GameVariables.QuestionLevel == 15){
-		startLongPassiveSound(window.GameVariables.CorrectAnswerSounds[window.GameVariables.QuestionLevel - 1]);
-		setTimeout(stopLongActiveSound, 1000);
+
+	var level = (window.GameVariables && window.GameVariables.QuestionLevel) ? window.GameVariables.QuestionLevel : 1;
+	var soundFile = "q1_to_q4_correct.mp3";
+	if(window.GameVariables && window.GameVariables.CorrectAnswerSounds && window.GameVariables.CorrectAnswerSounds[level - 1]){
+		soundFile = window.GameVariables.CorrectAnswerSounds[level - 1];
 	}
-	else{
-		startLongPassiveSound(window.GameVariables.CorrectAnswerSounds[window.GameVariables.QuestionLevel - 1]);
-		setTimeout(stopLongActiveSound, 200);
+
+	// Play win stinger once (never loop)
+	startGeneralSound(soundFile, false);
+	if(window.GameVariables && window.GameVariables.GeneralSound){
+		window.GameVariables.GeneralSound.loop = false;
 	}
 }
 
 function playWrongAnswerSound(){
-	if(window.GameVariables.QuestionLevel < 6){
-		startGeneralSound(window.GameVariables.WrongAnswerSounds[window.GameVariables.QuestionLevel - 1]);
-		setTimeout(stopLongPassiveSound, 200);
+	// Immediately stop all background suspense music, beds, and hot-seat cues
+	stopLongPassiveSound();
+	stopLongActiveSound();
+	stopShortActiveSound();
+	if(window.MillionaireFeatures && window.MillionaireFeatures.currentRemixAudio){
+		try { window.MillionaireFeatures.currentRemixAudio.pause(); } catch(e){}
 	}
-	else if(window.GameVariables.QuestionLevel == 6 || window.GameVariables.QuestionLevel == 11){
-		startLongPassiveSound(window.GameVariables.WrongAnswerSounds[window.GameVariables.QuestionLevel - 1]);
-		setTimeout(stopLongActiveSound, 1000);
+
+	var level = (window.GameVariables && window.GameVariables.QuestionLevel) ? window.GameVariables.QuestionLevel : 1;
+	var soundFile = "q1_to_q5_lose.mp3";
+	if(window.GameVariables && window.GameVariables.WrongAnswerSounds && window.GameVariables.WrongAnswerSounds[level - 1]){
+		soundFile = window.GameVariables.WrongAnswerSounds[level - 1];
 	}
-	else{
-		startLongPassiveSound(window.GameVariables.WrongAnswerSounds[window.GameVariables.QuestionLevel - 1]);
-		setTimeout(stopLongActiveSound, 200);
+
+	// Play wrong answer sound strictly once (never loop)
+	startGeneralSound(soundFile, false);
+	if(window.GameVariables && window.GameVariables.GeneralSound){
+		window.GameVariables.GeneralSound.loop = false;
 	}
 }

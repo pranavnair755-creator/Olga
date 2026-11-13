@@ -41,14 +41,34 @@ function serveFileWithMime(res, filePath) {
   return res.sendFile(filePath);
 }
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  httpOptions: {
-    headers: {
-      'User-Agent': 'aistudio-build',
-    }
+let ai = null;
+let isGeminiAvailable = false;
+
+const rawKey = (process.env.GEMINI_API_KEY || '').trim();
+if (rawKey && rawKey.length > 10 && !/^(placeholder|undefined|null|your_api_key)$/i.test(rawKey)) {
+  try {
+    ai = new GoogleGenAI({
+      apiKey: rawKey,
+      httpOptions: {
+        headers: {
+          'User-Agent': 'aistudio-build',
+        }
+      }
+    });
+    isGeminiAvailable = true;
+  } catch (err) {
+    ai = null;
+    isGeminiAvailable = false;
   }
-});
+}
+
+function handleGeminiError(err) {
+  if (!err) return;
+  const msg = (err.message || String(err));
+  if (/API key not valid|API_KEY_INVALID|INVALID_ARGUMENT|unauthorized|forbidden|400|403|PERMISSION_DENIED|quota/i.test(msg)) {
+    isGeminiAvailable = false;
+  }
+}
 
 app.use(express.json({ limit: '25mb' }));
 
@@ -203,8 +223,8 @@ function generateDynamicGameQuestions() {
 // POST /api/generate-questions - Generates 15 progressive questions + 15 switch questions
 app.post('/api/generate-questions', async (req, res) => {
   try {
-    // If Gemini API Key is provided, attempt live AI question generation
-    if (process.env.GEMINI_API_KEY) {
+    // If Gemini API is available and key is valid, attempt live AI question generation
+    if (isGeminiAvailable && ai) {
       try {
         const prompt = `Generate a brand new set of 15 Who Wants To Be A Millionaire questions with ascending difficulty, plus 15 alternative switch questions for the "Switch the Question" lifeline.
 The game is played in Indian Rupees (from Rs. 1,000 up to Rs. 1 CRORE).
@@ -242,7 +262,7 @@ Return JSON:
           });
         }
       } catch (apiError) {
-        console.warn("Gemini question generation error, using dynamic multi-tier sampling:", apiError.message);
+        handleGeminiError(apiError);
       }
     }
 
@@ -255,7 +275,7 @@ Return JSON:
       switchQuestions: dynamicGame.switchQuestions
     });
   } catch (err) {
-    console.error("Generate questions error:", err);
+    handleGeminiError(err);
     const dynamicGame = generateDynamicGameQuestions();
     return res.json({
       success: true,
@@ -273,7 +293,7 @@ app.post('/api/remix-soundtrack', async (req, res) => {
     const { style = "synthwave", track = "main_theme" } = req.body;
     const prompt = `A 30-second tense and dramatic ${style} remix of the iconic Who Wants To Be A Millionaire ${track} soundtrack, featuring driving bass pulses, atmospheric synth arpeggios, and suspenseful game show orchestral tension.`;
 
-    if (process.env.GEMINI_API_KEY) {
+    if (isGeminiAvailable && ai) {
       try {
         const response = await ai.models.generateContentStream({
           model: "lyria-3-clip-preview",
@@ -306,7 +326,7 @@ app.post('/api/remix-soundtrack', async (req, res) => {
           });
         }
       } catch (lyriaErr) {
-        console.warn("Lyria generation notice:", lyriaErr.message);
+        handleGeminiError(lyriaErr);
       }
     }
 
@@ -317,7 +337,6 @@ app.post('/api/remix-soundtrack', async (req, res) => {
       message: `Activated ${style} sound profile`
     });
   } catch (err) {
-    console.error("Remix endpoint error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -327,7 +346,7 @@ app.post('/api/generate-image-question', async (req, res) => {
   try {
     const { topic = "world monuments and astronomy" } = req.body;
 
-    if (process.env.GEMINI_API_KEY) {
+    if (isGeminiAvailable && ai) {
       try {
         const textPrompt = `Generate a high-stakes Picture Question for Who Wants to Be a Millionaire about ${topic}.
 Provide a vivid image generation prompt, question text referring directly to the image ("Which... is shown in this image?"), four distinct options a, b, c, d, and the correct option letter ('a','b','c', or 'd').
@@ -362,6 +381,7 @@ Return JSON:
               }
             }
           } catch (nanoErr) {
+            handleGeminiError(nanoErr);
             try {
               const imgRes2 = await ai.models.generateContent({
                 model: 'gemini-3.1-flash-lite-image',
@@ -375,7 +395,7 @@ Return JSON:
                 }
               }
             } catch (liteImgErr) {
-              console.warn("Flash lite image fallback notice:", liteImgErr.message);
+              handleGeminiError(liteImgErr);
             }
           }
         }
@@ -389,7 +409,7 @@ Return JSON:
           });
         }
       } catch (aiImgQErr) {
-        console.warn("AI image question notice:", aiImgQErr.message);
+        handleGeminiError(aiImgQErr);
       }
     }
 
@@ -431,7 +451,6 @@ Return JSON:
       question: pick
     });
   } catch (err) {
-    console.error("Image question error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -444,7 +463,7 @@ app.post('/api/transcribe', async (req, res) => {
       return res.status(400).json({ error: "Missing base64Audio parameter" });
     }
 
-    if (process.env.GEMINI_API_KEY) {
+    if (isGeminiAvailable && ai) {
       try {
         const audioPart = {
           inlineData: {
@@ -464,7 +483,7 @@ app.post('/api/transcribe', async (req, res) => {
           source: 'gemini-3.5-transcribe'
         });
       } catch (transcribeErr) {
-        console.warn("Gemini transcribe notice:", transcribeErr.message);
+        handleGeminiError(transcribeErr);
       }
     }
 
@@ -473,7 +492,6 @@ app.post('/api/transcribe', async (req, res) => {
       error: "Transcription unavailable, check API key"
     });
   } catch (err) {
-    console.error("Transcribe error:", err);
     res.status(500).json({ error: err.message });
   }
 });

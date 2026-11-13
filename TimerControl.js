@@ -43,18 +43,27 @@ function subtractMilliSecond(){
 function subtractSecond(){
 	if(seconds < 2){
 		clearInterval(timerInterval);
-		$('.timerSecondsDiv>span').text(new Intl.NumberFormat('en', { numberingSystem: window.GameVariables.TimerNumberingSystem }).format(0));
+		clearInterval(timerBarInterval);
+		clearInterval(timerBottomBarInterval);
+		$('.timerSecondsDiv>span').text(new Intl.NumberFormat('en', { numberingSystem: window.GameVariables.TimerNumberingSystem || 'latn' }).format(0));
 		$('#timerBar59Img').css('opacity', 0);
 		$('#timerBar60Img').css('opacity', 1);
 		document.querySelector('.timerBarFillDiv').style.scale = '100% 1';
 		stopLifelineActiveSound();
-		startGeneralSound("time_up.mp3");
+		startGeneralSound("time_up.mp3", false);
 		fadeOutLongPassiveSound(1);
+		window.GameVariables.TimerPaused = true;
 		window.GameVariables.IsWalkingAway = true;
 		window.GameVariables.QuestionSequenceCounter = 10;
+		var runIdAtTimeout = window.GameVariables.SoloRunId;
+		setTimeout(function(){
+			if(window.GameVariables.SoloRunId === runIdAtTimeout && (!window.TournamentEngine || !window.TournamentEngine.isActive) && window.GameVariables.QuestionSequenceCounter == 10 && window.GameVariables.QuestionInProgress){
+				$(document).trigger($.Event('keydown', { keyCode: 39, fromControlDeck: true }));
+			}
+		}, 600);
 	}
 	else{
-		$('.timerSecondsDiv>span').text(new Intl.NumberFormat('en', { numberingSystem: window.GameVariables.TimerNumberingSystem }).format(seconds -= 1));
+		$('.timerSecondsDiv>span').text(new Intl.NumberFormat('en', { numberingSystem: window.GameVariables.TimerNumberingSystem || 'latn' }).format(seconds -= 1));
 	}
 }
 
@@ -72,6 +81,21 @@ function subtractTimerBarSecond(){
 }
 
 function startTimer(){
+	if(window.TournamentEngine && window.TournamentEngine.isActive){
+		return;
+	}
+	clearInterval(timerInterval);
+	clearInterval(timerBarInterval);
+	clearInterval(timerBottomBarInterval);
+	if(seconds <= 0){
+		var level = (window.GameVariables && window.GameVariables.QuestionLevel) ? window.GameVariables.QuestionLevel : 1;
+		if(level < 6){
+			tier1Timer();
+		} else {
+			tier2Timer();
+		}
+	}
+	$('.timerStrapDiv').stop(true, true).show();
 	timerInterval = setInterval(function (){
 		countTimer();
 	}, 10);
@@ -94,11 +118,11 @@ function pauseTimer(){
 }
 
 function hideTimer(){
-	$('.timerStrapDiv').transition({perspective:0, opacity: 0}, 0);
+	$('.timerStrapDiv').stop(true, true).css({ transition: 'none', opacity: 0 }).hide();
 }
 
 function showTimer(){
-	$('.timerStrapDiv').transition({perspective:0, opacity: 1}, 0);
+	$('.timerStrapDiv').stop(true, true).show().css({ perspective: 0, opacity: 1 });
 }
 
 function slideTimerDown(){

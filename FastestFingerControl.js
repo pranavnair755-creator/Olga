@@ -179,6 +179,15 @@ function prepareFastestFingerQuestion(){
 }
 
 function activateFastestFinger(){
+	if(window.TournamentEngine && window.TournamentEngine.isActive){
+		window.TournamentEngine.exitToSoloMode(false);
+	}
+	$('#stageWelcomeOverlay').stop(true, true).hide();
+	if(window.GameVariables){
+		window.GameVariables.SoloRunId = (window.GameVariables.SoloRunId || 0) + 1;
+	}
+	try { if(typeof pauseTimer === 'function') pauseTimer(); } catch(e){}
+	try { if(typeof hideTimer === 'function') hideTimer(); } catch(e){}
 	try { stopGeneralSound(); } catch(e){}
 	try { stopLongPassiveSound(); } catch(e){}
 	try { stopShortPassiveSound(); } catch(e){}
@@ -206,7 +215,7 @@ function activateFastestFinger(){
 	hideContestantNameAndLocation();
 
 	if(typeof showToastNotification === 'function'){
-		showToastNotification("⚡ Fastest Finger First Activated! Click [Step FFF] or press [←] to reveal contestants (Step 1/28)");
+		showToastNotification("⚡ Fastest Finger First Activated! Click [FFF Step] or press [←] to step (1/28)");
 	}
 }
 
@@ -214,7 +223,6 @@ function stepFastestFinger(){
 	if(!window.GameVariables.IsPlayingFasestFinger){
 		activateFastestFinger();
 	} else {
-		// Trigger left arrow event to step through sequence
-		$(document).trigger($.Event('keydown', { keyCode: 37 }));
+		$(document).trigger($.Event('keydown', { keyCode: 37, fromControlDeck: true }));
 	}
 }

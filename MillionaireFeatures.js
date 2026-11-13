@@ -33,14 +33,14 @@
 
     if (imageUrl) {
       $('#questionImageElement').attr('src', imageUrl);
-      $frame.stop(true, true).css({ opacity: 0, transform: 'translateX(-50%) scale(0.92)' }).show().animate({
+      $frame.stop(true, true).css({ opacity: 0, transform: 'scale(0.92)' }).show().animate({
         opacity: 1
       }, {
-        duration: 400,
+        duration: 350,
         step: function(now, fx) {
           if (fx.prop === 'opacity') {
             var scale = 0.92 + (0.08 * now);
-            $frame.css('transform', 'translateX(-50%) scale(' + scale + ')');
+            $frame.css('transform', 'scale(' + scale + ')');
           }
         }
       });
@@ -235,17 +235,97 @@
     });
   };
 
+  /* =========================================================================
+   * 2b. QUESTION SUSPENSE BEDS JUKEBOX (Q6 - Q15)
+   * ========================================================================= */
+  var questionBeds = [
+    { level: 6, file: 'q6_bed.mp3', prize: '₹20,000', tier: 'Tier 2 Entry', desc: 'Heartbeat pulse accelerates as Tier 1 safety is left behind.' },
+    { level: 7, file: 'q7_bed.mp3', prize: '₹40,000', tier: 'Tier 2', desc: 'Deepening cello drones and subtle electronic tick.' },
+    { level: 8, file: 'q8_bed.mp3', prize: '₹80,000', tier: 'Tier 2', desc: 'Syncopated suspense bass pulse and rising studio tension.' },
+    { level: 9, file: 'q9_bed.mp3', prize: '₹1,60,000', tier: 'Tier 2 Pre-Milestone', desc: 'One question away from the guaranteed ₹3,20,000 safe haven.' },
+    { level: 10, file: 'q10_bed.mp3', prize: '₹3,20,000', tier: 'Tier 2 Milestone (Safety Net 2)', desc: 'Milestone question bed with dramatic atmospheric presence.' },
+    { level: 11, file: 'q11_bed.mp3', prize: '₹6,40,000', tier: 'Tier 3 High Stakes', desc: 'Unlocks Tier 3 - high frequency pitch sweeps and intense focus.' },
+    { level: 12, file: 'q12_bed.mp3', prize: '₹12,50,000', tier: 'Tier 3', desc: 'Taiko drums and creeping string tension in the hot seat.' },
+    { level: 13, file: 'q13_bed.mp3', prize: '₹25,00,000', tier: 'Tier 3', desc: 'Quarter-crore stakes with resonant sub-bass countdown.' },
+    { level: 14, file: 'q14_bed.mp3', prize: '₹50,00,000', tier: 'Penultimate Climax', desc: 'The penultimate ₹50 Lakh question before the summit.' },
+    { level: 15, file: 'q15_bed.mp3', prize: '₹1,00,00,000', tier: '₹1 Crore Grand Finale', desc: 'The ultimate climax bed - heart-stopping silence and thunderous brass.' }
+  ];
+
+  window.playQuestionBed = function(level) {
+    var bed = questionBeds.find(function(b) { return b.level === level; }) || questionBeds[0];
+
+    // Stop any existing AI Lyria audio
+    if (window.MillionaireFeatures.currentRemixAudio) {
+      window.MillionaireFeatures.currentRemixAudio.pause();
+    }
+
+    // Stop and replace long passive sound in game engine
+    if (typeof stopLongPassiveSound === 'function') {
+      stopLongPassiveSound();
+    }
+
+    if (typeof startLongPassiveSound === 'function') {
+      startLongPassiveSound(bed.file, true);
+    } else {
+      window.MillionaireFeatures.currentRemixAudio = new Audio("Sounds/" + bed.file);
+      window.MillionaireFeatures.currentRemixAudio.loop = true;
+      window.MillionaireFeatures.currentRemixAudio.volume = window.MillionaireFeatures.masterVolume || 0.85;
+      window.MillionaireFeatures.currentRemixAudio.play();
+    }
+
+    window.MillionaireFeatures.isPlayingRemix = true;
+    window.MillionaireFeatures.activeRemixStyle = 'bed_q' + level;
+    window.MillionaireFeatures.activeTrackTitle = 'Question ' + bed.level + ' Suspense Bed (' + bed.prize + ')';
+
+    // Update UI highlights
+    $('.remix-card').removeClass('active');
+    $('.bed-card').removeClass('active');
+    $('#bed-card-' + level).addClass('active');
+
+    $('#nowPlayingTitle').text('Question ' + bed.level + ' Suspense Bed (' + bed.prize + ')');
+    $('#nowPlayingMeta').text(bed.tier + ' • ' + bed.desc);
+    $('#waveformVisualizer').addClass('active');
+    $('#btnToggleRemixPlay').html('<span>⏸️ Pause</span>');
+
+    if (typeof showToastNotification === 'function') {
+      showToastNotification("🎵 Playing Question " + bed.level + " Bed: " + bed.prize + " (" + bed.tier + ")");
+    }
+  };
+
   window.toggleSoundtrackPlayback = function() {
     var $btn = $('#btnToggleRemixPlay');
-    if (window.MillionaireFeatures.currentRemixAudio && !window.MillionaireFeatures.currentRemixAudio.paused) {
-      window.MillionaireFeatures.currentRemixAudio.pause();
-      $btn.html('<span>▶️ Play</span>');
-      $('#waveformVisualizer').removeClass('active');
-    } else if (window.MillionaireFeatures.currentRemixAudio) {
-      window.MillionaireFeatures.currentRemixAudio.play();
-      $btn.html('<span>⏸️ Pause</span>');
-      $('#waveformVisualizer').addClass('active');
-    } else if (window.GameVariables && window.GameVariables.GeneralSound) {
+
+    // 1. Check custom remix / jukebox audio
+    if (window.MillionaireFeatures.currentRemixAudio) {
+      if (!window.MillionaireFeatures.currentRemixAudio.paused) {
+        window.MillionaireFeatures.currentRemixAudio.pause();
+        $btn.html('<span>▶️ Play</span>');
+        $('#waveformVisualizer').removeClass('active');
+        return;
+      } else {
+        window.MillionaireFeatures.currentRemixAudio.play();
+        $btn.html('<span>⏸️ Pause</span>');
+        $('#waveformVisualizer').addClass('active');
+        return;
+      }
+    }
+
+    // 2. Check engine LongPassiveSound (Question beds)
+    if (window.GameVariables && window.GameVariables.LongPassiveSound) {
+      if (!window.GameVariables.LongPassiveSound.paused) {
+        window.GameVariables.LongPassiveSound.pause();
+        $btn.html('<span>▶️ Play</span>');
+        $('#waveformVisualizer').removeClass('active');
+      } else {
+        window.GameVariables.LongPassiveSound.play();
+        $btn.html('<span>⏸️ Pause</span>');
+        $('#waveformVisualizer').addClass('active');
+      }
+      return;
+    }
+
+    // 3. Check engine GeneralSound
+    if (window.GameVariables && window.GameVariables.GeneralSound) {
       if (window.GameVariables.GeneralSound.paused) {
         window.GameVariables.GeneralSound.play();
         $btn.html('<span>⏸️ Pause</span>');
@@ -264,8 +344,12 @@
     if (window.MillionaireFeatures.currentRemixAudio) {
       window.MillionaireFeatures.currentRemixAudio.volume = volume;
     }
-    if (window.GameVariables && window.GameVariables.GeneralSound) {
-      window.GameVariables.GeneralSound.volume = volume;
+    if (window.GameVariables) {
+      if (window.GameVariables.GeneralSound) window.GameVariables.GeneralSound.volume = volume;
+      if (window.GameVariables.LongPassiveSound) window.GameVariables.LongPassiveSound.volume = volume;
+      if (window.GameVariables.ShortPassiveSound) window.GameVariables.ShortPassiveSound.volume = volume;
+      if (window.GameVariables.LongActiveSound) window.GameVariables.LongActiveSound.volume = volume;
+      if (window.GameVariables.ShortActiveSound) window.GameVariables.ShortActiveSound.volume = volume;
     }
     $('#volumeDisplayVal').text(Math.round(volume * 100) + '%');
   };
@@ -627,10 +711,12 @@
   function updateUserUI(user) {
     if (user && !user.isAnonymous) {
       $('#userAuthBtn').html('<img src="' + (user.photoURL || 'follower.png') + '" class="user-avatar-mini" /> ' + (user.displayName || 'Player')).attr('title', 'Click to view Cloud History & Sign Out');
-      $('#userStatusBadge').text('Cloud Saved ☁️').addClass('synced');
+      $('#userStatusText').text('Cloud Saved ☁️');
+      $('#userStatusBadge').addClass('synced');
     } else {
       $('#userAuthBtn').html('🔑 Sign in with Google').attr('title', 'Connect Google account to sync gameplay history');
-      $('#userStatusBadge').text('Guest Mode (Local)').removeClass('synced');
+      $('#userStatusText').text('Guest Mode (Local)');
+      $('#userStatusBadge').removeClass('synced');
     }
   }
 

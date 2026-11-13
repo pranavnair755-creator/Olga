@@ -158,7 +158,11 @@ function pafHideClock(){
 		pafLifeLineDisable();
 	});
 	
-	setTimeout(playBackgroundSound, 500);
+	setTimeout(function(){
+		if(window.GameVariables && window.GameVariables.QuestionInProgress && (!window.TournamentEngine || !window.TournamentEngine.isActive)){
+			playBackgroundSound();
+		}
+	}, 500);
 }
 
 /****************************************************************************************************************/
@@ -199,6 +203,9 @@ function ffLifeLineDisable(){
 }
 
 function ffRemoveTwoWrongAnswers(){
+	if(window.GameVariables.IsFFLifeLineUsed){
+		return false;
+	}
 	var canRemoveTwo = true;
 	var counter = 0;
 		
@@ -207,6 +214,8 @@ function ffRemoveTwoWrongAnswers(){
 	}
 	
 	if(canRemoveTwo == true){
+		window.GameVariables.IsFFLifeLineUsed = true;
+		$('#btn5050').addClass('btn-used');
 		ffLifeLineDisable();
 	
 		while(counter < 2){
@@ -216,6 +225,7 @@ function ffRemoveTwoWrongAnswers(){
 				$('#answerA .letterP').css('opacity', 0);
 				$('#answerA .answerP').css('opacity', 0);
 				$('#answerA .diagonalImg').css('opacity', 0);
+				$('#answerA').css('pointer-events', 'none');
 				window.GameVariables.AnswerAIsOut = true;
 				counter++;
 			}
@@ -224,6 +234,7 @@ function ffRemoveTwoWrongAnswers(){
 				$('#answerB .letterP').css('opacity', 0);
 				$('#answerB .answerP').css('opacity', 0);
 				$('#answerB .diagonalImg').css('opacity', 0);
+				$('#answerB').css('pointer-events', 'none');
 				window.GameVariables.AnswerBIsOut = true;
 				counter++;
 			}
@@ -232,6 +243,7 @@ function ffRemoveTwoWrongAnswers(){
 				$('#answerC .letterP').css('opacity', 0);
 				$('#answerC .answerP').css('opacity', 0);
 				$('#answerC .diagonalImg').css('opacity', 0);
+				$('#answerC').css('pointer-events', 'none');
 				window.GameVariables.AnswerCIsOut = true;
 				counter++;
 			}
@@ -240,11 +252,14 @@ function ffRemoveTwoWrongAnswers(){
 				$('#answerD .letterP').css('opacity', 0);
 				$('#answerD .answerP').css('opacity', 0);
 				$('#answerD .diagonalImg').css('opacity', 0);
+				$('#answerD').css('pointer-events', 'none');
 				window.GameVariables.AnswerDIsOut = true;
 				counter++;
 			}
 		}
+		return true;
 	}
+	return false;
 }
 
 /****************************************************************************************************************/
@@ -441,10 +456,11 @@ function slideOutATAGraph(){
 /****************************************************************************************************************/
 
 function stqLifeLineSlideIn(){
-	$('.pafLifeLine').transition({perspective:0, 'left':'-180px'}, 500, 'linear');
-	$('.ffLifeLine').transition({perspective:0, 'left':'167px'}, 500, 'linear');
-	$('.ataLifeLine').transition({perspective:0, 'left':'297px'}, 500, 'linear');
-	$('.stqLifeLine').transition({perspective:0, opacity: 1, 'left':'427px'}, 500, 'linear');
+	// 4 Lifelines evenly spaced and centered across the 760px Money Tree (margins 101px, gaps 22px)
+	$('.pafLifeLine').transition({perspective:0, 'left':'101px'}, 500, 'linear');
+	$('.ffLifeLine').transition({perspective:0, 'left':'246px'}, 500, 'linear');
+	$('.ataLifeLine').transition({perspective:0, 'left':'391px'}, 500, 'linear');
+	$('.stqLifeLine').transition({perspective:0, opacity: 1, 'left':'536px'}, 500, 'linear');
 	
 	$('.ffStrapLifeLine').transition({perspective:0, 'left':'625px'}, 500);
 	$('.ataStrapLifeLine').transition({perspective:0, 'left':'850px'}, 500);
@@ -453,9 +469,10 @@ function stqLifeLineSlideIn(){
 
 function stqLifeLineSlideOut(){
 	window.GameVariables.LifeLineAnimationCounter = 0;
-	$('.pafLifeLine').transition({perspective:0, 'left':'-50px'}, 500, 'linear');
-	$('.ffLifeLine').transition({perspective:0, 'left':'232px'}, 500, 'linear');
-	$('.ataLifeLine').transition({perspective:0, 'left':'362px'}, 500, 'linear');
+	// 3 Lifelines evenly spaced and centered across the 760px Money Tree (margins 138px/139px, gaps 57px)
+	$('.pafLifeLine').transition({perspective:0, 'left':'138px'}, 500, 'linear');
+	$('.ffLifeLine').transition({perspective:0, 'left':'318px'}, 500, 'linear');
+	$('.ataLifeLine').transition({perspective:0, 'left':'498px'}, 500, 'linear');
 	$('.stqLifeLine').transition({perspective:0, opacity: 0, 'left':'760px'}, 500, 'linear');
 	
 	$('.ffStrapLifeLine').transition({perspective:0, 'left':'745px'}, 500);
@@ -605,7 +622,7 @@ function escapeHtml(string) {
 function showToastNotification(text){
 	var toast = $('#gameToast');
 	if(toast.length === 0){
-		$('body').append('<div id="gameToast" style="position:fixed;top:24px;left:50%;transform:translateX(-50%);background:rgba(15,23,42,0.95);border:1px solid #38bdf8;box-shadow:0 0 20px rgba(56,189,248,0.4);color:#fff;padding:10px 20px;border-radius:8px;font-family:sans-serif;font-size:14px;z-index:999999;transition:opacity 0.3s ease;pointer-events:none;"></div>');
+		$('body').append('<div id="gameToast" style="position:fixed !important;top:68px;left:50%;transform:translateX(-50%);margin:0 !important;background:rgba(15,23,42,0.95);border:1px solid #38bdf8;box-shadow:0 0 20px rgba(56,189,248,0.4);color:#fff;padding:10px 20px;border-radius:8px;font-family:sans-serif;font-size:13px;font-weight:600;z-index:999999;transition:opacity 0.3s ease;pointer-events:none;white-space:nowrap;"></div>');
 		toast = $('#gameToast');
 	}
 	toast.text(text).css('opacity', 1);

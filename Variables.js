@@ -29,7 +29,7 @@
 	gameVariables.LevelNumberingSystem = "latn";	/* The numbering system to be used for the question levels. Uses the same numbering system for the amounts. */
 	gameVariables.PaFNumberingSystem = "latn";		/* The numbering system to be used for the Phone a Friend timer. Uses the same numbering system for the amounts. */
 	gameVariables.AtANumberingSystem = "latn";		/* The numbering system to be used for the Ask the Audience percentages. Uses the same numbering system for the amounts. */
-	gameVariables.TimerNumberingSystem = "latin";	/* The numbering system to be used for the question timer. Uses the same numbering system for the amounts. */
+	gameVariables.TimerNumberingSystem = "latn";	/* The numbering system to be used for the question timer. Uses the same numbering system for the amounts. */
 	
 	gameVariables.UseTopPrizeText = true;			/* If set to true, the top prize amount(s) will be displayed in text instead of a number. */
 	gameVariables.TopPrizeQuestionNumber = 15;		/* The value where the top prize text(s) are displayed above the level set by this value. */
@@ -147,6 +147,7 @@
 	gameVariables.ShowWinnerTimeout = null;
 	gameVariables.ScaleTreeTimeout = null;
 	gameVariables.PAFClockTimeout = null;
+	gameVariables.SoloRunId = 0;
 
 })(window.GameVariables = window.GameVariables || {});
 

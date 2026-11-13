@@ -35,15 +35,20 @@
 		<script type="text/javascript" src="Scripts/KeyboardController.js"></script>
 		<script type="text/javascript" src="Scripts/Init.js"></script>
 		<script type="text/javascript" src="MillionaireFeatures.js"></script>
+		<script type="text/javascript" src="TournamentEngine.js"></script>
 
 		<style>
 			html, body {
-				margin: 0;
-				padding: 0;
-				width: 100vw;
-				height: 100vh;
-				overflow: hidden;
-				background-color: #000;
+				margin: 0 !important;
+				padding: 0 !important;
+				width: 100vw !important;
+				height: 100vh !important;
+				overflow: hidden !important;
+				background-color: #020617 !important;
+			}
+			body {
+				width: 100vw !important;
+				height: 100vh !important;
 			}
 			.stageContainerDiv {
 				width: 1920px;
@@ -59,16 +64,18 @@
 			}
 			#hostControlPanel {
 				position: fixed;
-				bottom: 12px;
+				bottom: 0px;
 				left: 50%;
 				transform: translateX(-50%);
 				z-index: 99999;
 				background: linear-gradient(180deg, rgba(10, 20, 42, 0.96) 0%, rgba(4, 9, 22, 0.98) 100%);
 				border: 1px solid rgba(56, 189, 248, 0.4);
+				border-bottom: none;
 				box-shadow: 0 10px 40px rgba(0, 0, 0, 0.85), 0 0 18px rgba(14, 165, 233, 0.25);
 				backdrop-filter: blur(14px);
 				-webkit-backdrop-filter: blur(14px);
-				border-radius: 12px;
+				border-top-left-radius: 12px;
+				border-top-right-radius: 12px;
 				padding: 8px 16px;
 				display: flex;
 				flex-direction: column;
@@ -88,8 +95,14 @@
 				margin: 0;
 			}
 			#hostControlPanel.minimized {
-				transform: translateX(-50%) translateY(calc(100% - 32px));
-				opacity: 0.9;
+				transform: translateX(-50%) translateY(calc(100% - 34px));
+				opacity: 0.92;
+			}
+			#hostControlPanel.minimized:hover {
+				opacity: 1;
+			}
+			.hcp-header {
+				cursor: pointer;
 			}
 			.hcp-header {
 				display: flex !important;
@@ -296,31 +309,150 @@
 				box-shadow: 0 0 14px rgba(239, 68, 68, 0.7) !important;
 				color: #fff !important;
 			}
+			/* Complete CSS Isolation for Modals (Overrides divStyles.css, pStyles.css, tableStyles.css) */
 			.custom-modal-overlay {
 				display: none;
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100vw;
-				height: 100vh;
-				background: rgba(4, 8, 20, 0.85);
-				backdrop-filter: blur(8px);
-				z-index: 9999999;
-				align-items: center;
-				justify-content: center;
+				position: fixed !important;
+				top: 0 !important;
+				left: 0 !important;
+				right: 0 !important;
+				bottom: 0 !important;
+				width: 100vw !important;
+				height: 100vh !important;
+				background: rgba(3, 7, 18, 0.88) !important;
+				backdrop-filter: blur(8px) !important;
+				-webkit-backdrop-filter: blur(8px) !important;
+				z-index: 9999999 !important;
+				overflow-y: auto !important;
+				padding: 30px 16px !important;
+				box-sizing: border-box !important;
+				align-items: center !important;
+				justify-content: center !important;
+			}
+			.custom-modal-overlay.open,
+			.custom-modal-overlay[style*="block"],
+			.custom-modal-overlay[style*="flex"] {
+				display: flex !important;
+			}
+			.custom-modal-card,
+			.custom-modal-card *,
+			#tournamentModal,
+			#tournamentModal *,
+			#remixStudioModal,
+			#remixStudioModal *,
+			#gameHistoryModal,
+			#gameHistoryModal *,
+			#askTheHostModal,
+			#askTheHostModal *,
+			#keyboardHelpModal,
+			#keyboardHelpModal * {
+				position: relative !important;
+				box-sizing: border-box !important;
+				top: auto !important;
+				bottom: auto !important;
+				left: auto !important;
+				right: auto !important;
+				margin: 0;
+				letter-spacing: normal !important;
 			}
 			.custom-modal-card {
-				background: linear-gradient(180deg, #0b1329 0%, #030712 100%);
-				border: 1px solid rgba(56, 189, 248, 0.45);
-				box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(56, 189, 248, 0.25);
-				border-radius: 14px;
-				padding: 22px 26px;
-				max-width: 760px;
-				width: 92%;
-				max-height: 88vh;
-				overflow-y: auto;
-				color: #f8fafc;
-				font-family: system-ui, -apple-system, sans-serif;
+				background: linear-gradient(180deg, #0b1329 0%, #030712 100%) !important;
+				border: 1px solid rgba(56, 189, 248, 0.45) !important;
+				box-shadow: 0 20px 50px rgba(0, 0, 0, 0.95), 0 0 35px rgba(56, 189, 248, 0.25) !important;
+				border-radius: 14px !important;
+				padding: 24px 28px !important;
+				max-width: 960px !important;
+				width: 94% !important;
+				max-height: 90vh !important;
+				min-height: 520px !important;
+				overflow-y: auto !important;
+				color: #f8fafc !important;
+				font-family: system-ui, -apple-system, sans-serif !important;
+				margin: auto !important;
+				flex-shrink: 0 !important;
+				display: flex !important;
+				flex-direction: column !important;
+			}
+			#tournamentModal .custom-modal-card {
+				min-height: 540px !important;
+				max-width: 960px !important;
+				width: 94% !important;
+			}
+			.custom-modal-card p {
+				margin: 0 !important;
+				color: inherit !important;
+				font-family: system-ui, -apple-system, sans-serif !important;
+				text-shadow: none !important;
+				width: auto !important;
+			}
+			.custom-modal-card table,
+			#tournamentModal table {
+				position: static !important;
+				width: 100% !important;
+				border-collapse: collapse !important;
+				font-size: 12px !important;
+				text-align: left !important;
+				margin: 0 !important;
+				table-layout: auto !important;
+			}
+			.custom-modal-card thead,
+			.custom-modal-card tbody,
+			#tournamentModal thead,
+			#tournamentModal tbody {
+				display: table-row-group !important;
+				width: 100% !important;
+			}
+			.custom-modal-card tr,
+			#tournamentModal tr {
+				display: table-row !important;
+				position: static !important;
+				width: 100% !important;
+				height: auto !important;
+			}
+			.custom-modal-card th,
+			.custom-modal-card td,
+			#tournamentModal th,
+			#tournamentModal td {
+				display: table-cell !important;
+				position: static !important;
+				padding: 8px 10px !important;
+				height: auto !important;
+				max-height: none !important;
+				vertical-align: middle !important;
+			}
+			.tourney-arena-grid {
+				display: grid !important;
+				grid-template-columns: 1fr 340px !important;
+				gap: 18px !important;
+				min-height: 440px !important;
+				width: 100% !important;
+				flex: 1 1 auto !important;
+			}
+			.tourney-question-pane {
+				background: rgba(15, 23, 42, 0.75) !important;
+				border: 1px solid rgba(148, 163, 184, 0.25) !important;
+				border-radius: 10px !important;
+				padding: 18px !important;
+				display: flex !important;
+				flex-direction: column !important;
+				justify-content: space-between !important;
+				min-height: 420px !important;
+			}
+			.tourney-standings-pane {
+				background: rgba(15, 23, 42, 0.9) !important;
+				border: 1px solid rgba(148, 163, 184, 0.25) !important;
+				border-radius: 10px !important;
+				padding: 16px !important;
+				display: flex !important;
+				flex-direction: column !important;
+				min-height: 420px !important;
+			}
+			.tourney-options-grid {
+				display: grid !important;
+				grid-template-columns: 1fr 1fr !important;
+				gap: 10px !important;
+				width: 100% !important;
+				margin: 14px 0 !important;
 			}
 			.remix-now-playing {
 				background: linear-gradient(90deg, rgba(2, 132, 199, 0.2) 0%, rgba(15, 23, 42, 0.7) 100%);
@@ -412,6 +544,111 @@
 				background: rgba(245, 158, 11, 0.2);
 				color: #f59e0b;
 			}
+			/* Authentic Question Beds (Q6 - Q15) */
+			.bed-grid {
+				display: grid !important;
+				grid-template-columns: repeat(5, 1fr) !important;
+				gap: 8px !important;
+				margin: 10px 0 16px 0 !important;
+			}
+			@media (max-width: 800px) {
+				.bed-grid {
+					grid-template-columns: repeat(2, 1fr) !important;
+				}
+			}
+			.bed-card {
+				background: rgba(15, 23, 42, 0.75) !important;
+				border: 1px solid rgba(148, 163, 184, 0.22) !important;
+				border-radius: 8px !important;
+				padding: 9px 10px !important;
+				cursor: pointer !important;
+				transition: all 0.15s ease !important;
+				display: flex !important;
+				flex-direction: column !important;
+				justify-content: space-between !important;
+				text-align: left !important;
+			}
+			.bed-card:hover {
+				background: rgba(30, 41, 59, 0.9) !important;
+				border-color: #38bdf8 !important;
+				transform: translateY(-2px) !important;
+				box-shadow: 0 4px 14px rgba(56, 189, 248, 0.2) !important;
+			}
+			.bed-card.active {
+				background: linear-gradient(135deg, rgba(2, 132, 199, 0.35) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+				border-color: #38bdf8 !important;
+				box-shadow: 0 0 14px rgba(56, 189, 248, 0.45) !important;
+			}
+			.bed-card.milestone {
+				border-color: rgba(245, 158, 11, 0.4) !important;
+			}
+			.bed-card.milestone.active {
+				border-color: #f59e0b !important;
+				box-shadow: 0 0 16px rgba(245, 158, 11, 0.5) !important;
+			}
+			.bed-header {
+				display: flex !important;
+				align-items: center !important;
+				justify-content: space-between !important;
+				margin-bottom: 4px !important;
+			}
+			.bed-level {
+				font-size: 10px !important;
+				font-weight: 700 !important;
+				padding: 1px 6px !important;
+				border-radius: 4px !important;
+				background: rgba(56, 189, 248, 0.15) !important;
+				color: #38bdf8 !important;
+				border: 1px solid rgba(56, 189, 248, 0.3) !important;
+			}
+			.bed-prize {
+				font-size: 11px !important;
+				font-weight: 700 !important;
+				color: #cbd5e1 !important;
+			}
+			.bed-title {
+				font-size: 11.5px !important;
+				font-weight: 600 !important;
+				color: #f8fafc !important;
+				margin-bottom: 2px !important;
+				white-space: nowrap !important;
+				overflow: hidden !important;
+				text-overflow: ellipsis !important;
+			}
+			.bed-desc {
+				font-size: 9.5px !important;
+				color: #94a3b8 !important;
+				margin-bottom: 6px !important;
+				line-height: 1.25 !important;
+				height: 24px !important;
+				overflow: hidden !important;
+			}
+			.bed-play-btn {
+				background: rgba(56, 189, 248, 0.12) !important;
+				border: 1px solid rgba(56, 189, 248, 0.35) !important;
+				color: #38bdf8 !important;
+				font-size: 10px !important;
+				font-weight: 700 !important;
+				padding: 3px 8px !important;
+				border-radius: 4px !important;
+				cursor: pointer !important;
+				text-align: center !important;
+				transition: all 0.15s ease !important;
+				width: 100% !important;
+			}
+			.bed-play-btn:hover {
+				background: #0284c7 !important;
+				color: #fff !important;
+			}
+			.bed-play-btn.milestone {
+				background: rgba(245, 158, 11, 0.15) !important;
+				border-color: rgba(245, 158, 11, 0.4) !important;
+				color: #f59e0b !important;
+			}
+			.bed-play-btn.milestone:hover {
+				background: #d97706 !important;
+				color: #fff !important;
+			}
 			.lyria-composer-panel {
 				background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(2, 6, 23, 0.95) 100%);
 				border: 1px solid rgba(56, 189, 248, 0.4);
@@ -419,10 +656,232 @@
 				padding: 14px 16px;
 				margin-top: 12px;
 			}
+			/* Interactive Stage Answer Hover Effects */
+			.leftAnswerDiv, .rightAnswerDiv {
+				cursor: pointer;
+				transition: filter 0.2s ease, transform 0.15s ease;
+			}
+			.leftAnswerDiv:hover, .rightAnswerDiv:hover {
+				filter: brightness(1.22) drop-shadow(0 0 14px rgba(254, 173, 19, 0.75));
+			}
+			/* On-Stage Tournament Broadcast HUD, Banner & Coronation Styles */
+			.tourney-stage-hud {
+				position: absolute !important;
+				top: 85px;
+				right: 40px;
+				width: 480px;
+				z-index: 92;
+				background: linear-gradient(180deg, rgba(11, 19, 41, 0.94) 0%, rgba(3, 7, 18, 0.96) 100%) !important;
+				border: 2px solid rgba(245, 158, 11, 0.65) !important;
+				border-radius: 12px !important;
+				padding: 14px 16px !important;
+				box-shadow: 0 10px 35px rgba(0, 0, 0, 0.95), 0 0 30px rgba(245, 158, 11, 0.35) !important;
+				font-family: system-ui, -apple-system, sans-serif !important;
+				color: #f8fafc !important;
+			}
+			.tourney-stage-hud *,
+			.tourney-stage-banner *,
+			.tourney-coronation-overlay * {
+				position: relative !important;
+				box-sizing: border-box !important;
+				top: auto !important;
+				bottom: auto !important;
+				left: auto !important;
+				right: auto !important;
+				margin: 0 !important;
+				letter-spacing: normal !important;
+			}
+			.tourney-stage-hud table {
+				position: static !important;
+				width: 100% !important;
+				border-collapse: collapse !important;
+				font-size: 11px !important;
+				text-align: left !important;
+				table-layout: auto !important;
+			}
+			.tourney-stage-hud thead,
+			.tourney-stage-hud tbody {
+				display: table-row-group !important;
+				width: 100% !important;
+			}
+			.tourney-stage-hud tr {
+				display: table-row !important;
+				position: static !important;
+				width: 100% !important;
+			}
+			.tourney-stage-hud th,
+			.tourney-stage-hud td {
+				display: table-cell !important;
+				position: static !important;
+				padding: 5px 8px !important;
+				vertical-align: middle !important;
+				font-family: system-ui, -apple-system, sans-serif !important;
+			}
+			.tourney-stage-hud tr.user-row {
+				background: rgba(56, 189, 248, 0.22) !important;
+				border-left: 3px solid #38bdf8;
+				color: #38bdf8 !important;
+			}
+			.tourney-stage-hud tr.eliminated-row {
+				opacity: 0.42;
+				text-decoration: line-through;
+				background: rgba(239, 68, 68, 0.12) !important;
+			}
+
+			.tourney-stage-banner {
+				position: absolute !important;
+				bottom: 392px;
+				left: 50% !important;
+				transform: translateX(-50%) !important;
+				width: 1380px;
+				z-index: 90;
+				background: linear-gradient(90deg, rgba(15, 23, 42, 0.95) 0%, rgba(20, 32, 60, 0.98) 50%, rgba(15, 23, 42, 0.95) 100%) !important;
+				border: 1px solid rgba(245, 158, 11, 0.7) !important;
+				border-radius: 8px !important;
+				padding: 8px 18px !important;
+				box-shadow: 0 6px 20px rgba(0, 0, 0, 0.8), 0 0 20px rgba(245, 158, 11, 0.25) !important;
+				font-family: system-ui, -apple-system, sans-serif !important;
+				color: #f8fafc !important;
+			}
+			.tourney-stage-banner-inner {
+				display: flex !important;
+				align-items: center !important;
+				justify-content: space-between !important;
+				width: 100% !important;
+				gap: 12px !important;
+			}
+
+			.tourney-coronation-overlay {
+				position: absolute !important;
+				top: 100px;
+				left: 50% !important;
+				transform: translateX(-50%) !important;
+				width: 900px;
+				z-index: 95;
+				background: linear-gradient(180deg, rgba(11, 19, 41, 0.98) 0%, rgba(3, 7, 18, 0.99) 100%) !important;
+				border: 2px solid #fbbf24 !important;
+				border-radius: 16px !important;
+				padding: 36px 32px !important;
+				box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 45px rgba(251, 191, 36, 0.4) !important;
+				text-align: center !important;
+				font-family: system-ui, -apple-system, sans-serif !important;
+				color: #f8fafc !important;
+			}
+
+			.confidence-meter-bg {
+				background: rgba(15, 23, 42, 0.8);
+				border: 1px solid rgba(148, 163, 184, 0.2);
+				border-radius: 8px;
+				overflow: hidden;
+				height: 22px;
+				position: relative;
+			}
+			.confidence-meter-fill {
+				background: linear-gradient(90deg, #3b82f6, #10b981);
+				height: 100%;
+				transition: width 0.6s ease;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 11px;
+				font-weight: 700;
+				color: #fff;
+			}
+			/* Top Navigation Bar CSS Isolation (overrides global divStyles/pStyles/imgStyles) */
+			#topAppBar,
+			#topAppBar * {
+				position: relative !important;
+				box-sizing: border-box !important;
+				top: auto !important;
+				bottom: auto !important;
+				left: auto !important;
+				right: auto !important;
+				margin: 0 !important;
+				letter-spacing: normal !important;
+			}
+			#topAppBar {
+				position: fixed !important;
+				top: 10px !important;
+				left: 50% !important;
+				transform: translateX(-50%) !important;
+				display: flex !important;
+				flex-wrap: wrap !important;
+				gap: 8px !important;
+			}
+			#topAppBar > div {
+				display: flex !important;
+				align-items: center !important;
+				flex-wrap: wrap !important;
+				gap: 8px !important;
+			}
+			#userAuthBtn img {
+				position: relative !important;
+				margin: 0 !important;
+			}
+			#soundEnableHint {
+				position: fixed !important;
+				top: 64px !important;
+				left: 50% !important;
+				transform: translateX(-50%) !important;
+				margin: 0 !important;
+			}
+			#questionImageFrame div {
+				position: relative;
+				margin: 0;
+			}
+			#stageWelcomeOverlay,
+			#stageWelcomeOverlay * {
+				position: relative !important;
+				box-sizing: border-box !important;
+				top: auto !important;
+				bottom: auto !important;
+				left: auto !important;
+				right: auto !important;
+				margin: 0;
+			}
+			#stageWelcomeOverlay {
+				position: absolute !important;
+				top: 0 !important;
+				left: 0 !important;
+				width: 1920px !important;
+				height: 1080px !important;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="stageContainerDiv">
+			<!-- On-Stage Welcome & Mode Selector Overlay -->
+			<div id="stageWelcomeOverlay" style="position:absolute;top:0;left:0;width:1920px;height:1080px;z-index:96;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at center, rgba(3,7,18,0.72) 0%, rgba(2,6,23,0.94) 80%);backdrop-filter:blur(4px);">
+				<div style="text-align:center;max-width:880px;padding:40px 48px;background:linear-gradient(180deg, rgba(15,23,42,0.96) 0%, rgba(3,7,18,0.99) 100%);border:2px solid rgba(245,158,11,0.7);border-radius:20px;box-shadow:0 0 60px rgba(0,0,0,0.95), 0 0 40px rgba(245,158,11,0.35);position:relative;">
+					<div style="font-size:58px;margin-bottom:10px;filter:drop-shadow(0 0 20px rgba(245,158,11,0.6));">👑</div>
+					<h1 style="font-family:'Copperplate31bc', 'Copperplate Gothic', sans-serif;font-size:38px;font-weight:900;color:#fde68a;letter-spacing:2px;margin:0 0 10px;text-shadow:0 0 24px rgba(245,158,11,0.5);">
+						WHO WANTS TO BE A MILLIONAIRE
+					</h1>
+					<p style="font-family:system-ui, sans-serif;font-size:15px;color:#94a3b8;margin:0 0 32px;letter-spacing:0.5px;">
+						Authentic TV Broadcast Simulator • ₹1 Crore Grand Prize • 15 Levels & Lifelines
+					</p>
+
+					<div style="display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:28px;">
+						<button onclick="window.launchSoloGame();" style="background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;border:none;padding:16px 36px;border-radius:10px;font-size:16px;font-weight:800;letter-spacing:0.8px;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 0 25px rgba(2,132,199,0.5);transition:all 0.2s ease;">
+							<span style="font-size:20px;">▶</span>
+							<span>PLAY SOLO HOT SEAT (₹1 CRORE)</span>
+						</button>
+						<button onclick="$('#stageWelcomeOverlay').stop(true,true).fadeOut(200, function(){$(this).hide();}); if(window.TournamentEngine){TournamentEngine.startTournamentGame();}" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;border:none;padding:16px 36px;border-radius:10px;font-size:16px;font-weight:800;letter-spacing:0.8px;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 0 25px rgba(245,158,11,0.5);transition:all 0.2s ease;">
+							<span style="font-size:20px;">⚡</span>
+							<span>10-PLAYER TOURNAMENT GAME</span>
+						</button>
+					</div>
+
+					<div style="display:flex;align-items:center;justify-content:center;gap:24px;font-family:system-ui, sans-serif;font-size:12.5px;color:#cbd5e1;border-top:1px solid rgba(148,163,184,0.2);padding-top:18px;">
+						<span>🎯 <strong>Click on stage lozenges</strong> to answer</span>
+						<span>•</span>
+						<span>⌨️ <strong>Hotkeys 1, 2, 3, 4</strong> (or <strong>A–D</strong> in Tournament)</span>
+						<span>•</span>
+						<span>💰 <strong>50:50, Phone-A-Friend, Ask The Host</strong></span>
+					</div>
+				</div>
+			</div>
+
 			<video id="video" width="1920" height="1080" autoplay></video>
 			<!-- Stage Background Div -->
 			<div class="stageBackgroundDiv">
@@ -506,16 +965,99 @@
 			</div>
 			
 			<!-- Picture Question Broadcast Screen (Symmetrically aligned in upper arena) -->
-			<div id="questionImageFrame" style="display:none;position:absolute;top:150px;left:50%;transform:translateX(-50%);z-index:85;width:640px;background:radial-gradient(ellipse at center, rgba(15,23,42,0.96) 0%, rgba(2,6,23,0.99) 100%);border:2px solid #0284c7;box-shadow:0 0 35px rgba(2,132,199,0.5), 0 20px 50px rgba(0,0,0,0.85);border-radius:12px;padding:10px;text-align:center;">
-				<div style="font-family:'Copperplate31bc', 'Copperplate Gothic', sans-serif;font-size:13px;font-weight:700;color:#38bdf8;letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:1px solid rgba(56,189,248,0.25);padding-bottom:6px;">
+			<div id="questionImageFrame" style="display:none;position:absolute;top:105px;left:590px;z-index:85;width:740px;background:radial-gradient(ellipse at center, rgba(15,23,42,0.96) 0%, rgba(2,6,23,0.99) 100%);border:2px solid #0284c7;box-shadow:0 0 35px rgba(2,132,199,0.5), 0 20px 50px rgba(0,0,0,0.85);border-radius:12px;padding:12px;text-align:center;transform-origin:center center;">
+				<div style="font-family:'Copperplate31bc', 'Copperplate Gothic', sans-serif;font-size:13px;font-weight:700;color:#38bdf8;letter-spacing:1.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;border-bottom:1px solid rgba(56,189,248,0.25);padding-bottom:6px;position:relative;">
 					<span style="display:inline-flex;align-items:center;gap:6px;">
 						<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#38bdf8;box-shadow:0 0 8px #38bdf8;"></span>
 						PICTURE QUESTION
 					</span>
 					<span style="font-size:11px;color:#94a3b8;cursor:pointer;background:rgba(255,255,255,0.08);padding:3px 10px;border-radius:4px;border:1px solid rgba(255,255,255,0.15);letter-spacing:0.5px;" onclick="$('#pictureZoomModal').fadeIn(200);$('#zoomImageElem').attr('src',$('#questionImageElement').attr('src'));">🔍 Expand View</span>
 				</div>
-				<div style="position:relative;width:100%;height:310px;border-radius:8px;overflow:hidden;background:#000;border:1px solid rgba(56,189,248,0.3);box-shadow:inset 0 0 20px rgba(0,0,0,0.9);">
-					<img id="questionImageElement" src="" style="width:100%;height:100%;object-fit:cover;cursor:pointer;transition:transform 0.3s ease;" onclick="$('#pictureZoomModal').fadeIn(200);$('#zoomImageElem').attr('src',this.src);" title="Click to view full size" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+				<div style="position:relative;width:100%;height:360px;border-radius:8px;overflow:hidden;background:#030712;border:1px solid rgba(56,189,248,0.3);box-shadow:inset 0 0 30px rgba(0,0,0,0.95);display:flex;align-items:center;justify-content:center;">
+					<img id="questionImageElement" src="" style="position:relative !important;display:block !important;max-width:100% !important;max-height:100% !important;width:auto !important;height:auto !important;object-fit:contain !important;cursor:pointer;transition:transform 0.25s ease;margin:auto !important;" onclick="$('#pictureZoomModal').fadeIn(200);$('#zoomImageElem').attr('src',this.src);" title="Click to view full size" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'" />
+				</div>
+			</div>
+
+			<!-- Tournament Stage HUD: Live Broadcast Standings Sidebar -->
+			<div id="tournamentStageHUD" class="tourney-stage-hud" style="display:none;">
+				<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(245,158,11,0.3);padding-bottom:8px;margin-bottom:8px;">
+					<div style="display:flex;align-items:center;gap:8px;">
+						<span style="font-size:16px;">⚡</span>
+						<div>
+							<div style="font-size:12px;font-weight:800;color:#fde68a;letter-spacing:0.8px;text-transform:uppercase;">TOURNAMENT STANDINGS</div>
+							<div style="font-size:10px;color:#94a3b8;">10 Contestants • Knockout Speed</div>
+						</div>
+					</div>
+					<div style="display:flex;align-items:center;gap:8px;">
+						<div style="background:rgba(245,158,11,0.18);border:1px solid rgba(245,158,11,0.4);border-radius:5px;padding:3px 8px;display:flex;align-items:center;gap:5px;">
+							<span style="font-size:10px;color:#fde68a;">⏱️ Timer:</span>
+							<span id="tourneyStageTimerDisplay" style="font-family:monospace;font-size:12px;font-weight:800;color:#fbbf24;">0.00s</span>
+						</div>
+						<button onclick="TournamentEngine.exitToSoloMode();" style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);color:#fca5a5;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:700;cursor:pointer;" title="Exit Tournament to Solo Hot Seat">✕ Exit</button>
+					</div>
+				</div>
+
+				<!-- Scrollable Leaderboard Table -->
+				<div style="max-height:310px;overflow-y:auto;border:1px solid rgba(148,163,184,0.15);border-radius:6px;background:rgba(15,23,42,0.65);">
+					<table style="width:100%;border-collapse:collapse;font-size:11px;">
+						<thead>
+							<tr style="background:rgba(30,41,59,0.9);color:#94a3b8;border-bottom:1px solid rgba(148,163,184,0.2);">
+								<th style="width:24px;text-align:center;">#</th>
+								<th>Contestant</th>
+								<th style="text-align:right;">Pts</th>
+								<th style="text-align:right;">Speed</th>
+								<th style="text-align:center;">Status</th>
+							</tr>
+						</thead>
+						<tbody id="tourneyStageLeaderboardBody">
+							<!-- Dynamic on-stage leaderboard rows -->
+						</tbody>
+					</table>
+				</div>
+
+				<div style="margin-top:8px;font-size:10px;color:#94a3b8;line-height:1.3;border-top:1px solid rgba(148,163,184,0.2);padding-top:6px;">
+					<strong style="color:#ef4444;">Eliminations:</strong> Bottom 3 cut after Q5. Top 4 advance past Q10. #1 wins the Hot Seat!
+				</div>
+			</div>
+
+			<!-- Tournament Stage Banner: Above Question Strap -->
+			<div id="tournamentStageBanner" class="tourney-stage-banner" style="display:none;">
+				<div class="tourney-stage-banner-inner">
+					<div style="display:flex;align-items:center;gap:12px;">
+						<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f59e0b;box-shadow:0 0 10px #f59e0b;"></span>
+						<span id="tourneyStageBannerQText" style="font-size:12.5px;font-weight:800;color:#fde68a;letter-spacing:1px;text-transform:uppercase;">
+							QUESTION 1 OF 10 • INDIAN HERITAGE • SPEED BONUS ACTIVE
+						</span>
+					</div>
+					<div id="tourneyStageFeedback" style="font-size:13px;font-weight:600;color:#f8fafc;flex:1;text-align:center;padding:0 16px;">
+						<span style="color:#94a3b8;">Choose Answer A, B, C, or D on the stage lozenges below!</span>
+					</div>
+					<div style="display:flex;align-items:center;gap:12px;">
+						<div style="background:rgba(0,0,0,0.4);border:1px solid rgba(245,158,11,0.5);border-radius:6px;padding:3px 12px;font-family:monospace;font-size:14px;font-weight:800;color:#fbbf24;">
+							⏱️ <span id="tourneyStageBannerTimer">0.00s</span>
+						</div>
+						<button id="tourneyStageNextBtn" onclick="TournamentEngine.nextQuestion();" style="display:none;background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-weight:800;font-size:12px;box-shadow:0 0 12px rgba(2,132,199,0.5);">
+							Next Question →
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!-- Tournament Stage Coronation: Post-Q10 Victory Podium -->
+			<div id="tournamentStageCoronation" class="tourney-coronation-overlay" style="display:none;">
+				<div style="font-size:56px;margin-bottom:12px;filter:drop-shadow(0 0 20px rgba(251,191,36,0.6));">👑</div>
+				<h2 id="stageCoronationTitle" style="font-size:26px;font-weight:800;color:#fbbf24;margin-bottom:12px;letter-spacing:0.5px;"></h2>
+				<p id="stageCoronationDesc" style="font-size:15px;color:#cbd5e1;max-width:720px;margin:0 auto 28px;line-height:1.6;"></p>
+				<div style="display:flex;justify-content:center;gap:16px;">
+					<button id="btnStageEnterHotSeat" onclick="TournamentEngine.launchFinaleHotSeat();" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;border:none;padding:14px 32px;border-radius:8px;cursor:pointer;font-weight:800;font-size:15px;box-shadow:0 0 25px rgba(245,158,11,0.6);">
+						Enter ₹1 Crore Hot Seat Grand Finale (10 Questions) →
+					</button>
+					<button onclick="TournamentEngine.startTournamentGame();" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:14px 24px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;">
+						Replay Tournament
+					</button>
+					<button onclick="TournamentEngine.exitToSoloMode();" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;padding:14px 20px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;">
+						Exit to Solo Mode
+					</button>
 				</div>
 			</div>
 
@@ -747,28 +1289,28 @@
 			<!-- Money Tree Div -->
 			<div class="moneyTreeDiv">
 				<button type="button" onclick="slideOutMoneyTree();" title="Close Money Tree" style="position:absolute;top:28px;right:40px;background:rgba(10,14,35,0.85);border:1.5px solid #FEAD13;color:#FEAD13;width:36px;height:36px;border-radius:50%;font-size:18px;font-weight:bold;cursor:pointer;z-index:99;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(0,0,0,0.8);" onmouseover="this.style.background='#FEAD13';this.style.color='#000';" onmouseout="this.style.background='rgba(10,14,35,0.85)';this.style.color='#FEAD13';">✕</button>
-				<div class="lifelineTreeHolderDiv pafLifeLine" style="top:107px;left:140px;transform:perspective(0px);cursor:pointer;" title="Phone A Friend" onclick="if(window.GameVariables.QuestionInProgress){$(document).trigger($.Event('keydown', {keyCode: 80}));}else{pafPulseLifeLine();startGeneralSound('lifeline_1_on.mp3');}">
+				<div class="lifelineTreeHolderDiv pafLifeLine" style="top:100px;left:138px;transform:perspective(0px);cursor:pointer;" title="Phone A Friend" onclick="if(window.GameVariables.QuestionInProgress){$(document).trigger($.Event('keydown', {keyCode: 80}));}else{pafPulseLifeLine();startGeneralSound('lifeline_1_on.mp3');}">
 					<div class="lifelineTreeDiv">
 						<img src="Images/paf.png" class="lifelineTreeImg"/>
 						<img src="Images/paf_yellow.png" class="lifelineYellowTreeImg"/>
 						<img src="Images/lifeline_used.png" class="lifelineUsedImg"/>
 					</div>
 				</div>
-				<div class="lifelineTreeHolderDiv ffLifeLine" style="top:107px;left:320px;cursor:pointer;" title="50:50 Lifeline" onclick="if(window.GameVariables.QuestionInProgress){$(document).trigger($.Event('keydown', {keyCode: 70}));}else{ffPulseLifeLine();startGeneralSound('lifeline_2_on.mp3');}">
+				<div class="lifelineTreeHolderDiv ffLifeLine" style="top:100px;left:318px;cursor:pointer;" title="50:50 Lifeline" onclick="if(window.GameVariables.QuestionInProgress){$(document).trigger($.Event('keydown', {keyCode: 70}));}else{ffPulseLifeLine();startGeneralSound('lifeline_2_on.mp3');}">
 					<div class="lifelineTreeDiv" style="transform:perspective(0px);">
 						<img src="Images/5050.png" class="lifelineTreeImg"/>
 						<img src="Images/5050_yellow.png" class="lifelineYellowTreeImg"/>
 						<img src="Images/lifeline_used.png" class="lifelineUsedImg"/>
 					</div>
 				</div>
-				<div class="lifelineTreeHolderDiv ataLifeLine" style="top:107px;left:500px;cursor:pointer;" title="Ask The Audience" onclick="if(window.GameVariables.QuestionInProgress){$(document).trigger($.Event('keydown', {keyCode: 65}));}else{ataPulseLifeLine();startGeneralSound('lifeline_3_on.mp3');}">
+				<div class="lifelineTreeHolderDiv ataLifeLine" style="top:100px;left:498px;cursor:pointer;" title="Ask The Audience" onclick="if(window.GameVariables.QuestionInProgress){$(document).trigger($.Event('keydown', {keyCode: 65}));}else{ataPulseLifeLine();startGeneralSound('lifeline_3_on.mp3');}">
 					<div class="lifelineTreeDiv" style="transform:perspective(0px);">
 						<img src="Images/ata.png" class="lifelineTreeImg"/>
 						<img src="Images/ata_yellow.png" class="lifelineYellowTreeImg"/>
 						<img src="Images/lifeline_used.png" class="lifelineUsedImg"/>
 					</div>
 				</div>
-				<div class="lifelineTreeHolderDiv stqLifeLine" style="top:107px;left:760px;opacity:0;">
+				<div class="lifelineTreeHolderDiv stqLifeLine" style="top:100px;left:760px;opacity:0;">
 					<div class="lifelineTreeDiv" style="transform:perspective(0px);">
 						<img src="Images/stq.png" class="lifelineTreeImg"/>
 						<img src="Images/stq_yellow.png" class="lifelineYellowTreeImg"/>
@@ -977,46 +1519,74 @@
 		</div>
 
 		<!-- Autoplay Sound Hint Banner -->
-		<div id="soundEnableHint" onclick="unlockAudioEngine(); if(window.GameVariables && window.GameVariables.IsInCommercial) { startGeneralSound('main_theme.mp3', true); }" style="display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:999999;background:linear-gradient(135deg, #1e3a8a, #2563eb);color:#fff;padding:10px 22px;border-radius:24px;font-family:sans-serif;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.6);cursor:pointer;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.4);letter-spacing:0.3px;">
+		<div id="soundEnableHint" onclick="unlockAudioEngine(); if(window.GameVariables && window.GameVariables.IsInCommercial) { startGeneralSound('main_theme.mp3', true); }" style="display:none;position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:999999;background:linear-gradient(135deg, #1e3a8a, #2563eb);color:#fff;padding:10px 22px;border-radius:24px;font-family:sans-serif;font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.6);cursor:pointer;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.4);letter-spacing:0.3px;">
 			🔊 Click anywhere to enable sound & music
 		</div>
 
-		<!-- Top Bar: Cloud Save & Audio Controls -->
-		<div id="topAppBar" style="position:fixed;top:14px;right:20px;z-index:99999;display:flex;align-items:center;gap:10px;font-family:system-ui,-apple-system,sans-serif;">
-			<div id="userStatusBadge" style="background:rgba(15,23,42,0.85);border:1px solid rgba(148,163,184,0.35);color:#94a3b8;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:6px;backdrop-filter:blur(6px);">
-				<span style="width:7px;height:7px;border-radius:50%;background:#10b981;display:inline-block;"></span>
-				<span>Cloud Ready</span>
+		<!-- Top Bar: Consolidated Broadcast Navigation Bar -->
+		<div id="topAppBar" style="position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:99999;display:flex;align-items:center;justify-content:space-between;width:calc(100% - 32px);max-width:1420px;padding:6px 16px;background:rgba(10,20,42,0.85);border:1px solid rgba(56,189,248,0.3);border-radius:30px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 4px 20px rgba(0,0,0,0.6);font-family:system-ui,-apple-system,sans-serif;">
+			<div style="display:flex;align-items:center;gap:12px;">
+				<div style="display:flex;align-items:center;gap:8px;font-family:'Copperplate31bc','Copperplate Gothic',sans-serif;font-size:13px;font-weight:900;color:#fde68a;letter-spacing:1px;text-shadow:0 0 10px rgba(245,158,11,0.5);">
+					<span style="font-size:16px;">🏆</span>
+					<span>WHO WANTS TO BE A MILLIONAIRE</span>
+				</div>
+				<div id="userStatusBadge" style="background:rgba(15,23,42,0.85);border:1px solid rgba(148,163,184,0.3);color:#94a3b8;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:6px;">
+					<span style="width:6px;height:6px;border-radius:50%;background:#10b981;display:inline-block;box-shadow:0 0 6px #10b981;"></span>
+					<span id="userStatusText">Live Studio</span>
+				</div>
 			</div>
-			<button id="btnOpenHistory" style="background:linear-gradient(180deg,#1e293b 0%,#0f172a 100%);border:1px solid #38bdf8;color:#f0f9ff;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:flex;align-items:center;gap:6px;box-shadow:0 0 10px rgba(56,189,248,0.25);">
-				<span>🏆 Cloud History</span>
-			</button>
-			<button id="userAuthBtn" style="background:linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%);border:1px solid #60a5fa;color:#ffffff;padding:6px 14px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(37,99,235,0.4);">
-				<span>🔑 Sign in with Google</span>
-			</button>
+			
+			<div style="display:flex;align-items:center;gap:8px;">
+				<button id="btnTopTournament" style="background:linear-gradient(135deg,#f59e0b 0%,#d97706 100%);border:1px solid #fde68a;color:#1e1b4b;padding:5px 12px;border-radius:6px;cursor:pointer;font-weight:800;font-size:11.5px;display:flex;align-items:center;gap:5px;box-shadow:0 0 12px rgba(245,158,11,0.4);">
+					<span>⚡ Tournament Mode</span>
+				</button>
+				<button id="btnTopTree" onclick="if(typeof toggleMoneyTreeDisplay==='function')toggleMoneyTreeDisplay();else pressKey(37);" style="background:rgba(30,41,59,0.9);border:1px solid #38bdf8;color:#38bdf8;padding:5px 11px;border-radius:6px;cursor:pointer;font-weight:700;font-size:11.5px;display:flex;align-items:center;gap:5px;">
+					<span>💰 Money Tree</span>
+				</button>
+				<button id="btnTopNewGame" onclick="if(typeof resetAndStartNewGame==='function')resetAndStartNewGame();" style="background:rgba(30,41,59,0.9);border:1px solid rgba(148,163,184,0.3);color:#cbd5e1;padding:5px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:11.5px;display:flex;align-items:center;gap:5px;">
+					<span>🔄 New Game</span>
+				</button>
+				<button id="btnTopRemixStudio" style="background:rgba(30,41,59,0.9);border:1px solid rgba(148,163,184,0.3);color:#cbd5e1;padding:5px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:11.5px;display:flex;align-items:center;gap:5px;">
+					<span>🎧 Remix</span>
+				</button>
+				<button id="btnOpenHistory" style="background:rgba(30,41,59,0.9);border:1px solid rgba(148,163,184,0.3);color:#cbd5e1;padding:5px 11px;border-radius:6px;cursor:pointer;font-weight:600;font-size:11.5px;display:flex;align-items:center;gap:5px;">
+					<span>🏆 Records</span>
+				</button>
+				<button id="userAuthBtn" style="background:linear-gradient(180deg,#2563eb 0%,#1d4ed8 100%);border:1px solid #60a5fa;color:#ffffff;padding:5px 12px;border-radius:6px;cursor:pointer;font-weight:700;font-size:11.5px;display:flex;align-items:center;gap:5px;box-shadow:0 2px 6px rgba(37,99,235,0.4);">
+					<span>🔑 Sign In</span>
+				</button>
+				<button id="btnOpenShortcuts" style="background:rgba(30,41,59,0.9);border:1px solid rgba(148,163,184,0.3);color:#cbd5e1;padding:5px 9px;border-radius:6px;cursor:pointer;font-weight:700;font-size:11.5px;" title="Keyboard shortcuts guide">
+					<span>⌨️ ?</span>
+				</button>
+			</div>
 		</div>
 
-		<!-- Host Control Panel for easy play and broadcast control -->
-		<div id="hostControlPanel">
+		<!-- Host Control Panel for easy play and broadcast control (minimized by default) -->
+		<div id="hostControlPanel" class="minimized">
 			<div class="hcp-header">
 				<div class="panel-title">
 					<span class="pulse-dot"></span>
 					<span>BROADCAST CONTROL DECK</span>
 				</div>
-				<button class="toggle-btn" id="btnTogglePanel" title="Minimize / Expand controls">▼</button>
+				<button class="toggle-btn" id="btnTogglePanel" title="Minimize / Expand controls">▲</button>
 			</div>
 			
 			<div class="hcp-body">
 				<!-- Group: Game Flow -->
 				<div class="hcp-group">
-					<span class="group-label">GAME</span>
+					<span class="group-label">GAME MODES</span>
 					<div class="group-buttons">
 						<button id="btnNewGame" class="btn-gold" title="Start a fresh game with brand new questions">
 							<span class="btn-icon">🔄</span>
 							<span class="btn-text">New Game</span>
 						</button>
-						<button id="btnFastestFinger" class="btn-gold" title="Activate or Step Fastest Finger First (Key: X)">
+						<button id="btnHostTournament" class="btn-gold" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;font-weight:800;" title="Launch 10-Player Knockout Tournament">
 							<span class="btn-icon">⚡</span>
-							<span class="btn-text">Fastest Finger</span>
+							<span class="btn-text">Tournament</span>
+						</button>
+						<button id="btnFastestFinger" title="Activate or Step Fastest Finger First (Key: X)">
+							<span class="btn-key">X</span>
+							<span class="btn-text">FFF Step</span>
 						</button>
 						<button id="btnPlayTheme" class="btn-primary" title="Play or loop Main Theme Music">
 							<span class="btn-icon">🎵</span>
@@ -1079,7 +1649,11 @@
 							<span class="btn-key">P</span>
 							<span class="btn-text">PAF</span>
 						</button>
-						<button id="btnATA" class="btn-gold" title="Ask The Audience (Key: A)">
+						<button id="btnATH" class="btn-gold" style="border-color:#38bdf8;" title="Ask The Host Lifeline (Key: H)">
+							<span class="btn-key">H</span>
+							<span class="btn-text">Ask Host</span>
+						</button>
+						<button id="btnATA" title="Ask The Audience (Key: A)">
 							<span class="btn-key">A</span>
 							<span class="btn-text">ATA</span>
 						</button>
@@ -1231,6 +1805,118 @@
 					</div>
 				</div>
 
+				<!-- Official Question Suspense Beds (Q6 - Q15) -->
+				<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 6px;">
+					<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#38bdf8;display:flex;align-items:center;gap:6px;">
+						<span>🎵</span> Authentic Question Suspense Beds (Q6 – Q15)
+					</div>
+					<span style="font-size:10.5px;color:#38bdf8;background:rgba(56,189,248,0.12);padding:2px 8px;border-radius:4px;border:1px solid rgba(56,189,248,0.25);">All 10 Tracks Added to Gameplay & Jukebox</span>
+				</div>
+				<p style="font-size:11px;color:#94a3b8;margin:0 0 10px;">Click any question level to test or set its authentic suspense think-track:</p>
+				
+				<div class="bed-grid">
+					<!-- Q6 Bed -->
+					<div class="bed-card" id="bed-card-6" onclick="window.playQuestionBed(6);">
+						<div class="bed-header">
+							<span class="bed-level">Q6</span>
+							<span class="bed-prize">₹20,000</span>
+						</div>
+						<div class="bed-title">Tier 2 Entry Bed</div>
+						<div class="bed-desc">Heartbeat pulse begins</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(6);">▶ Play Bed</button>
+					</div>
+					<!-- Q7 Bed -->
+					<div class="bed-card" id="bed-card-7" onclick="window.playQuestionBed(7);">
+						<div class="bed-header">
+							<span class="bed-level">Q7</span>
+							<span class="bed-prize">₹40,000</span>
+						</div>
+						<div class="bed-title">Suspense Bed</div>
+						<div class="bed-desc">Deepening cello drones</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(7);">▶ Play Bed</button>
+					</div>
+					<!-- Q8 Bed -->
+					<div class="bed-card" id="bed-card-8" onclick="window.playQuestionBed(8);">
+						<div class="bed-header">
+							<span class="bed-level">Q8</span>
+							<span class="bed-prize">₹80,000</span>
+						</div>
+						<div class="bed-title">Rising Tension</div>
+						<div class="bed-desc">Syncopated bass pulse</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(8);">▶ Play Bed</button>
+					</div>
+					<!-- Q9 Bed -->
+					<div class="bed-card" id="bed-card-9" onclick="window.playQuestionBed(9);">
+						<div class="bed-header">
+							<span class="bed-level">Q9</span>
+							<span class="bed-prize">₹1,60,000</span>
+						</div>
+						<div class="bed-title">Pre-Milestone</div>
+						<div class="bed-desc">1 step from Safe Haven</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(9);">▶ Play Bed</button>
+					</div>
+					<!-- Q10 Bed (Milestone!) -->
+					<div class="bed-card milestone" id="bed-card-10" onclick="window.playQuestionBed(10);">
+						<div class="bed-header">
+							<span class="bed-level" style="background:rgba(245,158,11,0.2);color:#f59e0b;border:1px solid rgba(245,158,11,0.4);">Q10 🛡️</span>
+							<span class="bed-prize" style="color:#fef08a;">₹3,20,000</span>
+						</div>
+						<div class="bed-title" style="color:#fef08a;">Safety Net 2 Milestone</div>
+						<div class="bed-desc">Guaranteed ₹3.2L lock-in</div>
+						<button class="bed-play-btn milestone" onclick="event.stopPropagation(); window.playQuestionBed(10);">▶ Play Bed</button>
+					</div>
+					<!-- Q11 Bed -->
+					<div class="bed-card" id="bed-card-11" onclick="window.playQuestionBed(11);">
+						<div class="bed-header">
+							<span class="bed-level">Q11</span>
+							<span class="bed-prize">₹6,40,000</span>
+						</div>
+						<div class="bed-title">Tier 3 Arena</div>
+						<div class="bed-desc">High stakes pitch sweep</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(11);">▶ Play Bed</button>
+					</div>
+					<!-- Q12 Bed -->
+					<div class="bed-card" id="bed-card-12" onclick="window.playQuestionBed(12);">
+						<div class="bed-header">
+							<span class="bed-level">Q12</span>
+							<span class="bed-prize">₹12,50,000</span>
+						</div>
+						<div class="bed-title">Taiko Suspense</div>
+						<div class="bed-desc">Creeping string tension</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(12);">▶ Play Bed</button>
+					</div>
+					<!-- Q13 Bed -->
+					<div class="bed-card" id="bed-card-13" onclick="window.playQuestionBed(13);">
+						<div class="bed-header">
+							<span class="bed-level">Q13</span>
+							<span class="bed-prize">₹25,00,000</span>
+						</div>
+						<div class="bed-title">Quarter-Crore</div>
+						<div class="bed-desc">Sub-bass countdown</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(13);">▶ Play Bed</button>
+					</div>
+					<!-- Q14 Bed (Penultimate) -->
+					<div class="bed-card" id="bed-card-14" onclick="window.playQuestionBed(14);">
+						<div class="bed-header">
+							<span class="bed-level" style="background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.4);">Q14 🔥</span>
+							<span class="bed-prize" style="color:#fca5a5;">₹50,00,000</span>
+						</div>
+						<div class="bed-title" style="color:#fca5a5;">Penultimate Bed</div>
+						<div class="bed-desc">Final hurdle before Finale</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(14);">▶ Play Bed</button>
+					</div>
+					<!-- Q15 Bed (Millionaire Finale) -->
+					<div class="bed-card milestone" id="bed-card-15" onclick="window.playQuestionBed(15);">
+						<div class="bed-header">
+							<span class="bed-level" style="background:rgba(234,179,8,0.25);color:#facc15;border:1px solid rgba(234,179,8,0.5);">Q15 🏆</span>
+							<span class="bed-prize" style="color:#fef08a;font-weight:800;">₹1,00,00,000</span>
+						</div>
+						<div class="bed-title" style="color:#fde047;font-weight:700;">₹1 Crore Finale Bed</div>
+						<div class="bed-desc">Ultimate suspense climax</div>
+						<button class="bed-play-btn milestone" onclick="event.stopPropagation(); window.playQuestionBed(15);">▶ Play Bed</button>
+					</div>
+				</div>
+
 				<!-- AI Lyria Music Composer Panel -->
 				<div class="lyria-composer-panel">
 					<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -1300,10 +1986,86 @@
 
 		<!-- Picture Zoom Modal -->
 		<div id="pictureZoomModal" class="custom-modal-overlay" onclick="$(this).fadeOut(200);">
-			<div style="max-width:85vw;max-height:85vh;text-align:center;" onclick="event.stopPropagation();">
-				<img id="zoomImageElem" src="" style="max-width:100%;max-height:80vh;border-radius:10px;border:2px solid #38bdf8;box-shadow:0 0 40px rgba(56,189,248,0.6);" />
-				<div style="margin-top:10px;">
-					<button onclick="$('#pictureZoomModal').fadeOut(200);" style="background:#0284c7;color:#fff;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-weight:700;">Close View</button>
+			<div style="max-width:90vw;max-height:90vh;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;" onclick="event.stopPropagation();">
+				<img id="zoomImageElem" src="" style="position:relative !important;display:block !important;max-width:90vw !important;max-height:80vh !important;width:auto !important;height:auto !important;object-fit:contain !important;border-radius:10px;border:2px solid #38bdf8;box-shadow:0 0 45px rgba(56,189,248,0.6);margin:0 auto !important;" />
+				<div style="margin-top:14px;position:relative !important;">
+					<button onclick="$('#pictureZoomModal').fadeOut(200);" style="background:#0284c7;color:#fff;border:none;padding:9px 26px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;box-shadow:0 0 15px rgba(2,132,199,0.4);">Close View (✕)</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Tournament is now played directly on stage (see #tournamentStageHUD, #tournamentStageBanner, #tournamentStageCoronation) -->
+
+		<!-- Ask The Host Lifeline Modal -->
+		<div id="askTheHostModal" class="custom-modal-overlay" onclick="$(this).fadeOut(200);">
+			<div class="custom-modal-card" style="max-width:540px;" onclick="event.stopPropagation();">
+				<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(148,163,184,0.2);padding-bottom:12px;margin-bottom:16px;">
+					<div style="display:flex;align-items:center;gap:10px;">
+						<div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#1d4ed8);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 12px rgba(56,189,248,0.4);">🎙️</div>
+						<div>
+							<h3 style="margin:0;font-size:17px;color:#f8fafc;font-weight:700;">Ask The Host Consultation</h3>
+							<p style="margin:2px 0 0;font-size:11.5px;color:#94a3b8;">Charismatic Host analysis and probability estimation</p>
+						</div>
+					</div>
+					<button onclick="$('#askTheHostModal').fadeOut(200);" style="background:transparent;border:none;color:#94a3b8;font-size:18px;cursor:pointer;">✕</button>
+				</div>
+				<div style="background:rgba(15,23,42,0.8);border:1px solid rgba(56,189,248,0.3);border-radius:8px;padding:16px;margin-bottom:14px;">
+					<div style="font-size:12px;font-weight:700;color:#38bdf8;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">HOST ADVICE:</div>
+					<div id="hostAdviceText" style="font-size:14px;color:#f8fafc;line-height:1.5;margin-bottom:14px;"></div>
+					<div>
+						<div style="display:flex;justify-content:space-between;font-size:11.5px;color:#94a3b8;margin-bottom:4px;">
+							<span>Host Confidence:</span>
+						</div>
+						<div class="confidence-meter-bg">
+							<div id="hostConfidenceBar" class="confidence-meter-fill" style="width:85%;">85% Confident</div>
+						</div>
+					</div>
+				</div>
+				<div style="display:flex;justify-content:flex-end;">
+					<button onclick="$('#askTheHostModal').fadeOut(200);" style="background:#0284c7;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;">Lock In Mind & Return</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Keyboard Shortcuts & Broadcast Guide Modal -->
+		<div id="keyboardHelpModal" class="custom-modal-overlay" onclick="$(this).fadeOut(200);">
+			<div class="custom-modal-card" style="max-width:620px;" onclick="event.stopPropagation();">
+				<div style="display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(148,163,184,0.2);padding-bottom:12px;margin-bottom:16px;">
+					<div style="display:flex;align-items:center;gap:10px;">
+						<span style="font-size:22px;">⌨️</span>
+						<div>
+							<h3 style="margin:0;font-size:17px;color:#f8fafc;font-weight:700;">Broadcast & Player Control Guide</h3>
+							<p style="margin:2px 0 0;font-size:11.5px;color:#94a3b8;">Full keyboard shortcuts and hotkeys for seamless game show operation</p>
+						</div>
+					</div>
+					<button onclick="$('#keyboardHelpModal').fadeOut(200);" style="background:transparent;border:none;color:#94a3b8;font-size:18px;cursor:pointer;">✕</button>
+				</div>
+				<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12.5px;max-height:360px;overflow-y:auto;">
+					<div style="background:rgba(30,41,59,0.5);border:1px solid rgba(148,163,184,0.2);border-radius:8px;padding:12px;">
+						<div style="font-weight:700;color:#38bdf8;margin-bottom:8px;">GAMEPLAY & ANSWERS</div>
+						<div style="display:flex;flex-direction:column;gap:6px;color:#cbd5e1;">
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">1, 2, 3, 4</kbd> Lock Option A, B, C, D <span style="color:#94a3b8;font-size:11px;">(A–D in Tournament)</span></div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">→</kbd> Next Action / Advance Question</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">←</kbd> Money Tree / FFF Step</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">0</kbd> Pause / Resume Timer (Q1–Q10)</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">↓</kbd> Show / Hide Total Prize Money</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">C</kbd> Commercial Break / Resume</div>
+						</div>
+					</div>
+					<div style="background:rgba(30,41,59,0.5);border:1px solid rgba(148,163,184,0.2);border-radius:8px;padding:12px;">
+						<div style="font-weight:700;color:#38bdf8;margin-bottom:8px;">LIFELINES & TOURNAMENT</div>
+						<div style="display:flex;flex-direction:column;gap:6px;color:#cbd5e1;">
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">F</kbd> 50:50 Lifeline</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">P</kbd> Phone-A-Friend Lifeline</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">H</kbd> Ask The Host Lifeline</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">A</kbd> Ask The Audience Lifeline</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">X</kbd> Activate Fastest Finger First</div>
+							<div><kbd style="background:#0f172a;border:1px solid #475569;padding:2px 6px;border-radius:4px;color:#fbbf24;font-weight:700;">Esc</kbd> Exit Tournament / Close Modal</div>
+						</div>
+					</div>
+				</div>
+				<div style="display:flex;justify-content:flex-end;margin-top:16px;">
+					<button onclick="$('#keyboardHelpModal').fadeOut(200);" style="background:#0284c7;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:700;font-size:12px;">Close</button>
 				</div>
 			</div>
 		</div>
@@ -1329,7 +2091,7 @@
 
 			// Wire Host Control Panel to trigger the keyboard event handlers
 			function pressKey(keyCode) {
-				$(document).trigger($.Event('keydown', { keyCode: keyCode }));
+				$(document).trigger($.Event('keydown', { keyCode: keyCode, fromControlDeck: true }));
 			}
 
 			document.getElementById('btnNewGame').addEventListener('click', function() {
@@ -1346,13 +2108,23 @@
 					pressKey(88);
 				}
 			});
-			document.getElementById('btnPlayTheme').addEventListener('click', function() {
-				startGeneralSound("main_theme.mp3", true);
+			document.getElementById('btnPlayTheme').addEventListener('click', function(e) {
+				e.stopPropagation();
+				var gs = window.GameVariables && window.GameVariables.GeneralSound;
+				if (gs && !gs.paused && (gs.src || '').indexOf('main_theme') !== -1) {
+					try { gs.pause(); } catch (err) {}
+					if (typeof showToastNotification === 'function') showToastNotification("🔇 Theme Music Paused");
+				} else {
+					startGeneralSound("main_theme.mp3", true);
+					if (typeof showToastNotification === 'function') showToastNotification("🎵 Playing Main Theme");
+				}
 			});
 			document.getElementById('btnComm').addEventListener('click', function() { pressKey(67); });
 			document.getElementById('btnNext').addEventListener('click', function() { pressKey(39); });
 			document.getElementById('btnTree').addEventListener('click', function() {
-				if(typeof toggleMoneyTreeDisplay === 'function') {
+				if(window.GameVariables && window.GameVariables.IsPlayingFasestFinger) {
+					pressKey(37);
+				} else if(typeof toggleMoneyTreeDisplay === 'function') {
 					toggleMoneyTreeDisplay();
 				} else {
 					pressKey(37);
@@ -1369,9 +2141,13 @@
 			document.getElementById('btnTPM').addEventListener('click', function() { pressKey(40); });
 
 			// Audio & AI Listeners
-			document.getElementById('btnOpenRemixStudio').addEventListener('click', function() {
+			function openRemixStudioModal() {
 				$('#remixStudioModal').css('display', 'flex').hide().fadeIn(200);
-			});
+			}
+			var btnOpenRemix = document.getElementById('btnOpenRemixStudio');
+			if (btnOpenRemix) btnOpenRemix.addEventListener('click', openRemixStudioModal);
+			var btnTopRemix = document.getElementById('btnTopRemixStudio');
+			if (btnTopRemix) btnTopRemix.addEventListener('click', openRemixStudioModal);
 
 			document.getElementById('btnVoiceAnswer').addEventListener('click', function() {
 				if (typeof toggleVoiceRecognition === 'function') {
@@ -1397,28 +2173,244 @@
 				}
 			});
 
-			// On user click anywhere, unlock audio and start main theme if in start screen
+			// Tournament Mode Listeners
+			function openTournament() {
+				if (window.TournamentEngine) {
+					if (window.TournamentEngine.isActive) {
+						window.TournamentEngine.exitToSoloMode();
+					} else {
+						window.TournamentEngine.startTournamentGame();
+					}
+				}
+			}
+			var btnTopTourney = document.getElementById('btnTopTournament');
+			if (btnTopTourney) btnTopTourney.addEventListener('click', openTournament);
+			var btnHostTourney = document.getElementById('btnHostTournament');
+			if (btnHostTourney) btnHostTourney.addEventListener('click', openTournament);
+
+			// Ask The Host Lifeline Listener
+			var btnATH = document.getElementById('btnATH');
+			if (btnATH) {
+				btnATH.addEventListener('click', function() {
+					if (typeof window.askTheHostLifeline === 'function') {
+						window.askTheHostLifeline();
+					} else {
+						pressKey(72);
+					}
+				});
+			}
+
+			// Shortcuts Guide Listener
+			var btnShortcuts = document.getElementById('btnOpenShortcuts');
+			if (btnShortcuts) {
+				btnShortcuts.addEventListener('click', function() {
+					if (typeof window.toggleKeyboardHelpModal === 'function') {
+						window.toggleKeyboardHelpModal();
+					}
+				});
+			}
+
+			// Direct on-stage answer click to lock in A, B, C, D
+			$('#answerA').on('click', function() {
+				if (window.TournamentEngine && window.TournamentEngine.isActive) {
+					window.TournamentEngine.handleStageAnswer('a');
+				} else {
+					pressKey(49);
+				}
+			});
+			$('#answerB').on('click', function() {
+				if (window.TournamentEngine && window.TournamentEngine.isActive) {
+					window.TournamentEngine.handleStageAnswer('b');
+				} else {
+					pressKey(50);
+				}
+			});
+			$('#answerC').on('click', function() {
+				if (window.TournamentEngine && window.TournamentEngine.isActive) {
+					window.TournamentEngine.handleStageAnswer('c');
+				} else {
+					pressKey(51);
+				}
+			});
+			$('#answerD').on('click', function() {
+				if (window.TournamentEngine && window.TournamentEngine.isActive) {
+					window.TournamentEngine.handleStageAnswer('d');
+				} else {
+					pressKey(52);
+				}
+			});
+
+			// Global hotkey for Shortcuts ('?') — Host Lifeline ('H') is routed cleanly inside KeyboardController.js
+			$(document).on('keydown', function(e) {
+				if ((e.keyCode === 191 || e.key === '?') && !$(e.target).is('input, textarea')) {
+					if (typeof window.toggleKeyboardHelpModal === 'function') {
+						window.toggleKeyboardHelpModal();
+					}
+				}
+			});
+
+			// On user click anywhere, unlock audio and start main theme if on initial welcome screen
 			document.addEventListener('click', function() {
 				if (typeof unlockAudioEngine === 'function') {
 					unlockAudioEngine();
 				}
-				if (window.GameVariables && window.GameVariables.IsInCommercial && (!window.GameVariables.GeneralSound || window.GameVariables.GeneralSound.paused)) {
+				if ((!window.TournamentEngine || !window.TournamentEngine.isActive) && $('#stageWelcomeOverlay').is(':visible') && window.GameVariables && window.GameVariables.IsInCommercial && (!window.GameVariables.GeneralSound || window.GameVariables.GeneralSound.paused)) {
 					startGeneralSound("main_theme.mp3", true);
 				}
 			});
 
-			var isPanelMinimized = false;
-			document.getElementById('btnTogglePanel').addEventListener('click', function() {
-				var panel = document.getElementById('hostControlPanel');
-				isPanelMinimized = !isPanelMinimized;
-				if (isPanelMinimized) {
-					panel.classList.add('minimized');
-					this.textContent = '▲';
-				} else {
-					panel.classList.remove('minimized');
-					this.textContent = '▼';
+			function initTierTimerForLevel(level) {
+				if (!window.GameVariables || level >= 11) return;
+				var setting = level < 6 ? window.GameVariables.FirstTierTimer : window.GameVariables.SecondTierTimer;
+				if (setting == 1 && typeof tier1Timer === 'function') tier1Timer();
+				else if (setting == 2 && typeof tier2Timer === 'function') tier2Timer();
+				else if (setting == 3 && typeof tier3Timer === 'function') tier3Timer();
+				else if (setting == 4 && typeof tier4Timer === 'function') tier4Timer();
+				else if (typeof tier1Timer === 'function') {
+					if (level < 6) tier1Timer();
+					else if (typeof tier2Timer === 'function') tier2Timer();
 				}
-			});
+			}
+
+			// Present current solo question cleanly onto stage
+			window.presentNextSoloQuestion = function() {
+				if (!window.GameVariables) return;
+				var level = window.GameVariables.QuestionLevel || 1;
+
+				if (!window.GameVariables.QuestionsAndAnswers || window.GameVariables.QuestionsAndAnswers.length < level) {
+					var fetchRunId = window.GameVariables.SoloRunId;
+					if (typeof fetchAndLoadQuestions === 'function') {
+						fetchAndLoadQuestions(function() {
+							if (window.GameVariables.SoloRunId !== fetchRunId || (window.TournamentEngine && window.TournamentEngine.isActive)) return;
+							window.presentNextSoloQuestion();
+						});
+					}
+					return;
+				}
+
+				if (window.TournamentEngine && window.TournamentEngine.isActive) {
+					window.TournamentEngine.exitToSoloMode(false);
+				}
+				$('#stageWelcomeOverlay').stop(true, true).hide();
+				$('#tournamentStageHUD').stop(true, true).hide();
+				$('#tournamentStageBanner').stop(true, true).hide();
+				$('#tournamentStageCoronation').stop(true, true).hide();
+				$('.logoContainerDiv').stop(true, true).css({ transition: 'none', opacity: 0 }).hide();
+
+				if (typeof pauseTimer === 'function') {
+					try { pauseTimer(); } catch (e) {}
+				}
+				if (typeof hideAmountWon === 'function') hideAmountWon();
+				if (typeof hideTotalPrizeMoneyStrap === 'function') hideTotalPrizeMoneyStrap();
+				if (typeof hideMillionaireTitleStrap === 'function') hideMillionaireTitleStrap();
+				if (typeof slideOutMoneyTree === 'function') slideOutMoneyTree();
+				if (typeof resetAnswerStraps === 'function') resetAnswerStraps();
+
+				window.GameVariables.IsInCommercial = false;
+				window.GameVariables.IsLogoShowing = false;
+				window.GameVariables.IsExplainingRules = false;
+				window.GameVariables.IsFirstQuestionOfGame = false;
+				window.GameVariables.QuestionInProgress = true;
+				window.GameVariables.CannotLockInFinalAnswer = false;
+				window.GameVariables.CurrentTargetAnswer = "";
+				window.GameVariables.QuestionSequenceCounter = -1;
+				window.GameVariables.IsTotalPrizeMoneyShowing = false;
+				window.GameVariables.IsLevelStrapShowing = false;
+				window.GameVariables.pafLifeLineSequenceCounter = 0;
+				window.GameVariables.ataLifeLineSequenceCounter = 0;
+				window.GameVariables.commericalSequenceCounter = 0;
+
+				$('.answerGroupBDiv').stop(true, true).css({ perspective: 4096, bottom: '0px' });
+				$('.answerGroupADiv').stop(true, true).css({ perspective: 4096, bottom: '0px' });
+				$('.questionStrapDiv').stop(true, true).css({ perspective: 4096, bottom: '220px', rotateX: '0deg', opacity: 1 });
+
+				setQuestion(false);
+				revealQuestionAndAnswerStraps();
+				revealAllAnswersAtOnce();
+				playBackgroundSound();
+
+				if (level < 11) {
+					initTierTimerForLevel(level);
+					$('.timerStrapDiv').stop(true, true).show().css({ perspective: 0, opacity: 1, bottom: '399px' });
+					if (window.GameVariables.displaySecondsAndTimerBar && typeof startTimer === 'function') {
+						startTimer();
+					}
+				} else {
+					if (typeof hideTimer === 'function') {
+						hideTimer();
+					} else {
+						$('.timerStrapDiv').stop(true, true).css({ transition: 'none', opacity: 0 }).hide();
+					}
+				}
+
+				var prizeVal = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts[level - 1]) ? window.GameVariables.PrizeAmounts[level - 1] : 0;
+				var prizeLabel = typeof accounting !== 'undefined' ? accounting.formatMoney(prizeVal, (window.GameVariables.NumberPrefix || "Rs. "), 0) : prizeVal;
+				if (typeof showToastNotification === 'function') {
+					showToastNotification("✨ Question " + level + " for " + prizeLabel + "! Click an answer or press 1-4.");
+				}
+			};
+
+			// Launch Solo Hot Seat Game directly onto stage
+			window.launchSoloGame = function() {
+				$('#stageWelcomeOverlay').stop(true, true).fadeOut(200, function() {
+					$(this).hide();
+				});
+				if (window.TournamentEngine && window.TournamentEngine.isActive) {
+					window.TournamentEngine.exitToSoloMode(false);
+				}
+				if (window.GameVariables) {
+					window.GameVariables.SoloRunId = (window.GameVariables.SoloRunId || 0) + 1;
+				}
+				var launchRunId = window.GameVariables ? window.GameVariables.SoloRunId : 0;
+				if (typeof hideMillionaireLogo === 'function') {
+					hideMillionaireLogo();
+				}
+				if (typeof hideTotalPrizeMoneyStrap === 'function') {
+					hideTotalPrizeMoneyStrap();
+				}
+				if (typeof hideMillionaireTitleStrap === 'function') {
+					hideMillionaireTitleStrap();
+				}
+				if (typeof hideLevelStrap === 'function') {
+					hideLevelStrap();
+				}
+				if (typeof unlockAudioEngine === 'function') {
+					unlockAudioEngine();
+				}
+				if (!window.GameVariables.QuestionsAndAnswers || window.GameVariables.QuestionsAndAnswers.length === 0) {
+					if (typeof fetchAndLoadQuestions === 'function') {
+						fetchAndLoadQuestions(function() {
+							if (window.GameVariables.SoloRunId !== launchRunId || (window.TournamentEngine && window.TournamentEngine.isActive)) return;
+							window.launchSoloGame();
+						});
+					}
+					return;
+				}
+				window.GameVariables.QuestionLevel = 1;
+				window.GameVariables.FirstTierBackgroundSoundPlaying = false;
+				window.GameVariables.IsWalkingAway = false;
+				if (typeof setLevelOnMoneyTree === 'function') {
+					setLevelOnMoneyTree(1);
+				}
+				window.presentNextSoloQuestion();
+			};
+
+			var isPanelMinimized = true;
+			var hcpHeader = document.querySelector('#hostControlPanel .hcp-header');
+			var btnTogglePanel = document.getElementById('btnTogglePanel');
+			if (hcpHeader && btnTogglePanel) {
+				hcpHeader.addEventListener('click', function() {
+					var panel = document.getElementById('hostControlPanel');
+					isPanelMinimized = !isPanelMinimized;
+					if (isPanelMinimized) {
+						panel.classList.add('minimized');
+						btnTogglePanel.textContent = '▲';
+					} else {
+						panel.classList.remove('minimized');
+						btnTogglePanel.textContent = '▼';
+					}
+				});
+			}
 		</script>
 	</body>
 </html>

@@ -131,8 +131,20 @@ function startLongPassiveSound(filename, loop){
 	try{
 		stopLongPassiveSound();
 		window.GameVariables.LongPassiveSound = new Audio("Sounds/" + filename);
-		if(loop !== false){
+		if(loop === false){
+			window.GameVariables.LongPassiveSound.loop = false;
+		} else if(loop === true){
 			window.GameVariables.LongPassiveSound.loop = true;
+		} else {
+			// If loop argument is omitted:
+			// Only loop if filename indicates an ambient bed or think track.
+			// Lose sounds, wrong answers, win stingers, and narration must never loop.
+			var fn = (filename || '').toLowerCase();
+			if(fn.indexOf('lose') !== -1 || fn.indexOf('wrong') !== -1 || fn.indexOf('correct') !== -1 || fn.indexOf('explain') !== -1 || fn.indexOf('resume') !== -1){
+				window.GameVariables.LongPassiveSound.loop = false;
+			} else {
+				window.GameVariables.LongPassiveSound.loop = true;
+			}
 		}
 		safePlay(window.GameVariables.LongPassiveSound);
 	}

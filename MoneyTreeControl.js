@@ -1,39 +1,44 @@
 function renderMoneyTreeTable(){
 	var htmlTableString = "";
+	var totalLevels = (window.GameVariables && window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts.length) ? window.GameVariables.PrizeAmounts.length : 15;
 	
-	for (var i = 14; i >= 0; i--){
+	for (var i = totalLevels - 1; i >= 0; i--){
 		htmlTableString += "<tr id='moneyTreeTr" + (i+1) + "'>";
 		
-		if((i+1)%5 === 0){
+		var isMilestone = ((i+1) % 5 === 0) || (i + 1 === totalLevels);
+		if(isMilestone){
 			htmlTableString += "<td class='moneyTreeLevelWhiteTd'>";
 		}
 		else{
 			htmlTableString += "<td class='moneyTreeLevelTd'>";
 		}
 		
-		htmlTableString += (new Intl.NumberFormat('en', { numberingSystem: window.GameVariables.LevelNumberingSystem }).format(i + 1));
+		htmlTableString += (new Intl.NumberFormat('en', { numberingSystem: window.GameVariables.LevelNumberingSystem || 'latn' }).format(i + 1));
 		htmlTableString += "</td>"
 		htmlTableString += "<td class='moneyTreeDiagonalTd'></td>"
 		
-		if((i+1)%5 === 0){
+		if(isMilestone){
 			htmlTableString += "<td class='moneyTreeAmountWhiteTd'>"
 		}
 		else{
 			htmlTableString += "<td class='moneyTreeAmountTd'>"
 		}
 		
-		if(i >= window.GameVariables.TopPrizeQuestionNumber - 1)
+		var topQNum = window.GameVariables.TopPrizeQuestionNumber || totalLevels;
+		if(i >= topQNum - 1)
 		{
-			if(window.GameVariables.UseTopPrizeText == true){
+			if(window.GameVariables.UseTopPrizeText == true && window.GameVariables.TopPrizeText && window.GameVariables.TopPrizeText[i]){
 				htmlTableString += window.GameVariables.TopPrizeText[i];
 			}
 			else{
-				htmlTableString += window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[i]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix;
+				var prefix = window.GameVariables.NumberPrefix || "Rs. ";
+				htmlTableString += prefix + new Intl.NumberFormat(window.GameVariables.LocaleCode || 'en-IN', window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[i]);
 			}
 		}
 		else
 		{
-			htmlTableString += window.GameVariables.NumberPrefix + new Intl.NumberFormat(window.GameVariables.LocaleCode, window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[i]).replace(window.GameVariables.ReplaceCharacterBefore, window.GameVariables.ReplaceCharacterAfter).trim() + window.GameVariables.NumberSuffix;
+			var prefix = window.GameVariables.NumberPrefix || "Rs. ";
+			htmlTableString += prefix + new Intl.NumberFormat(window.GameVariables.LocaleCode || 'en-IN', window.GameVariables.FormatOptions).format(window.GameVariables.PrizeAmounts[i]);
 		}
 
 		
@@ -56,6 +61,13 @@ function slideOutMoneyTree(){
 }
 
 function toggleMoneyTreeDisplay(){
+	if(window.TournamentEngine && window.TournamentEngine.isActive){
+		if(typeof showToastNotification === 'function'){
+			showToastNotification("💰 Money Tree is for Solo Hot Seat Mode (Exit Tournament first).");
+		}
+		return;
+	}
+	$('#stageWelcomeOverlay').stop(true, true).hide();
 	if(window.GameVariables.IsMoneyTreeShowing){
 		slideOutMoneyTree();
 	} else {
@@ -124,7 +136,8 @@ function scaleTreeLevels(level){
 		$(previousTargetId + ' .moneyTreeDiagonalTd').css('background-image','url(' + 'Images/white_diagonal_money_tree.png' +')');
 	}
 	
-	if(level < 15){
+	var totalLevels = (window.GameVariables && window.GameVariables.PrizeAmounts) ? window.GameVariables.PrizeAmounts.length : 15;
+	if(level < totalLevels){
 		window.GameVariables.ScaleTreeTimeout = setTimeout(function(){
 			scaleTreeLevels(level + 1);
 		}, 250);
