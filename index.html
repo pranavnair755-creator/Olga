@@ -858,13 +858,13 @@
 						WHO WANTS TO BE A MILLIONAIRE
 					</h1>
 					<p style="font-family:system-ui, sans-serif;font-size:15px;color:#94a3b8;margin:0 0 32px;letter-spacing:0.5px;">
-						Authentic TV Broadcast Simulator • ₹1 Crore Grand Prize • 15 Levels & Lifelines
+						Authentic TV Broadcast Simulator • $1 Million Grand Prize • 15 Levels & Lifelines
 					</p>
 
 					<div style="display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:28px;">
 						<button onclick="window.launchSoloGame();" style="background:linear-gradient(135deg,#0284c7,#2563eb);color:#fff;border:none;padding:16px 36px;border-radius:10px;font-size:16px;font-weight:800;letter-spacing:0.8px;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 0 25px rgba(2,132,199,0.5);transition:all 0.2s ease;">
 							<span style="font-size:20px;">▶</span>
-							<span>PLAY SOLO HOT SEAT (₹1 CRORE)</span>
+							<span>PLAY SOLO HOT SEAT ($1 MILLION)</span>
 						</button>
 						<button onclick="$('#stageWelcomeOverlay').stop(true,true).fadeOut(200, function(){$(this).hide();}); if(window.TournamentEngine){TournamentEngine.startTournamentGame();}" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;border:none;padding:16px 36px;border-radius:10px;font-size:16px;font-weight:800;letter-spacing:0.8px;cursor:pointer;display:flex;align-items:center;gap:10px;box-shadow:0 0 25px rgba(245,158,11,0.5);transition:all 0.2s ease;">
 							<span style="font-size:20px;">⚡</span>
@@ -1050,7 +1050,7 @@
 				<p id="stageCoronationDesc" style="font-size:15px;color:#cbd5e1;max-width:720px;margin:0 auto 28px;line-height:1.6;"></p>
 				<div style="display:flex;justify-content:center;gap:16px;">
 					<button id="btnStageEnterHotSeat" onclick="TournamentEngine.launchFinaleHotSeat();" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#0f172a;border:none;padding:14px 32px;border-radius:8px;cursor:pointer;font-weight:800;font-size:15px;box-shadow:0 0 25px rgba(245,158,11,0.6);">
-						Enter ₹1 Crore Hot Seat Grand Finale (10 Questions) →
+						Enter $1 Million Hot Seat Grand Finale (10 Questions) →
 					</button>
 					<button onclick="TournamentEngine.startTournamentGame();" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:14px 24px;border-radius:8px;cursor:pointer;font-weight:700;font-size:14px;">
 						Replay Tournament
@@ -1147,7 +1147,7 @@
 			
 			<!-- Win Strap Div -->
 			<div class="winStrapDiv">
-				<p class="winningsP">Rs. 25,00,000</p>
+				<p class="winningsP">$250,000</p>
 			</div>
 			
 			<!-- Fastest Finger Contestants Div -->
@@ -1496,7 +1496,7 @@
 				<img src="Images/white_diagonal.png" style="top:240px;left:468px;"/>
 				<img src="Images/white_diagonal.png" style="top:240px;right:468px;"/>
 				<div class="totalPrizeDiv">TOTAL PRIZE</div>
-				<div class="totalPrizeMoneyWonDiv">Rs. 0</div>
+				<div class="totalPrizeMoneyWonDiv">$0</div>
 			</div>
 			
 			<!-- Current Level Strap Div-->
@@ -1505,7 +1505,7 @@
 				<img src="Images/small_side_strap_gold.png" class="sideStrapGoldImg"/>
 				<img src="Images/small_side_strap_gold_fill.png" class="sideStrapGoldFillImg"/>
 				<div class="currentLevelStrapAmountDiv">
-					Rs. 1 CRORE
+					$1 MILLION
 				</div>
 			</div>
 			
@@ -1805,116 +1805,149 @@
 					</div>
 				</div>
 
-				<!-- Official Question Suspense Beds (Q6 - Q15) -->
+				<!-- Official Question Suspense Beds (10-Question Tournament & Finale) -->
 				<div style="display:flex;align-items:center;justify-content:space-between;margin:18px 0 6px;">
 					<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#38bdf8;display:flex;align-items:center;gap:6px;">
-						<span>🎵</span> Authentic Question Suspense Beds (Q6 – Q15)
+						<span>🎵</span> Question Suspense Beds (10-Question Format)
 					</div>
-					<span style="font-size:10.5px;color:#38bdf8;background:rgba(56,189,248,0.12);padding:2px 8px;border-radius:4px;border:1px solid rgba(56,189,248,0.25);">All 10 Tracks Added to Gameplay & Jukebox</span>
+					<span style="font-size:10.5px;color:#38bdf8;background:rgba(56,189,248,0.12);padding:2px 8px;border-radius:4px;border:1px solid rgba(56,189,248,0.25);">Q1–Q5 Flow (60s) • Q6–Q10 High Stakes (90s)</span>
 				</div>
-				<p style="font-size:11px;color:#94a3b8;margin:0 0 10px;">Click any question level to test or set its authentic suspense think-track:</p>
+				<p style="font-size:11px;color:#94a3b8;margin:0 0 10px;">Click any question level to play its authentic suspense bed:</p>
 				
 				<div class="bed-grid">
+					<!-- Q1-Q5 Flow Bed -->
+					<div class="bed-card" id="bed-card-1" onclick="window.playQuestionBed(1);">
+						<div class="bed-header">
+							<span class="bed-level">Q1–Q5</span>
+							<span class="bed-prize">$100–$1,000</span>
+						</div>
+						<div class="bed-title">Tier 1 Continuous Flow</div>
+						<div class="bed-desc">45s timer • No lights down Q2–Q5</div>
+						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(1);">▶ Play Bed</button>
+					</div>
 					<!-- Q6 Bed -->
 					<div class="bed-card" id="bed-card-6" onclick="window.playQuestionBed(6);">
 						<div class="bed-header">
 							<span class="bed-level">Q6</span>
-							<span class="bed-prize">₹20,000</span>
+							<span class="bed-prize">$2,000</span>
 						</div>
 						<div class="bed-title">Tier 2 Entry Bed</div>
-						<div class="bed-desc">Heartbeat pulse begins</div>
+						<div class="bed-desc">60s timer • Studio tension</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(6);">▶ Play Bed</button>
 					</div>
 					<!-- Q7 Bed -->
 					<div class="bed-card" id="bed-card-7" onclick="window.playQuestionBed(7);">
 						<div class="bed-header">
 							<span class="bed-level">Q7</span>
-							<span class="bed-prize">₹40,000</span>
+							<span class="bed-prize">$4,000</span>
 						</div>
-						<div class="bed-title">Suspense Bed</div>
-						<div class="bed-desc">Deepening cello drones</div>
+						<div class="bed-title">Clock Pressure Bed</div>
+						<div class="bed-desc">60s timer • Driving pulse</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(7);">▶ Play Bed</button>
 					</div>
 					<!-- Q8 Bed -->
 					<div class="bed-card" id="bed-card-8" onclick="window.playQuestionBed(8);">
 						<div class="bed-header">
 							<span class="bed-level">Q8</span>
-							<span class="bed-prize">₹80,000</span>
+							<span class="bed-prize">$8,000</span>
 						</div>
-						<div class="bed-title">Rising Tension</div>
-						<div class="bed-desc">Syncopated bass pulse</div>
+						<div class="bed-title">Eight Thousand Tension</div>
+						<div class="bed-desc">60s timer • High stakes</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(8);">▶ Play Bed</button>
 					</div>
 					<!-- Q9 Bed -->
 					<div class="bed-card" id="bed-card-9" onclick="window.playQuestionBed(9);">
 						<div class="bed-header">
-							<span class="bed-level">Q9</span>
-							<span class="bed-prize">₹1,60,000</span>
+							<span class="bed-level" style="background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.4);">Q9 🔥</span>
+							<span class="bed-prize" style="color:#fca5a5;">$16,000</span>
 						</div>
-						<div class="bed-title">Pre-Milestone</div>
-						<div class="bed-desc">1 step from Safe Haven</div>
+						<div class="bed-title" style="color:#fca5a5;">Sixteen Thousand Climax</div>
+						<div class="bed-desc">60s timer • 1 step from Safety Net</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(9);">▶ Play Bed</button>
 					</div>
-					<!-- Q10 Bed (Milestone!) -->
+					<!-- Q10 Bed -->
 					<div class="bed-card milestone" id="bed-card-10" onclick="window.playQuestionBed(10);">
 						<div class="bed-header">
 							<span class="bed-level" style="background:rgba(245,158,11,0.2);color:#f59e0b;border:1px solid rgba(245,158,11,0.4);">Q10 🛡️</span>
-							<span class="bed-prize" style="color:#fef08a;">₹3,20,000</span>
+							<span class="bed-prize" style="color:#fef08a;">$32,000</span>
 						</div>
-						<div class="bed-title" style="color:#fef08a;">Safety Net 2 Milestone</div>
-						<div class="bed-desc">Guaranteed ₹3.2L lock-in</div>
+						<div class="bed-title" style="color:#fef08a;">Safety Net 2 Bed</div>
+						<div class="bed-desc">Authentic Q10 bed</div>
 						<button class="bed-play-btn milestone" onclick="event.stopPropagation(); window.playQuestionBed(10);">▶ Play Bed</button>
 					</div>
 					<!-- Q11 Bed -->
 					<div class="bed-card" id="bed-card-11" onclick="window.playQuestionBed(11);">
 						<div class="bed-header">
 							<span class="bed-level">Q11</span>
-							<span class="bed-prize">₹6,40,000</span>
+							<span class="bed-prize">$64,000</span>
 						</div>
-						<div class="bed-title">Tier 3 Arena</div>
-						<div class="bed-desc">High stakes pitch sweep</div>
+						<div class="bed-title">Tier 3 Entry Bed</div>
+						<div class="bed-desc">No timer • Authentic Q11 bed</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(11);">▶ Play Bed</button>
 					</div>
 					<!-- Q12 Bed -->
 					<div class="bed-card" id="bed-card-12" onclick="window.playQuestionBed(12);">
 						<div class="bed-header">
 							<span class="bed-level">Q12</span>
-							<span class="bed-prize">₹12,50,000</span>
+							<span class="bed-prize">$125,000</span>
 						</div>
-						<div class="bed-title">Taiko Suspense</div>
-						<div class="bed-desc">Creeping string tension</div>
+						<div class="bed-title">High Stakes Bed</div>
+						<div class="bed-desc">No timer • Authentic Q12 bed</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(12);">▶ Play Bed</button>
 					</div>
 					<!-- Q13 Bed -->
 					<div class="bed-card" id="bed-card-13" onclick="window.playQuestionBed(13);">
 						<div class="bed-header">
 							<span class="bed-level">Q13</span>
-							<span class="bed-prize">₹25,00,000</span>
+							<span class="bed-prize">$250,000</span>
 						</div>
-						<div class="bed-title">Quarter-Crore</div>
-						<div class="bed-desc">Sub-bass countdown</div>
+						<div class="bed-title">Quarter-Million Bed</div>
+						<div class="bed-desc">No timer • Authentic Q13 bed</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(13);">▶ Play Bed</button>
 					</div>
-					<!-- Q14 Bed (Penultimate) -->
+					<!-- Q14 Bed -->
 					<div class="bed-card" id="bed-card-14" onclick="window.playQuestionBed(14);">
 						<div class="bed-header">
 							<span class="bed-level" style="background:rgba(239,68,68,0.2);color:#f87171;border:1px solid rgba(239,68,68,0.4);">Q14 🔥</span>
-							<span class="bed-prize" style="color:#fca5a5;">₹50,00,000</span>
+							<span class="bed-prize" style="color:#fca5a5;">$500,000</span>
 						</div>
 						<div class="bed-title" style="color:#fca5a5;">Penultimate Bed</div>
-						<div class="bed-desc">Final hurdle before Finale</div>
+						<div class="bed-desc">No timer • 1 step from $1 Million</div>
 						<button class="bed-play-btn" onclick="event.stopPropagation(); window.playQuestionBed(14);">▶ Play Bed</button>
 					</div>
-					<!-- Q15 Bed (Millionaire Finale) -->
+					<!-- Q15 Bed -->
 					<div class="bed-card milestone" id="bed-card-15" onclick="window.playQuestionBed(15);">
 						<div class="bed-header">
 							<span class="bed-level" style="background:rgba(234,179,8,0.25);color:#facc15;border:1px solid rgba(234,179,8,0.5);">Q15 🏆</span>
-							<span class="bed-prize" style="color:#fef08a;font-weight:800;">₹1,00,00,000</span>
+							<span class="bed-prize" style="color:#fef08a;font-weight:800;">$1 MILLION</span>
 						</div>
-						<div class="bed-title" style="color:#fde047;font-weight:700;">₹1 Crore Finale Bed</div>
-						<div class="bed-desc">Ultimate suspense climax</div>
+						<div class="bed-title" style="color:#fde047;font-weight:700;">$1 Million Finale Bed</div>
+						<div class="bed-desc">No timer • Authentic Q15 bed</div>
 						<button class="bed-play-btn milestone" onclick="event.stopPropagation(); window.playQuestionBed(15);">▶ Play Bed</button>
 					</div>
+				</div>
+
+				<!-- Live Broadcast Soundboard Cues -->
+				<div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 8px;">
+					<div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#facc15;display:flex;align-items:center;gap:6px;">
+						<span>🎛️</span> Live Broadcast Soundboard Cues
+					</div>
+				</div>
+				<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;">
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('/public/assets/aistudio/30sec_UK_41885c7f.wav', 'Tournament Elimination Cue', true);">⚡ Tourney Elim Cue</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('/public/assets/aistudio/45sec_UK_1eea5d72.wav', 'Tournament 10Q Finale Cue', true);">🔥 Tourney 10Q Cue</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('main_theme.mp3', 'Main Theme', false);">🎺 Main Theme</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('q1_to_q5_lights_down.mp3', 'Q1 Lights Down', false);">💡 Q1 Lights Down</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('lights_down_1.mp3', 'Q6 Lights Down', false);">💡 Q6 Lights Down</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('lights_down_5.mp3', 'Q10 Finale Lights Down', false);">💡 Q10 Lights Down</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('final_answer_1.mp3', 'Final Answer (Q6)', false);">🔒 Final Answer 1</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('final_answer_5.mp3', 'Final Answer (Q10)', false);">🔒 Final Answer 5</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('q5_correct.mp3', 'Q5 Safe Haven Win', false);">✅ Q5 Win</button>
+					<button class="bed-play-btn milestone" onclick="window.playSoundboardCue('q15_correct.mp3', '$1 Million Jackpot Win', false);">🏆 $1 Million Win</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('q10_lose.mp3', 'High-Stakes Wrong', false);">❌ Wrong Answer</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('time_up.mp3', 'Time Up Buzzer', false);">⏰ Time Up</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('fifty_fifty.mp3', '50:50 Lifeline', false);">✂️ 50:50</button>
+					<button class="bed-play-btn" onclick="window.playSoundboardCue('close_theme.mp3', 'Closing Theme', false);">🎬 Close Theme</button>
 				</div>
 
 				<!-- AI Lyria Music Composer Panel -->
@@ -2266,9 +2299,10 @@
 				else if (setting == 2 && typeof tier2Timer === 'function') tier2Timer();
 				else if (setting == 3 && typeof tier3Timer === 'function') tier3Timer();
 				else if (setting == 4 && typeof tier4Timer === 'function') tier4Timer();
-				else if (typeof tier1Timer === 'function') {
-					if (level < 6) tier1Timer();
-					else if (typeof tier2Timer === 'function') tier2Timer();
+				else if (setting == 5 && typeof tier5Timer === 'function') tier5Timer();
+				else if (typeof tier4Timer === 'function') {
+					if (level < 6) tier4Timer();
+					else if (typeof tier5Timer === 'function') tier5Timer();
 				}
 			}
 
@@ -2313,40 +2347,37 @@
 				window.GameVariables.QuestionInProgress = true;
 				window.GameVariables.CannotLockInFinalAnswer = false;
 				window.GameVariables.CurrentTargetAnswer = "";
-				window.GameVariables.QuestionSequenceCounter = -1;
+				window.GameVariables.QuestionSequenceCounter = 2;
 				window.GameVariables.IsTotalPrizeMoneyShowing = false;
 				window.GameVariables.IsLevelStrapShowing = false;
 				window.GameVariables.pafLifeLineSequenceCounter = 0;
 				window.GameVariables.ataLifeLineSequenceCounter = 0;
 				window.GameVariables.commericalSequenceCounter = 0;
 
-				$('.answerGroupBDiv').stop(true, true).css({ perspective: 4096, bottom: '0px' });
-				$('.answerGroupADiv').stop(true, true).css({ perspective: 4096, bottom: '0px' });
-				$('.questionStrapDiv').stop(true, true).css({ perspective: 4096, bottom: '220px', rotateX: '0deg', opacity: 1 });
+				$('.answerGroupBDiv').stop(true, true).transition({ perspective: 4096, bottom: '-331px' }, 0);
+				$('.answerGroupADiv').stop(true, true).transition({ perspective: 4096, bottom: '-256px' }, 0);
+				$('.questionStrapDiv').stop(true, true).transition({ perspective: 4096, bottom: '-192px', rotateX: '0deg' }, 0);
+				$('.timerStrapDiv').stop(true, true).transition({ perspective: 0, opacity: 0, bottom: '241px' }, 0);
 
 				setQuestion(false);
 				revealQuestionAndAnswerStraps();
-				revealAllAnswersAtOnce();
 				playBackgroundSound();
 
-				if (level < 11) {
-					initTierTimerForLevel(level);
-					$('.timerStrapDiv').stop(true, true).show().css({ perspective: 0, opacity: 1, bottom: '399px' });
-					if (window.GameVariables.displaySecondsAndTimerBar && typeof startTimer === 'function') {
-						startTimer();
-					}
-				} else {
-					if (typeof hideTimer === 'function') {
+				var runIdRevealSolo = window.GameVariables.SoloRunId;
+				$('.questionStrapDiv').transition({ perspective: 4096, bottom: '62px' }, 700, 'cubic-bezier(0.5, 2, 0.5, 1)', function() {
+					if (window.GameVariables.SoloRunId !== runIdRevealSolo || (window.TournamentEngine && window.TournamentEngine.isActive)) return;
+					if (level < 11) {
+						initTierTimerForLevel(level);
+						$('.timerStrapDiv').show().transition({ perspective: 0, opacity: 1, bottom: '241px' }, 500, 'linear');
+					} else if (typeof hideTimer === 'function') {
 						hideTimer();
-					} else {
-						$('.timerStrapDiv').stop(true, true).css({ transition: 'none', opacity: 0 }).hide();
 					}
-				}
+				});
 
 				var prizeVal = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts[level - 1]) ? window.GameVariables.PrizeAmounts[level - 1] : 0;
-				var prizeLabel = typeof accounting !== 'undefined' ? accounting.formatMoney(prizeVal, (window.GameVariables.NumberPrefix || "Rs. "), 0) : prizeVal;
+				var prizeLabel = typeof accounting !== 'undefined' ? accounting.formatMoney(prizeVal, (window.GameVariables.NumberPrefix || "$"), 0) : prizeVal;
 				if (typeof showToastNotification === 'function') {
-					showToastNotification("✨ Question " + level + " for " + prizeLabel + "! Click an answer or press 1-4.");
+					showToastNotification("✨ Question " + level + " for " + prizeLabel + "! Press [→] Next to reveal options.");
 				}
 			};
 

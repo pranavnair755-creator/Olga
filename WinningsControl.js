@@ -1,7 +1,7 @@
 function showAmountWon(){
 	var level = window.GameVariables.QuestionLevel || 1;
-	var amount = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts[level - 1]) ? window.GameVariables.PrizeAmounts[level - 1] : 1000;
-	var text = "Rs. " + (amount >= 10000000 ? "1 CRORE" : new Intl.NumberFormat('en-IN').format(amount));
+	var amount = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts[level - 1]) ? window.GameVariables.PrizeAmounts[level - 1] : 100;
+	var text = amount >= 1000000 ? "$1 MILLION" : ("$" + new Intl.NumberFormat('en-US').format(amount));
 	$('.winningsP').html(text);
 	$('.totalPrizeMoneyWonDiv').html(text);
 	$('.winStrapDiv').css('opacity', 1);
@@ -14,15 +14,18 @@ function hideAmountWon(){
 
 function reduceAmountWon(){
 	var level = window.GameVariables.QuestionLevel || 1;
-	var wonText = "Rs. 0";
+	var amounts = (window.GameVariables && window.GameVariables.PrizeAmounts) ? window.GameVariables.PrizeAmounts : [];
+	var q5Safe = amounts[4] || 1000;
+	var q10Safe = amounts[9] || 32000;
+	var wonText = "$0";
 	if(level <= 5){
-		wonText = "Rs. 0";
+		wonText = "$0";
 	}
 	else if(level <= 10){
-		wonText = "Rs. 10,000";
+		wonText = "$" + new Intl.NumberFormat('en-US').format(q5Safe);
 	}
 	else {
-		wonText = "Rs. 3,20,000";
+		wonText = "$" + new Intl.NumberFormat('en-US').format(q10Safe);
 	}
 	$('.totalPrizeMoneyWonDiv').html(wonText);
 	$('.winningsP').html(wonText);

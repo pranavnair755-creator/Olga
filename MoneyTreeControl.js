@@ -46,7 +46,7 @@ function renderMoneyTreeTable(){
 		htmlTableString += "</tr>"
 	}
 	
-	$('.moneyTreeTable').html(htmlTableString);
+	$('.moneyTreeTable').toggleClass('tree-10q', totalLevels === 10).html(htmlTableString);
 }
 
 function slideInMoneyTree(){

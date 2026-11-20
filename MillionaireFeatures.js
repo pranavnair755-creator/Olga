@@ -236,19 +236,20 @@
   };
 
   /* =========================================================================
-   * 2b. QUESTION SUSPENSE BEDS JUKEBOX (Q6 - Q15)
+   * 2b. QUESTION SUSPENSE BEDS & LIVE CUES SOUNDBOARD (Q1 – Q10 / FINALE)
    * ========================================================================= */
   var questionBeds = [
-    { level: 6, file: 'q6_bed.mp3', prize: '₹20,000', tier: 'Tier 2 Entry', desc: 'Heartbeat pulse accelerates as Tier 1 safety is left behind.' },
-    { level: 7, file: 'q7_bed.mp3', prize: '₹40,000', tier: 'Tier 2', desc: 'Deepening cello drones and subtle electronic tick.' },
-    { level: 8, file: 'q8_bed.mp3', prize: '₹80,000', tier: 'Tier 2', desc: 'Syncopated suspense bass pulse and rising studio tension.' },
-    { level: 9, file: 'q9_bed.mp3', prize: '₹1,60,000', tier: 'Tier 2 Pre-Milestone', desc: 'One question away from the guaranteed ₹3,20,000 safe haven.' },
-    { level: 10, file: 'q10_bed.mp3', prize: '₹3,20,000', tier: 'Tier 2 Milestone (Safety Net 2)', desc: 'Milestone question bed with dramatic atmospheric presence.' },
-    { level: 11, file: 'q11_bed.mp3', prize: '₹6,40,000', tier: 'Tier 3 High Stakes', desc: 'Unlocks Tier 3 - high frequency pitch sweeps and intense focus.' },
-    { level: 12, file: 'q12_bed.mp3', prize: '₹12,50,000', tier: 'Tier 3', desc: 'Taiko drums and creeping string tension in the hot seat.' },
-    { level: 13, file: 'q13_bed.mp3', prize: '₹25,00,000', tier: 'Tier 3', desc: 'Quarter-crore stakes with resonant sub-bass countdown.' },
-    { level: 14, file: 'q14_bed.mp3', prize: '₹50,00,000', tier: 'Penultimate Climax', desc: 'The penultimate ₹50 Lakh question before the summit.' },
-    { level: 15, file: 'q15_bed.mp3', prize: '₹1,00,00,000', tier: '₹1 Crore Grand Finale', desc: 'The ultimate climax bed - heart-stopping silence and thunderous brass.' }
+    { level: 1, file: 'q1_to_q5_bed.mp3', prize: '₹1K – ₹10K', tier: 'Q1–Q5 Continuous Flow (60s)', desc: 'Uninterrupted Tier 1 flow bed across Q1 to Q5 — no lights down breaks.' },
+    { level: 6, file: '/public/assets/aistudio/q6_bed_f9e5384c.mp3', prize: '₹20,000', tier: 'Q6 • Tier 2 Entry (90s)', desc: 'Authentic Q6 suspense bed as Tier 2 begins.' },
+    { level: 7, file: '/public/assets/aistudio/q7_bed_009125c9.mp3', prize: '₹40,000', tier: 'Q7 • Tier 2 (90s)', desc: 'Authentic Q7 suspense bed with deepening tension.' },
+    { level: 8, file: '/public/assets/aistudio/q8_bed_1535e743.mp3', prize: '₹80,000', tier: 'Q8 • Tier 2 (90s)', desc: 'Authentic Q8 rising suspense bed.' },
+    { level: 9, file: '/public/assets/aistudio/q9_bed_37107a78.mp3', prize: '₹1,60,000', tier: 'Q9 • Pre-Milestone (90s)', desc: 'One step from the ₹3,20,000 safe haven.' },
+    { level: 10, file: '/public/assets/aistudio/q10_bed_c1cab28e.mp3', prize: '₹3,20,000', tier: 'Q10 • Safety Net 2 (90s)', desc: 'Authentic Q10 milestone suspense bed.' },
+    { level: 11, file: '/public/assets/aistudio/q11_bed_543a1f07.mp3', prize: '₹6,40,000', tier: 'Q11 • Tier 3 High Stakes', desc: 'Authentic Q11 high-stakes suspense bed.' },
+    { level: 12, file: '/public/assets/aistudio/q12_bed_72a87fa8.mp3', prize: '₹12,50,000', tier: 'Q12 • Tier 3', desc: 'Authentic Q12 intense suspense bed.' },
+    { level: 13, file: '/public/assets/aistudio/q13_bed_16cf28f1.mp3', prize: '₹25,00,000', tier: 'Q13 • Quarter-Crore', desc: 'Authentic Q13 quarter-crore tension bed.' },
+    { level: 14, file: '/public/assets/aistudio/q14_bed_7dac6280.mp3', prize: '₹50,00,000', tier: 'Q14 • Penultimate Climax', desc: 'Authentic Q14 ₹50 Lakh climax bed.' },
+    { level: 15, file: '/public/assets/aistudio/q15_bed_73e371bb.mp3', prize: '₹1 CRORE', tier: 'Q15 • ₹1 Crore Grand Finale', desc: 'Authentic Q15 ultimate ₹1 Crore suspense bed.' }
   ];
 
   window.playQuestionBed = function(level) {
@@ -275,20 +276,37 @@
 
     window.MillionaireFeatures.isPlayingRemix = true;
     window.MillionaireFeatures.activeRemixStyle = 'bed_q' + level;
-    window.MillionaireFeatures.activeTrackTitle = 'Question ' + bed.level + ' Suspense Bed (' + bed.prize + ')';
+    window.MillionaireFeatures.activeTrackTitle = (level === 1 ? 'Q1–Q5 Flow Bed' : 'Q' + bed.level + ' Suspense Bed') + ' (' + bed.prize + ')';
 
     // Update UI highlights
     $('.remix-card').removeClass('active');
     $('.bed-card').removeClass('active');
     $('#bed-card-' + level).addClass('active');
 
-    $('#nowPlayingTitle').text('Question ' + bed.level + ' Suspense Bed (' + bed.prize + ')');
+    $('#nowPlayingTitle').text(window.MillionaireFeatures.activeTrackTitle);
     $('#nowPlayingMeta').text(bed.tier + ' • ' + bed.desc);
     $('#waveformVisualizer').addClass('active');
     $('#btnToggleRemixPlay').html('<span>⏸️ Pause</span>');
 
     if (typeof showToastNotification === 'function') {
-      showToastNotification("🎵 Playing Question " + bed.level + " Bed: " + bed.prize + " (" + bed.tier + ")");
+      showToastNotification("🎵 Playing " + window.MillionaireFeatures.activeTrackTitle);
+    }
+  };
+
+  window.playSoundboardCue = function(filename, label, loop) {
+    if (typeof startGeneralSound === 'function') {
+      startGeneralSound(filename, !!loop);
+    } else {
+      var audio = new Audio("Sounds/" + filename);
+      audio.loop = !!loop;
+      audio.volume = window.MillionaireFeatures.masterVolume || 0.85;
+      audio.play();
+    }
+    $('#nowPlayingTitle').text(label || filename);
+    $('#nowPlayingMeta').text('Live Soundboard Cue • ' + filename);
+    $('#waveformVisualizer').addClass('active');
+    if (typeof showToastNotification === 'function') {
+      showToastNotification("🔊 Cue: " + (label || filename));
     }
   };
 

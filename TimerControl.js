@@ -84,16 +84,25 @@ function startTimer(){
 	if(window.TournamentEngine && window.TournamentEngine.isActive){
 		return;
 	}
+	var level = (window.GameVariables && window.GameVariables.QuestionLevel) ? window.GameVariables.QuestionLevel : 1;
+	if(level > 10){
+		hideTimer();
+		return;
+	}
 	clearInterval(timerInterval);
 	clearInterval(timerBarInterval);
 	clearInterval(timerBottomBarInterval);
 	if(seconds <= 0){
-		var level = (window.GameVariables && window.GameVariables.QuestionLevel) ? window.GameVariables.QuestionLevel : 1;
-		if(level < 6){
-			tier1Timer();
-		} else {
-			tier2Timer();
-		}
+		var setting = level < 6
+			? (window.GameVariables ? window.GameVariables.FirstTierTimer : 3)
+			: (window.GameVariables ? window.GameVariables.SecondTierTimer : 4);
+		if(setting == 1) tier1Timer();
+		else if(setting == 2) tier2Timer();
+		else if(setting == 3) tier3Timer();
+		else if(setting == 4) tier4Timer();
+		else if(setting == 5) tier5Timer();
+		else if(level < 6) tier3Timer();
+		else tier4Timer();
 	}
 	$('.timerStrapDiv').stop(true, true).show();
 	timerInterval = setInterval(function (){
@@ -474,6 +483,14 @@ function tier4Timer(){
 	setTimerBarMilliSeconds();
 }
 
+function tier5Timer(){
+	$('.timerSecondsDiv>span').text(new Intl.NumberFormat('en', { numberingSystem: window.GameVariables.TimerNumberingSystem }).format(90));
+	seconds = 90;
+	tierSetting = 5;
+	resetTimer();
+	setTimerBarMilliSeconds();
+}
+
 function setTimerBarMilliSeconds(){
 	if(tierSetting == 1){
 		timerBarMilliSeconds = 24.9;/* 25 - 0.1 */
@@ -490,6 +507,10 @@ function setTimerBarMilliSeconds(){
 	else if(tierSetting == 4){
 		timerBarMilliSeconds = 99.9;/* 100 - 0.1 */
 		timerBottomBarMilliseconds = 6000;
+	}
+	else if(tierSetting == 5){
+		timerBarMilliSeconds = 149.9;/* 150 - 0.1 */
+		timerBottomBarMilliseconds = 9000;
 	}
 	else{
 		timerBarMilliSeconds = 0;

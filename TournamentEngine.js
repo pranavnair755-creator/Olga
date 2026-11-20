@@ -23,55 +23,72 @@
 
   var TOURNAMENT_QUESTIONS = [
     {
-      q: "Which Indian monument was commissioned by Mughal Emperor Shah Jahan as a mausoleum for his beloved wife?",
-      a: "Taj Mahal", b: "Red Fort", c: "Qutub Minar", d: "Fatehpur Sikri",
-      correct: "a", category: "Indian Heritage"
+      q: "Which 19th-century Treaty, signed in 1809 between Maharaja Ranjit Singh and the British East India Company, fixed the Sutlej River as the boundary of the Sikh Empire?",
+      a: "Treaty of Amritsar", b: "Treaty of Lahore", c: "Treaty of Sugauli", d: "Treaty of Salbai",
+      correct: "a", category: "Indian History"
     },
     {
-      q: "In international cricket, how many total deliveries are bowled in a standard 6-ball over?",
-      a: "5 balls", b: "6 balls", c: "8 balls", d: "10 balls",
-      correct: "b", category: "Sports"
+      q: "In quantum mechanics, which principle states that no two identical fermions can simultaneously occupy the same quantum state within a quantum system?",
+      a: "Heisenberg Uncertainty Principle", b: "Pauli Exclusion Principle", c: "Hund's Rule of Maximum Multiplicity", d: "Aufbau Principle",
+      correct: "b", category: "Theoretical Physics"
     },
     {
-      q: "What is the chemical symbol for Gold on the periodic table of elements?",
-      a: "Ag", b: "Fe", c: "Au", d: "Pb",
-      correct: "c", category: "Science"
+      q: "Which strait separates the North and South Islands of New Zealand?",
+      a: "Bass Strait", b: "Torres Strait", c: "Cook Strait", d: "Foveaux Strait",
+      correct: "c", category: "World Geography"
     },
     {
-      q: "Which state in India is internationally famous for its tranquil backwaters and houseboats in Alappuzha?",
-      a: "Goa", b: "Kerala", c: "Odisha", d: "Assam",
-      correct: "b", category: "Geography"
+      q: "Who was the first Indian woman to preside over the Indian National Congress at its Kanpur session in 1925?",
+      a: "Annie Besant", b: "Sarojini Naidu", c: "Nellie Sengupta", d: "Vijaya Lakshmi Pandit",
+      correct: "b", category: "Freedom Movement"
     },
     {
-      q: "Which energetic dance number from the blockbuster film 'RRR' won the Oscar for Best Original Song in 2023?",
-      a: "Chaiyya Chaiyya", b: "Jai Ho", c: "Naatu Naatu", d: "Kesariya",
-      correct: "c", category: "Cinema"
+      q: "Which element, with atomic number 74, has the highest melting point of all pure metals and is denoted by the chemical symbol 'W'?",
+      a: "Osmium", b: "Rhenium", c: "Tungsten", d: "Tantalum",
+      correct: "c", category: "Chemistry"
     },
     {
-      q: "Who was the legendary Chairman of the Drafting Committee of the Indian Constitution, honored as its chief architect?",
-      a: "Dr. B. R. Ambedkar", b: "Sardar Vallabhbhai Patel", c: "Dr. Rajendra Prasad", d: "Jawaharlal Nehru",
-      correct: "a", category: "Indian Polity"
+      q: "Which ancient Indian treatise on statecraft, economic policy, and military strategy was discovered in manuscript form by R. Shamasastry in 1905?",
+      a: "Arthashastra", b: "Manusmriti", c: "Nitisara", d: "Rajatarangini",
+      correct: "a", category: "Classical Literature"
     },
     {
-      q: "What is the official currency of the United Kingdom?",
-      a: "Euro", b: "British Pound", c: "Franc", d: "Krona",
-      correct: "b", category: "World Currencies"
+      q: "In international finance, the 'Bretton Woods Conference' of 1944 led to the creation of the IMF and which other major global institution?",
+      a: "World Trade Organization", b: "International Bank for Reconstruction and Development", c: "Bank for International Settlements", d: "Asian Development Bank",
+      correct: "b", category: "Global Economics"
     },
     {
-      q: "Which planet in our solar system is nicknamed the 'Red Planet' due to iron oxide on its surface?",
-      a: "Venus", b: "Mercury", c: "Mars", d: "Jupiter",
-      correct: "c", category: "Astronomy"
+      q: "Which spacecraft became the first human-made object to enter interstellar space in August 2012?",
+      a: "Pioneer 10", b: "New Horizons", c: "Voyager 1", d: "Voyager 2",
+      correct: "c", category: "Space Exploration"
     },
     {
-      q: "Which Indian space mission achieved a historic soft landing near the lunar South Pole on August 23, 2023?",
-      a: "Mangalyaan", b: "Aditya-L1", c: "Chandrayaan-3", d: "Gaganyaan",
-      correct: "c", category: "Space Science"
+      q: "Which Chola king launched a historic naval expedition across the Bay of Bengal in 1025 CE against the Srivijaya Empire in Southeast Asia?",
+      a: "Raja Raja Chola I", b: "Kulothunga Chola I", c: "Rajendra Chola I", d: "Parantaka Chola I",
+      correct: "c", category: "Medieval History"
     },
     {
-      q: "Who is celebrated as the legendary author of the timeless Sanskrit epic 'Abhijnanasakuntalam' and 'Meghaduta'?",
-      a: "Kalidasa", b: "Bhasa", c: "Banabhatta", d: "Tulsidas",
-      correct: "a", category: "Literature"
+      q: "Which mathematician proved Fermat's Last Theorem in 1994, solving a 358-year-old conjecture in number theory?",
+      a: "Andrew Wiles", b: "Grigori Perelman", c: "Terence Tao", d: "Srinivasa Ramanujan",
+      correct: "a", category: "Mathematics"
     }
+  ];
+
+  var TOURNAMENT_ELIMINATION_CUE = "/public/assets/aistudio/30sec_UK_41885c7f.wav";
+  var FINALE_10Q_CUE = "/public/assets/aistudio/45sec_UK_1eea5d72.wav";
+
+  // Elimination Round (Q1-Q10): 30sec UK cue for every question, plays until answer is revealed, Q1-Q5 right answer tune on reveal
+  var TOURNAMENT_AUDIO_MAP = [
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q1
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q2
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q3
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q4
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q5
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q6
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q7
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q8
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }, // Q9
+    { correct: "q1_to_q4_correct.mp3", lose: "q1_to_q5_lose.mp3" }  // Q10
   ];
 
   window.TournamentEngine = {
@@ -81,6 +98,9 @@
     timerInterval: null,
     userAnswered: false,
     waitingForNext: false,
+    stageStep: 'idle', // 'question' | 'options' | 'answered' | 'revealed'
+    pendingReveal: null,
+    activeQuestions: [],
     players: [],
     
     // Entry point: starts the tournament as a real game on stage
@@ -208,14 +228,54 @@
       $('#btnTopTournament').html('<span>⚡ Exit Tournament</span>');
 
       if (typeof showToastNotification === 'function') {
-        showToastNotification("🏆 TOURNAMENT GAME STARTED: 10 Contestants competing on the main stage!");
+        showToastNotification("🏆 TOURNAMENT STARTED: Generating brand new progressive questions...");
       }
 
-      this.loadStageQuestion(0);
+      this.activeQuestions = [];
+      this.stageStep = 'loading';
+      $('#tourneyStageBannerQText').html('ELIMINATION ROUND • GENERATING BRAND NEW PROGRESSIVE QUESTIONS...');
+      $('#tourneyStageFeedback').html('<span style="color:#7dd3fc;">Preparing a fresh set of 10 escalating tournament questions...</span>');
+      $('#tourneyStageNextBtn').hide();
+      this.updateLeaderboardUI();
+
+      var self = this;
+      var runId = this._tourneyRunId;
+      $.ajax({
+        type: "POST",
+        url: "/api/generate-questions?t=" + new Date().getTime(),
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ mode: "tournament_elimination", format: "10q", roundId: Date.now() }),
+        dataType: "json",
+        success: function(data) {
+          if (!self.isActive || self._tourneyRunId !== runId) return;
+          if (data && Array.isArray(data.questions) && data.questions.length >= 10) {
+            self.activeQuestions = data.questions.slice(0, 10).map(function(item) {
+              return {
+                q: (item.question || "").replace(/\\n/g, "<br />"),
+                a: item.a || "",
+                b: item.b || "",
+                c: item.c || "",
+                d: item.d || "",
+                correct: (item.correct || "a").toLowerCase(),
+                category: item.category || "General Knowledge"
+              };
+            });
+          } else {
+            self.activeQuestions = TOURNAMENT_QUESTIONS.slice();
+          }
+          self.loadStageQuestion(0);
+        },
+        error: function() {
+          if (!self.isActive || self._tourneyRunId !== runId) return;
+          self.activeQuestions = TOURNAMENT_QUESTIONS.slice();
+          self.loadStageQuestion(0);
+        }
+      });
     },
 
     loadStageQuestion: function(index) {
-      if (index >= TOURNAMENT_QUESTIONS.length) {
+      var qList = (this.activeQuestions && this.activeQuestions.length > 0) ? this.activeQuestions : TOURNAMENT_QUESTIONS;
+      if (index >= qList.length) {
         this.finishTournament();
         return;
       }
@@ -223,23 +283,26 @@
       this.currentQuestionIndex = index;
       this.userAnswered = false;
       this.waitingForNext = false;
-      var q = TOURNAMENT_QUESTIONS[index];
+      this.pendingReveal = null;
+      this.stageStep = 'question';
+      clearInterval(this.timerInterval);
+      var q = qList[index];
 
       // Hide coronation overlay
       $('#tournamentStageCoronation').hide();
 
-      // Ensure stage straps are positioned accurately above A/B/C/D options
-      $('.answerGroupBDiv').stop(true, true).css({ perspective: 4096, bottom: '0px' });
-      $('.answerGroupADiv').stop(true, true).css({ perspective: 4096, bottom: '0px' });
-      $('.questionStrapDiv').stop(true, true).css({ perspective: 4096, bottom: '220px', rotateX: '0deg', opacity: 1 });
-
-      // Reset stage answer lozenge styling
+      // Reset stage answer lozenge styling & hide options off-screen first
       if (typeof resetAnswerStraps === 'function') {
         resetAnswerStraps();
       }
       $('.finalImg, .correctImg, .diagonalImg').css('opacity', 0);
-      $('.answerP').css({ 'color': '#FFFFFF', 'text-shadow': '2px 2px 0px black', 'opacity': 1 });
-      $('.letterP').css({ 'color': '#EA932C', 'text-shadow': '2px 2px 0px black', 'opacity': 1 });
+      $('.answerP').css({ 'color': '#FFFFFF', 'text-shadow': '2px 2px 0px black', 'opacity': 0 });
+      $('.letterP').css({ 'color': '#EA932C', 'text-shadow': '2px 2px 0px black', 'opacity': 0 });
+
+      // Position straps off-screen for classic reveal animation (Question first, then Options)
+      $('.answerGroupBDiv').stop(true, true).transition({ perspective: 4096, bottom: '-331px' }, 0);
+      $('.answerGroupADiv').stop(true, true).transition({ perspective: 4096, bottom: '-256px' }, 0);
+      $('.questionStrapDiv').stop(true, true).transition({ perspective: 4096, bottom: '-192px', rotateX: '0deg' }, 0);
 
       // Populate stage question & answers
       $('.questionTd').html(q.q);
@@ -248,33 +311,62 @@
       $('#answerC .answerP').html(q.c);
       $('#answerD .answerP').html(q.d);
 
-      // Reveal question & answer straps on stage
+      // Animate ONLY the Question Strap onto stage first
       if (typeof revealQuestionAndAnswerStraps === 'function') {
         revealQuestionAndAnswerStraps();
       } else {
         $('.questionStrapDiv, .answerStrapDiv').css('opacity', 1);
       }
-      if (typeof revealAllAnswersAtOnce === 'function') {
-        revealAllAnswersAtOnce();
-      }
+      $('.questionStrapDiv').transition({ perspective: 4096, bottom: '62px' }, 700, 'cubic-bezier(0.5, 2, 0.5, 1)');
 
-      // Update stage tournament banner
-      $('#tourneyStageBannerQText').html('QUESTION ' + (index + 1) + ' OF 10 • ' + q.category.toUpperCase() + ' • SPEED BONUS ACTIVE');
-      $('#tourneyStageFeedback').html('<span style="color:#94a3b8;">Choose Answer A, B, C, or D on the stage lozenges below!</span>');
-      $('#tourneyStageNextBtn').hide();
+      // Update stage tournament banner & let user control when to reveal options
+      $('#tourneyStageBannerQText').html('ELIMINATION ROUND • QUESTION ' + (index + 1) + ' OF 10 • ' + q.category.toUpperCase() + ' • SPEED BONUS ACTIVE');
+      $('#tourneyStageFeedback').html('<span style="color:#7dd3fc;">Press <strong>→ (Next)</strong> or click <strong>Reveal Options</strong> when ready!</span>');
+      $('#tourneyStageNextBtn').show().text('Reveal Options →');
+      $('#tourneyStageTimerDisplay').text('0.00s');
+      $('#tourneyStageBannerTimer').text('0.00s');
 
       // Ensure solo timer remains hidden during Tournament questions
       $('.timerStrapDiv').stop(true, true).css({ transition: 'none', opacity: 0 }).hide();
 
-      // Play suspense background bed
+      // Play 30sec UK cue for every question in the Elimination Round until answer is revealed
       if (typeof startLongPassiveSound === 'function') {
-        startLongPassiveSound("q1_to_q5_bed.mp3", true);
+        var curSrc = (window.GameVariables && window.GameVariables.LongPassiveSound && window.GameVariables.LongPassiveSound.src) || '';
+        var isPlayingCue = curSrc.indexOf('30sec_UK_41885c7f.wav') !== -1 && !window.GameVariables.LongPassiveSound.paused;
+        if (!isPlayingCue) {
+          startLongPassiveSound(TOURNAMENT_ELIMINATION_CUE, true);
+        }
       }
 
-      // Start reaction timer
+      this.updateLeaderboardUI();
+    },
+
+    revealStageOptions: function() {
+      if (!this.isActive || this.stageStep !== 'question') return;
+      this.stageStep = 'options';
+
+      // Classic broadcast animation: slide Question up, then slide Answer Groups A & B in
+      $('.questionStrapDiv').transition({ perspective: 4096, bottom: '229px' }, 250, 'linear', function() {
+        $('.questionStrapDiv').transition({ perspective: 4096, bottom: '220px' }, 375, 'linear');
+      });
+      setTimeout(function() {
+        $('.answerGroupADiv').transition({ perspective: 4096, bottom: '0px' }, 500, 'cubic-bezier(0.5, 1.35, 0.5, 1)');
+      }, 0);
+      setTimeout(function() {
+        $('.answerGroupBDiv').transition({ perspective: 4096, bottom: '0px' }, 500, 'cubic-bezier(0.5, 1.25, 0.5, 1)');
+      }, 80);
+
+      if (typeof revealAllAnswersAtOnce === 'function') {
+        revealAllAnswersAtOnce();
+      } else {
+        $('.answerP, .letterP, .diagonalImg').css('opacity', 1);
+      }
+
+      $('#tourneyStageFeedback').html('<span style="color:#94a3b8;">Choose Answer A, B, C, or D (or press 1-4)!</span>');
+      $('#tourneyStageNextBtn').hide();
+
+      // Start reaction timer once options are revealed
       this.questionStartTime = Date.now();
-      $('#tourneyStageTimerDisplay').text('0.00s');
-      $('#tourneyStageBannerTimer').text('0.00s');
       var self = this;
       clearInterval(this.timerInterval);
       this.timerInterval = setInterval(function() {
@@ -282,13 +374,18 @@
         $('#tourneyStageTimerDisplay').text(elapsed + 's');
         $('#tourneyStageBannerTimer').text(elapsed + 's');
       }, 50);
-
-      this.updateLeaderboardUI();
     },
 
     handleStageAnswer: function(optLetter) {
       if (!this.isActive || this.userAnswered) return;
+      if (this.stageStep === 'question') {
+        if (typeof showToastNotification === 'function') {
+          showToastNotification("👉 Reveal the options first (press → or click Reveal Options)!");
+        }
+        return;
+      }
       this.userAnswered = true;
+      this.stageStep = 'answered';
       clearInterval(this.timerInterval);
 
       var opt = (optLetter || '').toLowerCase();
@@ -297,17 +394,13 @@
       $('#tourneyStageTimerDisplay').text(elapsed.toFixed(2) + 's');
       $('#tourneyStageBannerTimer').text(elapsed.toFixed(2) + 's');
 
-      var q = TOURNAMENT_QUESTIONS[this.currentQuestionIndex];
+      var qList = (this.activeQuestions && this.activeQuestions.length > 0) ? this.activeQuestions : TOURNAMENT_QUESTIONS;
+      var q = qList[this.currentQuestionIndex];
       var isCorrect = (opt === q.correct.toLowerCase());
 
-      // 1. Lock in answer on stage lozenge (Orange Highlight)
+      // Lock in answer on stage lozenge (Orange Highlight) — keep Elimination cue playing until answer is revealed
       $('#answer' + optUpper + ' .finalImg').css('opacity', 1);
       $('#answer' + optUpper + ' .letterP, #answer' + optUpper + ' .answerP').css({ 'color': '#000000', 'text-shadow': 'none' });
-
-      // Play lock-in final answer sound
-      if (typeof startLongActiveSound === 'function') {
-        startLongActiveSound("final_answer_1.mp3");
-      }
 
       // Update User stats
       var user = this.players.find(function(p) { return p.isUser; });
@@ -335,29 +428,34 @@
         }
       }
 
-      var self = this;
-      var runIdAtAnswer = this._tourneyRunId;
-      // Dramatic reveal pause (650ms)
-      setTimeout(function() {
-        if (!self.isActive || self._tourneyRunId !== runIdAtAnswer) return;
-        self.revealStageAnswerResult(optUpper, isCorrect, q, elapsed);
-      }, 650);
+      // Wait for user to manually trigger the answer reveal via controls
+      this.pendingReveal = { optUpper: optUpper, isCorrect: isCorrect, q: q, elapsed: elapsed };
+      $('#tourneyStageFeedback').html('<span style="color:#fbbf24;font-weight:700;">🔒 Option (' + optUpper + ') locked! Press <strong>→ (Next)</strong> or click <strong>Reveal Answer</strong>.</span>');
+      $('#tourneyStageNextBtn').show().text('Reveal Answer →');
     },
 
     revealStageAnswerResult: function(optUpper, isCorrect, q, elapsed) {
+      this.stageStep = 'revealed';
+      this.pendingReveal = null;
       var correctUpper = q.correct.toUpperCase();
+      var audioSpecRes = TOURNAMENT_AUDIO_MAP[this.currentQuestionIndex] || TOURNAMENT_AUDIO_MAP[0];
+
+      if (typeof stopLongActiveSound === 'function') {
+        stopLongActiveSound();
+      }
+      if (typeof stopLongPassiveSound === 'function') {
+        stopLongPassiveSound();
+      }
 
       if (isCorrect) {
-        // Flash answer green (correct)
+        // Flash answer green (correct); play right answer cue in Round 2 (Q6-Q10)
         if (typeof showFinalToCorrectAnswerStep1 === 'function') {
           showFinalToCorrectAnswerStep1(optUpper);
         } else {
           $('#answer' + optUpper + ' .correctImg').css('opacity', 1);
         }
-        if (typeof playCorrectAnswerSound === 'function') {
-          playCorrectAnswerSound();
-        } else if (typeof startGeneralSound === 'function') {
-          startGeneralSound("q1_to_q4_correct.mp3", false);
+        if (audioSpecRes.correct && typeof startGeneralSound === 'function') {
+          startGeneralSound(audioSpecRes.correct, false);
         }
         $('#tourneyStageFeedback').html('<span style="color:#10b981;font-weight:700;">✨ CORRECT! Response Time: ' + elapsed.toFixed(2) + 's. Points awarded!</span>');
       } else {
@@ -367,10 +465,8 @@
         } else {
           $('#answer' + correctUpper + ' .correctImg').css('opacity', 1);
         }
-        if (typeof playWrongAnswerSound === 'function') {
-          playWrongAnswerSound();
-        } else if (typeof startGeneralSound === 'function') {
-          startGeneralSound("q1_to_q5_lose.mp3", false);
+        if (typeof startGeneralSound === 'function') {
+          startGeneralSound(audioSpecRes.lose || "q1_to_q5_lose.mp3", false);
         }
         $('#tourneyStageFeedback').html('<span style="color:#ef4444;font-weight:700;">❌ INCORRECT! Correct answer was (' + correctUpper + '). Speed counts!</span>');
       }
@@ -397,6 +493,20 @@
         $('#tourneyStageNextBtn').show().text('Next Question (Q' + (this.currentQuestionIndex + 2) + ') →');
       } else {
         $('#tourneyStageNextBtn').show().text('CROWN TOURNAMENT CHAMPION 🏆 →');
+      }
+    },
+
+    advanceStageStep: function() {
+      if (!this.isActive) return;
+      if (this.stageStep === 'question') {
+        this.revealStageOptions();
+      } else if (this.stageStep === 'answered' && this.pendingReveal) {
+        var r = this.pendingReveal;
+        this.revealStageAnswerResult(r.optUpper, r.isCorrect, r.q, r.elapsed);
+      } else if (this.stageStep === 'revealed' || this.waitingForNext) {
+        this.loadStageQuestion(this.currentQuestionIndex + 1);
+      } else if (this.stageStep === 'options' && typeof showToastNotification === 'function') {
+        showToastNotification("⏳ Choose Answer A, B, C, or D (or press 1-4) first!");
       }
     },
 
@@ -458,8 +568,7 @@
     },
 
     nextQuestion: function() {
-      if (!this.isActive) return;
-      this.loadStageQuestion(this.currentQuestionIndex + 1);
+      this.advanceStageStep();
     },
 
     finishTournament: function() {
@@ -483,14 +592,14 @@
 
       if (isUserWinner) {
         $('#stageCoronationTitle').html('👑 CONGRATULATIONS! YOU WON THE TOURNAMENT HOT SEAT!');
-        $('#stageCoronationDesc').html('You scored <strong>' + winner.score + ' pts</strong> with a lightning total speed of <strong>' + winner.totalTime.toFixed(2) + 's</strong>, finishing <strong>#1 on the Leaderboard</strong>!<br/>You have officially qualified for the Grand Finale Hot Seat to play for <strong>₹1 CRORE</strong>!');
-        $('#btnStageEnterHotSeat').show().text('Enter ₹1 Crore Hot Seat Grand Finale (10 Questions) →');
+        $('#stageCoronationDesc').html('You scored <strong>' + winner.score + ' pts</strong> with a lightning total speed of <strong>' + winner.totalTime.toFixed(2) + 's</strong>, finishing <strong>#1 on the Leaderboard</strong>!<br/>You have officially qualified for the Grand Finale Hot Seat to play for <strong>$1 MILLION</strong>!');
+        $('#btnStageEnterHotSeat').show().text('Enter $1 Million Hot Seat Grand Finale (10 Questions) →');
       } else {
         var wName = winner ? winner.name : 'Aarav Sharma';
         var wScore = winner ? winner.score : '940';
         $('#stageCoronationTitle').html('⚡ Tournament Knockout Concluded');
-        $('#stageCoronationDesc').html('Contestant <strong>' + wName + '</strong> won the Hot Seat with ' + wScore + ' pts.<br/>You finished strong! You can now challenge the Hot Seat for ₹1 Crore or replay the tournament.');
-        $('#btnStageEnterHotSeat').show().text('Enter Hot Seat as Challenger (₹1 Crore Finale) →');
+        $('#stageCoronationDesc').html('Contestant <strong>' + wName + '</strong> won the Hot Seat with ' + wScore + ' pts.<br/>You finished strong! You can now challenge the Hot Seat for $1 Million or replay the tournament.');
+        $('#btnStageEnterHotSeat').show().text('Enter Hot Seat as Challenger ($1 Million Finale) →');
       }
 
       if (typeof window.saveGameplaySession === 'function') {
@@ -501,15 +610,40 @@
     launchFinaleHotSeat: function() {
       this.exitToSoloMode(false);
 
-      // Configure game variables for 10-Question Finale Money Tree in INR (₹)
+      // Configure game variables for 10-Question Finale Money Tree in USD ($)
       if (window.GameVariables) {
+        window.GameVariables.IsTenQuestionFormat = true;
         window.GameVariables.PrizeAmounts = [
-          10000, 20000, 50000, 100000, 250000, 375000, 500000, 1000000, 5000000, 10000000
+          1000, 2000, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000
         ];
-        window.GameVariables.NumberPrefix = "₹";
+        window.GameVariables.NumberPrefix = "$";
+        window.GameVariables.TopPrizeQuestionNumber = 10;
+        window.GameVariables.STQUnlockedLevel = 6;
+        window.GameVariables.FirstTierTimer = 4;  // 60 seconds for Q1-Q5
+        window.GameVariables.SecondTierTimer = 5; // 90 seconds for Q6-Q10
         window.GameVariables.TopPrizeText = [
-          "₹10,000", "₹20,000", "₹50,000", "₹1,00,000", "₹2,50,000",
-          "₹3,75,000", "₹5,00,000", "₹10,00,000", "₹50,00,000", "₹1 CRORE"
+          "$1,000", "$2,000", "$5,000", "$10,000", "$25,000",
+          "$50,000", "$100,000", "$250,000", "$500,000", "$1 MILLION"
+        ];
+        window.GameVariables.LightsDownSounds = [
+          "q1_to_q5_lights_down.mp3", "", "", "", "",
+          "lights_down_1.mp3", "lights_down_2.mp3", "lights_down_3.mp3", "lights_down_4.mp3", "lights_down_5.mp3"
+        ];
+        window.GameVariables.RoundBackgroundSounds = [
+          FINALE_10Q_CUE, FINALE_10Q_CUE, FINALE_10Q_CUE, FINALE_10Q_CUE, FINALE_10Q_CUE,
+          FINALE_10Q_CUE, FINALE_10Q_CUE, FINALE_10Q_CUE, FINALE_10Q_CUE, FINALE_10Q_CUE
+        ];
+        window.GameVariables.FinalAnswerSounds = [
+          "", "", "", "", "",
+          "final_answer_1.mp3", "final_answer_2.mp3", "final_answer_3.mp3", "final_answer_4.mp3", "final_answer_5.mp3"
+        ];
+        window.GameVariables.CorrectAnswerSounds = [
+          "q1_to_q4_correct.mp3", "q1_to_q4_correct.mp3", "q1_to_q4_correct.mp3", "q1_to_q4_correct.mp3", "q5_correct.mp3",
+          "q6_correct.mp3", "q7_correct.mp3", "q8_correct.mp3", "q9_correct.mp3", "q15_correct.mp3"
+        ];
+        window.GameVariables.WrongAnswerSounds = [
+          "q1_to_q5_lose.mp3", "q1_to_q5_lose.mp3", "q1_to_q5_lose.mp3", "q1_to_q5_lose.mp3", "q1_to_q5_lose.mp3",
+          "q6_lose.mp3", "q7_lose.mp3", "q8_lose.mp3", "q9_lose.mp3", "q15_lose.mp3"
         ];
       }
 
@@ -518,7 +652,7 @@
       }
 
       if (typeof showToastNotification === 'function') {
-        showToastNotification("🌟 FINALE HOT SEAT ACTIVE: 10 Questions to ₹1 Crore (₹2.5 Lakh Safe Haven)!");
+        showToastNotification("🌟 FINALE HOT SEAT ACTIVE: 10 Tough Questions • 60s (Q1–Q5) / 90s (Q6–Q10)!");
       }
     },
 
@@ -564,7 +698,10 @@
 
     var currentQ = null;
     if (window.TournamentEngine && window.TournamentEngine.isActive) {
-      currentQ = TOURNAMENT_QUESTIONS[window.TournamentEngine.currentQuestionIndex];
+      var tList = (window.TournamentEngine.activeQuestions && window.TournamentEngine.activeQuestions.length > 0)
+        ? window.TournamentEngine.activeQuestions
+        : TOURNAMENT_QUESTIONS;
+      currentQ = tList[window.TournamentEngine.currentQuestionIndex];
     } else if (window.GameVariables && window.GameVariables.QuestionInProgress && window.GameVariables.QuestionsAndAnswers && window.GameVariables.QuestionLevel) {
       currentQ = window.GameVariables.QuestionsAndAnswers[window.GameVariables.QuestionLevel - 1];
     } else {

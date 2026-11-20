@@ -16,7 +16,7 @@ function init(){
 		document.querySelector('.timerBaseDiv').style.opacity = 0;
 	}
 	
-	$('.totalPrizeMoneyWonDiv').html(accounting.formatMoney(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 2] || 0, "Rs. ", 0));
+	$('.totalPrizeMoneyWonDiv').html(accounting.formatMoney(window.GameVariables.PrizeAmounts[window.GameVariables.QuestionLevel - 2] || 0, "$", 0));
 	
 	/* Set initial transitions on certain elements */
 	$('.answerStrapLifeLineCenterContainerDiv').transition({perspective:0, scale:[0.2, 0.2], opacity:0}, 1);
@@ -92,13 +92,20 @@ function getAllQuestionsForGame(){
 }
 
 function fetchAndLoadQuestions(callback){
+	var isTenQ = !!(window.GameVariables && ((window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts.length === 10) || window.GameVariables.IsTenQuestionFormat));
 	$.ajax({
 		type: "POST",
 		url: "/api/generate-questions?t=" + new Date().getTime(),
 		contentType: "application/json; charset=utf-8",
+		data: JSON.stringify({
+			mode: isTenQ ? "tournament_finale" : "solo",
+			format: isTenQ ? "10q" : "15q",
+			difficulty: isTenQ ? "hard" : "standard",
+			roundId: Date.now()
+		}),
 		dataType: "json",
 		success: function(data){
-			if(data && Array.isArray(data.questions) && data.questions.length >= 15){
+			if(data && Array.isArray(data.questions) && data.questions.length >= 10){
 				window.GameVariables.QuestionsAndAnswers = data.questions.map(function(q){
 					var qAndA = new QuestionAndAnswer();
 					qAndA.Category = q.category || "General Knowledge";
@@ -305,8 +312,8 @@ function resetAndStartNewGame(onComplete){
 	if(typeof stqLifeLineSlideOut === 'function') stqLifeLineSlideOut();
 	renderMoneyTreeTable();
 	setLevelOnMoneyTree(1);
-	$('.totalPrizeMoneyWonDiv').html("Rs. 0");
-	$('.winningsP').html("Rs. 0");
+	$('.totalPrizeMoneyWonDiv').html("$0");
+	$('.winningsP').html("$0");
 	hideTotalPrizeMoneyStrap();
 	hideMillionaireTitleStrap();
 	hideLevelStrap();
@@ -323,7 +330,7 @@ function resetAndStartNewGame(onComplete){
 			window.launchSoloGame();
 		} else {
 			setQuestion(false);
-			showToastNotification("✨ New game loaded with fresh questions! Ready for Question 1 (Rs. 1,000)");
+			showToastNotification("✨ New game loaded with fresh questions! Ready for Question 1 ($100)");
 		}
 		if(typeof onComplete === 'function') onComplete();
 	});

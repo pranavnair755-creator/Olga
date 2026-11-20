@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Type } from '@google/genai';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,6 +25,7 @@ const mimeTypes = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.mp3': 'audio/mpeg',
+  '.ogg': 'audio/ogg',
   '.wav': 'audio/wav',
   '.ttf': 'font/ttf',
   '.otf': 'font/otf',
@@ -207,58 +208,318 @@ function randomizeQuestionOptions(rawQ) {
   return newQ;
 }
 
-// Generates a brand new, randomized 15-question game + 15 switch questions
-function generateDynamicGameQuestions() {
-  const t1 = shuffleArray(tier1Pool).slice(0, 5).map(randomizeQuestionOptions);
-  const t2 = shuffleArray(tier2Pool).slice(0, 5).map(randomizeQuestionOptions);
-  const t3 = shuffleArray(tier3Pool).slice(0, 5).map(randomizeQuestionOptions);
-  const sw = shuffleArray(switchPool).slice(0, 15).map(randomizeQuestionOptions);
+// Track recently served questions so consecutive rounds never repeat
+const recentQuestionTexts = [];
+const MAX_RECENT_QUESTIONS = 120;
 
+function recordRecentQuestions(questions) {
+  if (!Array.isArray(questions)) return;
+  for (const q of questions) {
+    const text = (q && (q.question || q.q) || '').trim();
+    if (text && !recentQuestionTexts.includes(text)) {
+      recentQuestionTexts.push(text);
+    }
+  }
+  while (recentQuestionTexts.length > MAX_RECENT_QUESTIONS) {
+    recentQuestionTexts.shift();
+  }
+}
+
+function pickNonRepeating(pool, count) {
+  const fresh = pool.filter(q => !recentQuestionTexts.includes((q.question || '').trim()));
+  const selected = shuffleArray(fresh).slice(0, count);
+  if (selected.length < count) {
+    const usedSet = new Set(selected.map(q => q.question));
+    const remainder = shuffleArray(pool.filter(q => !usedSet.has(q.question))).slice(0, count - selected.length);
+    selected.push(...remainder);
+  }
+  return selected.map(randomizeQuestionOptions);
+}
+
+// Generates a brand new, randomized game + switch questions with ascending difficulty
+function generateDynamicGameQuestions(mode = 'solo') {
+  if (mode === 'tournament_elimination') {
+    const t1 = pickNonRepeating(tier1Pool, 3);
+    const t2 = pickNonRepeating(tier2Pool, 4);
+    const t3 = pickNonRepeating(tier3Pool, 3);
+    const questions = [...t1, ...t2, ...t3];
+    recordRecentQuestions(questions);
+    return {
+      questions,
+      switchQuestions: pickNonRepeating(switchPool, 10)
+    };
+  }
+  if (mode === 'tournament_finale') {
+    const t2 = pickNonRepeating(tier2Pool, 5);
+    const t3 = pickNonRepeating(tier3Pool, 10);
+    const questions = [...t2, ...t3];
+    recordRecentQuestions(questions);
+    return {
+      questions,
+      switchQuestions: pickNonRepeating(tier3Pool, 15)
+    };
+  }
+  const t1 = pickNonRepeating(tier1Pool, 5);
+  const t2 = pickNonRepeating(tier2Pool, 5);
+  const t3 = pickNonRepeating(tier3Pool, 5);
+  const questions = [...t1, ...t2, ...t3];
+  recordRecentQuestions(questions);
   return {
-    questions: [...t1, ...t2, ...t3],
-    switchQuestions: sw
+    questions,
+    switchQuestions: pickNonRepeating(switchPool, 15)
   };
 }
 
-// POST /api/generate-questions - Generates 15 progressive questions + 15 switch questions
-app.post('/api/generate-questions', async (req, res) => {
+const questionItemSchema = {
+  type: Type.OBJECT,
+  properties: {
+    category: { type: Type.STRING, description: "Short trivia category name." },
+    question: { type: Type.STRING, description: "Clear, factual trivia question." },
+    a: { type: Type.STRING, description: "Option A text." },
+    b: { type: Type.STRING, description: "Option B text." },
+    c: { type: Type.STRING, description: "Option C text." },
+    d: { type: Type.STRING, description: "Option D text." },
+    correct: { type: Type.STRING, description: "Correct option letter: 'a', 'b', 'c', or 'd'." },
+  },
+  required: ["category", "question", "a", "b", "c", "d", "correct"],
+};
+
+// Decode HTML entities returned by OpenTDB
+function decodeHtmlEntities(str) {
+  if (!str || typeof str !== 'string') return '';
+  const named = {
+    '&quot;': '"', '&amp;': '&', '&lt;': '<', '&gt;': '>', '&apos;': "'",
+    '&#039;': "'", '&nbsp;': ' ', '&ndash;': '–', '&mdash;': '—',
+    '&lsquo;': '‘', '&rsquo;': '’', '&ldquo;': '“', '&rdquo;': '”',
+    '&hellip;': '…', '&deg;': '°', '&eacute;': 'é', '&egrave;': 'è',
+    '&aacute;': 'á', '&iacute;': 'í', '&oacute;': 'ó', '&uacute;': 'ú',
+    '&ntilde;': 'ñ', '&uuml;': 'ü', '&ouml;': 'ö', '&auml;': 'ä',
+    '&ccedil;': 'ç', '&szlig;': 'ß', '&pi;': 'π', '&times;': '×',
+  };
+  return str
+    .replace(/&[a-zA-Z0-9#]+;/g, (entity) => {
+      if (named[entity]) return named[entity];
+      if (entity.startsWith('&#x') || entity.startsWith('&#X')) {
+        const code = parseInt(entity.slice(3, -1), 16);
+        return isNaN(code) ? entity : String.fromCharCode(code);
+      }
+      if (entity.startsWith('&#')) {
+        const code = parseInt(entity.slice(2, -1), 10);
+        return isNaN(code) ? entity : String.fromCharCode(code);
+      }
+      return entity;
+    });
+}
+
+// Persistent OpenTDB session token so live trivia questions never repeat across rounds
+let openTdbSessionToken = null;
+
+async function getOpenTdbToken(forceNew = false) {
+  if (openTdbSessionToken && !forceNew) return openTdbSessionToken;
   try {
-    // If Gemini API is available and key is valid, attempt live AI question generation
+    const resp = await fetch('https://opentdb.com/api_token.php?command=request');
+    const data = await resp.json();
+    if (data && data.response_code === 0 && data.token) {
+      openTdbSessionToken = data.token;
+      return openTdbSessionToken;
+    }
+  } catch (e) {
+    // Ignore token request error
+  }
+  return null;
+}
+
+async function fetchOpenTdbBatch(amount, difficulty) {
+  const token = await getOpenTdbToken(false);
+  const buildUrl = (tok) => {
+    let url = `https://opentdb.com/api.php?amount=${amount}&type=multiple`;
+    if (difficulty) url += `&difficulty=${difficulty}`;
+    if (tok) url += `&token=${encodeURIComponent(tok)}`;
+    return url;
+  };
+
+  let resp = await fetch(buildUrl(token));
+  let data = await resp.json();
+
+  // If session token is exhausted (code 4) or invalid (code 3), request a fresh token and retry once
+  if (data && (data.response_code === 3 || data.response_code === 4)) {
+    const freshToken = await getOpenTdbToken(true);
+    resp = await fetch(buildUrl(freshToken));
+    data = await resp.json();
+  }
+
+  if (!data || data.response_code !== 0 || !Array.isArray(data.results)) {
+    return [];
+  }
+
+  return data.results.map((item) => {
+    const raw = {
+      category: decodeHtmlEntities(item.category || 'General Knowledge').replace(/^Entertainment:\s*|^Science:\s*/i, ''),
+      question: decodeHtmlEntities(item.question || ''),
+      a: decodeHtmlEntities(item.correct_answer || ''),
+      b: decodeHtmlEntities((item.incorrect_answers && item.incorrect_answers[0]) || ''),
+      c: decodeHtmlEntities((item.incorrect_answers && item.incorrect_answers[1]) || ''),
+      d: decodeHtmlEntities((item.incorrect_answers && item.incorrect_answers[2]) || ''),
+      correct: 'a',
+    };
+    return randomizeQuestionOptions(raw);
+  });
+}
+
+async function generateLiveOpenTdbQuestions(mode = 'solo') {
+  try {
+    if (mode === 'tournament_finale') {
+      // 10-question Finale: 100% HARD questions — significantly tougher than the Elimination Round
+      const [hardMain, hardSwitch] = await Promise.all([
+        fetchOpenTdbBatch(15, 'hard'),
+        fetchOpenTdbBatch(15, 'hard'),
+      ]);
+      if (hardMain.length >= 10) {
+        recordRecentQuestions(hardMain);
+        return {
+          questions: hardMain.slice(0, 15),
+          switchQuestions: hardSwitch.length >= 10 ? hardSwitch.slice(0, 15) : pickNonRepeating(tier3Pool, 15),
+        };
+      }
+    } else if (mode === 'tournament_elimination') {
+      // Elimination Round: progressive easy (3) -> medium (4) -> hard (3)
+      const [easy, medium, hard] = await Promise.all([
+        fetchOpenTdbBatch(3, 'easy'),
+        fetchOpenTdbBatch(4, 'medium'),
+        fetchOpenTdbBatch(3, 'hard'),
+      ]);
+      const combined = [...easy, ...medium, ...hard];
+      if (combined.length >= 10) {
+        recordRecentQuestions(combined);
+        return {
+          questions: combined.slice(0, 10),
+          switchQuestions: pickNonRepeating(switchPool, 10),
+        };
+      }
+    } else {
+      // Solo 15-question mode: progressive easy (5) -> medium (5) -> hard (5) + 15 switch
+      const [easy, medium, hard, sw] = await Promise.all([
+        fetchOpenTdbBatch(5, 'easy'),
+        fetchOpenTdbBatch(5, 'medium'),
+        fetchOpenTdbBatch(5, 'hard'),
+        fetchOpenTdbBatch(15, 'medium'),
+      ]);
+      const combined = [...easy, ...medium, ...hard];
+      if (combined.length >= 15) {
+        recordRecentQuestions(combined);
+        return {
+          questions: combined.slice(0, 15),
+          switchQuestions: sw.length >= 10 ? sw.slice(0, 15) : pickNonRepeating(switchPool, 15),
+        };
+      }
+    }
+  } catch (e) {
+    // Fall through to local pool if offline
+  }
+  return null;
+}
+
+// POST /api/generate-questions - Generates a brand new progressively tougher set of questions for Solo, Tournament Elimination, or 10Q Finale
+app.post('/api/generate-questions', async (req, res) => {
+  const body = req.body || {};
+  const isHard10Q = !!(body.format === '10q' || body.difficulty === 'hard');
+  const mode = body.mode || (isHard10Q ? 'tournament_finale' : 'solo');
+  const roundNonce = `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
+  const avoidList = recentQuestionTexts.slice(-60);
+  const avoidInstruction = avoidList.length > 0
+    ? `\nDo NOT repeat or closely paraphrase any of these recently asked questions:\n- ${avoidList.join('\n- ')}\n`
+    : '';
+
+  try {
+    // Priority 1: Gemini AI live generation (when GEMINI_API_KEY is configured)
     if (isGeminiAvailable && ai) {
       try {
-        const prompt = `Generate a brand new set of 15 Who Wants To Be A Millionaire questions with ascending difficulty, plus 15 alternative switch questions for the "Switch the Question" lifeline.
-The game is played in Indian Rupees (from Rs. 1,000 up to Rs. 1 CRORE).
-The questions should cover diverse trivia: Indian & world history, geography, science & technology, cinema & pop culture, sports, literature, and nature.
-Progressive Difficulty:
-- Q1 to Q5: Tier 1 (Fun, accessible trivia)
-- Q6 to Q10: Tier 2 (Intermediate general knowledge)
-- Q11 to Q15: Tier 3 (Mastery level, high stakes up to Rs. 1 CRORE)
-Return JSON:
-{
-  "questions": [ { "category": "...", "question": "...", "a": "...", "b": "...", "c": "...", "d": "...", "correct": "a" } ],
-  "switchQuestions": [ { "category": "...", "question": "...", "a": "...", "b": "...", "c": "...", "d": "...", "correct": "b" } ]
-}`;
+        let prompt = '';
+        let expectedMin = 15;
+        let needSwitch = true;
+
+        if (mode === 'tournament_elimination') {
+          expectedMin = 10;
+          needSwitch = false;
+          prompt = `Round Session ID: ${roundNonce}
+Generate a BRAND NEW set of 10 Who Wants To Be A Millionaire Tournament Elimination questions.
+Every single question must be fresh, factually verified, unambiguous, and cover diverse topics (world history, science, geography, literature, arts, sports, economics, space, technology, culture).
+STRICTLY ESCALATING DIFFICULTY:
+- Q1 to Q3: Accessible warmup trivia.
+- Q4 to Q6: Moderate-to-challenging general knowledge.
+- Q7 to Q8: Challenging intermediate trivia.
+- Q9 to Q10: Hard specialist knockout questions.${avoidInstruction}
+Return a JSON object with a "questions" array of exactly 10 items.`;
+        } else if (mode === 'tournament_finale') {
+          expectedMin = 10;
+          prompt = `Round Session ID: ${roundNonce}
+Generate a BRAND NEW set of 15 BRUTALLY TOUGH, championship-level Who Wants To Be A Millionaire questions (10 for the $1 Million Finale + 5 reserve) and 15 equally hard alternative switch questions.
+These 10-question Finale questions MUST be SIGNIFICANTLY TOUGHER than the Elimination Round — zero easy or moderate warmups!
+The game is played in US Dollars (from $1,000 up to $1,000,000 in 10 questions).
+STRICTLY ESCALATING GRANDMASTER DIFFICULTY:
+- Q1 to Q3 ($1,000 – $5,000): Already hard specialist trivia (deep world history, advanced science, niche geography, economics, classical literature).
+- Q4 to Q6 ($10,000 – $50,000): Very hard expert trivia (lesser-known historical treaties, Nobel laureates, astrophysics, rare biological/chemical facts).
+- Q7 to Q8 ($100,000 – $250,000): Elite championship difficulty requiring deep academic/encyclopedic knowledge.
+- Q9 to Q10 & reserve ($500,000 – $1 MILLION): Grandmaster / $1 MILLION finale difficulty — genuinely formidable, obscure-yet-unambiguous facts.${avoidInstruction}
+Return a JSON object with "questions" (15 items) and "switchQuestions" (15 items).`;
+        } else {
+          expectedMin = 15;
+          prompt = `Round Session ID: ${roundNonce}
+Generate a BRAND NEW set of 15 Who Wants To Be A Millionaire Solo Hot Seat questions and 15 alternative switch questions for the "Switch the Question" lifeline.
+The game is played in US Dollars (from $100 up to $1,000,000).
+Cover diverse trivia: world & Indian history, geography, science & technology, cinema & arts, sports, literature, economics, and nature.
+STRICTLY ESCALATING DIFFICULTY as the player climbs the money tree:
+- Q1 to Q3 ($100 – $300): Easy, fun, accessible trivia.
+- Q4 to Q5 ($500 – $1,000): Moderate general knowledge.
+- Q6 to Q8 ($2,000 – $8,000): Challenging intermediate trivia.
+- Q9 to Q11 ($16,000 – $64,000): Hard specialist knowledge.
+- Q12 to Q15 ($125,000 – $1,000,000): Very hard to brutal grandmaster / $1 MILLION difficulty.${avoidInstruction}
+Return a JSON object with "questions" (15 items) and "switchQuestions" (15 items).`;
+        }
+
+        const schemaProperties = {
+          questions: {
+            type: Type.ARRAY,
+            items: questionItemSchema,
+          }
+        };
+        const requiredFields = ["questions"];
+        if (needSwitch) {
+          schemaProperties.switchQuestions = {
+            type: Type.ARRAY,
+            items: questionItemSchema,
+          };
+          requiredFields.push("switchQuestions");
+        }
 
         const response = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
+          model: 'gemini-4-hydrogen',
           contents: prompt,
           config: {
             responseMimeType: 'application/json',
-            temperature: 0.9,
+            responseSchema: {
+              type: Type.OBJECT,
+              properties: schemaProperties,
+              required: requiredFields,
+            },
           }
         });
 
         const cleaned = (response.text || '').replace(/^```json\s*/i, '').replace(/\s*```$/i, '').trim();
         const parsed = JSON.parse(cleaned);
 
-        if (parsed && Array.isArray(parsed.questions) && parsed.questions.length >= 15) {
+        if (parsed && Array.isArray(parsed.questions) && parsed.questions.length >= expectedMin) {
+          const finalQuestions = parsed.questions.slice(0, mode === 'tournament_elimination' ? 10 : 15).map(randomizeQuestionOptions);
+          recordRecentQuestions(finalQuestions);
+          const finalSwitch = (Array.isArray(parsed.switchQuestions) && parsed.switchQuestions.length >= 10)
+            ? parsed.switchQuestions.slice(0, 15).map(randomizeQuestionOptions)
+            : pickNonRepeating(mode === 'tournament_finale' ? tier3Pool : switchPool, 15);
           return res.json({
             success: true,
-            source: 'gemini',
-            questions: parsed.questions.slice(0, 15).map(randomizeQuestionOptions),
-            switchQuestions: (Array.isArray(parsed.switchQuestions) && parsed.switchQuestions.length >= 15) 
-              ? parsed.switchQuestions.slice(0, 15).map(randomizeQuestionOptions)
-              : shuffleArray(switchPool).slice(0, 15).map(randomizeQuestionOptions)
+            source: 'gemini-4-hydrogen',
+            mode,
+            questions: finalQuestions,
+            switchQuestions: finalSwitch
           });
         }
       } catch (apiError) {
@@ -266,20 +527,34 @@ Return JSON:
       }
     }
 
-    // Generate brand new dynamic game questions from curated multi-tier pools
-    const dynamicGame = generateDynamicGameQuestions();
+    // Priority 2: Live OpenTDB API with session token (brand new, non-repeating questions every round)
+    const liveOpenTdb = await generateLiveOpenTdbQuestions(mode);
+    if (liveOpenTdb) {
+      return res.json({
+        success: true,
+        source: mode === 'tournament_finale' ? 'opentdb_hard_10q' : 'opentdb_live',
+        mode,
+        questions: liveOpenTdb.questions,
+        switchQuestions: liveOpenTdb.switchQuestions
+      });
+    }
+
+    // Priority 3: Offline fallback from curated multi-tier pools
+    const dynamicGame = generateDynamicGameQuestions(mode);
     return res.json({
       success: true,
-      source: 'dynamic_engine',
+      source: mode === 'tournament_finale' ? 'dynamic_hard_10q' : 'dynamic_engine',
+      mode,
       questions: dynamicGame.questions,
       switchQuestions: dynamicGame.switchQuestions
     });
   } catch (err) {
     handleGeminiError(err);
-    const dynamicGame = generateDynamicGameQuestions();
+    const dynamicGame = generateDynamicGameQuestions(mode);
     return res.json({
       success: true,
       source: 'dynamic_fallback',
+      mode,
       questions: dynamicGame.questions,
       switchQuestions: dynamicGame.switchQuestions
     });
@@ -359,7 +634,7 @@ Return JSON:
   "correct": "a"
 }`;
         const textRes = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
+          model: 'gemini-4-hydrogen',
           contents: textPrompt,
           config: { responseMimeType: 'application/json' }
         });

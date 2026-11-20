@@ -33,11 +33,7 @@ $(document).ready(function(){
 				return;
 			}
 			else if(e.keyCode == 39 || e.keyCode == 13 || e.keyCode == 32) { // Right Arrow, Enter, Space
-				if(window.TournamentEngine.waitingForNext) {
-					window.TournamentEngine.nextQuestion();
-				} else if(typeof showToastNotification === 'function') {
-					showToastNotification("⏳ Choose Answer A, B, C, or D first!");
-				}
+				window.TournamentEngine.advanceStageStep();
 				return;
 			}
 			else if(e.keyCode == 27) { // Escape
@@ -86,12 +82,9 @@ $(document).ready(function(){
 				if(window.GameVariables.IsWalkingAway == false){
 					playFinalAnswerSound();
 				}
-				var runIdAtAnswer = window.GameVariables.SoloRunId;
-				setTimeout(function(){
-					if(window.GameVariables.SoloRunId === runIdAtAnswer && (!window.TournamentEngine || !window.TournamentEngine.isActive) && window.GameVariables.QuestionSequenceCounter == 7){
-						$(document).trigger($.Event('keydown', { keyCode: 39, fromControlDeck: true }));
-					}
-				}, 1200);
+				if(typeof showToastNotification === 'function') {
+					showToastNotification("🔒 Option (" + letterUpper + ") locked! Press [→] Next to reveal answer.");
+				}
 			}
 		}
 
@@ -350,6 +343,7 @@ $(document).ready(function(){
 							else if(window.GameVariables.FirstTierTimer == 2) tier2Timer();
 							else if(window.GameVariables.FirstTierTimer == 3) tier3Timer();
 							else if(window.GameVariables.FirstTierTimer == 4) tier4Timer();
+							else if(window.GameVariables.FirstTierTimer == 5) tier5Timer();
 							$('.timerStrapDiv').show().transition({perspective:0, opacity: 1, 'bottom':'241px'}, 500, 'linear');
 						}
 						else if(window.GameVariables.QuestionLevel < 11){
@@ -357,6 +351,7 @@ $(document).ready(function(){
 							else if(window.GameVariables.SecondTierTimer == 2) tier2Timer();
 							else if(window.GameVariables.SecondTierTimer == 3) tier3Timer();
 							else if(window.GameVariables.SecondTierTimer == 4) tier4Timer();
+							else if(window.GameVariables.SecondTierTimer == 5) tier5Timer();
 							$('.timerStrapDiv').show().transition({perspective:0, opacity: 1, 'bottom':'241px'}, 500, 'linear');
 						}
 					});
@@ -405,31 +400,9 @@ $(document).ready(function(){
 						$('.timerStrapDiv').transition({perspective:0, 'bottom':'269px'}, 125, 'linear', function(){
 							$('.timerStrapDiv').transition({perspective:0, opacity: 0, 'bottom':'269px'}, 0, function(){ $(this).hide(); });
 						});
-
-						setTimeout(function(){
-							if(window.GameVariables.SoloRunId !== runIdStep7 || (window.TournamentEngine && window.TournamentEngine.isActive)) return;
-							if(window.GameVariables.QuestionSequenceCounter == 8){
-								$(document).trigger($.Event('keydown', { keyCode: 39, fromControlDeck: true }));
-								setTimeout(function(){
-									if(window.GameVariables.SoloRunId !== runIdStep7 || (window.TournamentEngine && window.TournamentEngine.isActive)) return;
-									if(window.GameVariables.QuestionSequenceCounter == 9){
-										$(document).trigger($.Event('keydown', { keyCode: 39, fromControlDeck: true }));
-										if(window.GameVariables.QuestionLevel <= 15 && !window.GameVariables.IsWalkingAway){
-											setTimeout(function(){
-												if(window.GameVariables.SoloRunId !== runIdStep7 || (window.TournamentEngine && window.TournamentEngine.isActive)) return;
-												playLightsDownSound();
-												setTimeout(function(){
-													if(window.GameVariables.SoloRunId !== runIdStep7 || (window.TournamentEngine && window.TournamentEngine.isActive)) return;
-													if(typeof window.presentNextSoloQuestion === 'function'){
-														window.presentNextSoloQuestion();
-													}
-												}, 550);
-											}, 600);
-										}
-									}
-								}, 1600);
-							}
-						}, 1800);
+						if(typeof showToastNotification === 'function'){
+							showToastNotification("✨ CORRECT! Press [→] Next to show winnings.");
+						}
 					}
 					else if(window.GameVariables.CurrentTargetAnswer != window.GameVariables.CurrentCorrectAnswer){
 						revealNormalToCorrectAnswerStep1(window.GameVariables.CurrentCorrectAnswer.toUpperCase());
@@ -468,7 +441,8 @@ $(document).ready(function(){
 					}
 				}
 				else if(window.GameVariables.QuestionSequenceCounter == 8){
-					if(window.GameVariables.QuestionLevel == 15){
+					var maxLevelStep8 = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts.length) ? window.GameVariables.PrizeAmounts.length : 15;
+					if(window.GameVariables.QuestionLevel == maxLevelStep8){
 						if(typeof window.saveGameplaySession === 'function'){
 							window.saveGameplaySession(true, false);
 						}
@@ -494,7 +468,8 @@ $(document).ready(function(){
 					}
 				}
 				else if(window.GameVariables.QuestionSequenceCounter == 9){
-					if(window.GameVariables.QuestionLevel == 15){
+					var maxLevelStep9 = (window.GameVariables.PrizeAmounts && window.GameVariables.PrizeAmounts.length) ? window.GameVariables.PrizeAmounts.length : 15;
+					if(window.GameVariables.QuestionLevel == maxLevelStep9){
 						hideMillionaireTitleStrap();
 						window.GameVariables.IsWalkingAway = true;
 						window.GameVariables.QuestionSequenceCounter = 99;

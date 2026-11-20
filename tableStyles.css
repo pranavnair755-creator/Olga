@@ -105,6 +105,34 @@ table {
 	background-position-y: center;
 }
 
+/* 10-Question Finale Money Tree Typography & Spacing */
+.moneyTreeTable.tree-10q {
+	bottom: 145px;
+}
+
+.moneyTreeTable.tree-10q tr {
+	height: 68px;
+	max-height: 68px;
+}
+
+.moneyTreeTable.tree-10q .moneyTreeAmountTd,
+.moneyTreeTable.tree-10q .moneyTreeAmountWhiteTd {
+	font-size: 25pt;
+	height: 68px;
+	padding-left: 12px;
+	letter-spacing: -0.5px;
+}
+
+.moneyTreeTable.tree-10q .moneyTreeLevelTd,
+.moneyTreeTable.tree-10q .moneyTreeLevelWhiteTd {
+	font-size: 27pt;
+	height: 68px;
+}
+
+.moneyTreeTable.tree-10q .moneyTreeDiagonalTd {
+	height: 68px;
+}
+
 .questionTable {
 	width:1500px;
 	max-width:1500px;

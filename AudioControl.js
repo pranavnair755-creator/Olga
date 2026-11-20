@@ -126,11 +126,19 @@ function fadeOutLongPassiveSound(vol){
 	}
 }
 
+function resolveAudioSrc(filename){
+	if(!filename) return "";
+	if(filename.indexOf('/') === 0 || filename.indexOf('http://') === 0 || filename.indexOf('https://') === 0){
+		return filename;
+	}
+	return "Sounds/" + filename;
+}
+
 /* Start the long passive sound with the specified filename */
 function startLongPassiveSound(filename, loop){
 	try{
 		stopLongPassiveSound();
-		window.GameVariables.LongPassiveSound = new Audio("Sounds/" + filename);
+		window.GameVariables.LongPassiveSound = new Audio(resolveAudioSrc(filename));
 		if(loop === false){
 			window.GameVariables.LongPassiveSound.loop = false;
 		} else if(loop === true){
@@ -260,7 +268,7 @@ function startGeneralSound(filename, loop){
 		if(window.GameVariables && window.GameVariables.GeneralSound){
 			try { window.GameVariables.GeneralSound.pause(); } catch(e){}
 		}
-		window.GameVariables.GeneralSound = new Audio("Sounds/" + filename);
+		window.GameVariables.GeneralSound = new Audio(resolveAudioSrc(filename));
 		if(loop === true){
 			window.GameVariables.GeneralSound.loop = true;
 		}

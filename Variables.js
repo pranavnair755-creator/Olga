@@ -15,16 +15,16 @@
 	gameVariables.ContestantLocation = "Location";
 	
 	/* Number Format Settings */
-	gameVariables.LocaleCode = "en-IN";				/* Uses the country's locale code to determine the numbering system that the country uses. See the "List of Locales.txt" file for a list of locale codes. */
+	gameVariables.LocaleCode = "en-US";				/* Uses the country's locale code to determine the numbering system that the country uses. See the "List of Locales.txt" file for a list of locale codes. */
 	gameVariables.FormatOptions = {
 		style: "decimal",							/* The formatting style to use. Use code "decimal" for plain number formatting and "currency" for currency formatting. */
 		numberingSystem: "latn",					/* The numbering system to be used for the amounts. */
 		minimumFractionDigits: 0,					/* Displays the number of Fraction Digits at the end of the amount. */
 		maximumFractionDigits: 0,
 	};
-	gameVariables.ReplaceCharacterBefore = "₹";		/* Targets the exact character that you want to replace. */
-	gameVariables.ReplaceCharacterAfter = "Rs. ";	/* Replaces the targeted character with a different one. */
-	gameVariables.NumberPrefix = "Rs. ";			/* The text that displays before the amount. */
+	gameVariables.ReplaceCharacterBefore = "$";		/* Targets the exact character that you want to replace. */
+	gameVariables.ReplaceCharacterAfter = "$";		/* Replaces the targeted character with a different one. */
+	gameVariables.NumberPrefix = "$";				/* The text that displays before the amount. */
 	gameVariables.NumberSuffix = "";				/* The text that displays after the amount. */
 	gameVariables.LevelNumberingSystem = "latn";	/* The numbering system to be used for the question levels. Uses the same numbering system for the amounts. */
 	gameVariables.PaFNumberingSystem = "latn";		/* The numbering system to be used for the Phone a Friend timer. Uses the same numbering system for the amounts. */
@@ -33,10 +33,10 @@
 	
 	gameVariables.UseTopPrizeText = true;			/* If set to true, the top prize amount(s) will be displayed in text instead of a number. */
 	gameVariables.TopPrizeQuestionNumber = 15;		/* The value where the top prize text(s) are displayed above the level set by this value. */
-	gameVariables.TopPrizeText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Rs. 1 CRORE"];
+	gameVariables.TopPrizeText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","$1 MILLION"];
 	gameVariables.UseTopPrizeLevelStrapText = false;	/* If set to true, the top prize amount shown in the Level Strap will be displayed in text instead of a number. */
 	gameVariables.TopPrizeLevelStrapQuestionNumber = 15;	/* The value where the top prize text in the Level Strap is displayed above the level set by this value. */
-	gameVariables.TopPrizeLevelStrapText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Rs. 1 CRORE"];
+	gameVariables.TopPrizeLevelStrapText = ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","$1 MILLION"];
 	gameVariables.UseZeronaireText = false;			/* If set to true, when a contestant walks away with nothing, the Zeronaire text is displayed instead of just 0 and a currency. */
 	gameVariables.ZeronaireText = "Nothing";		/* The text that displays when a contestant walks away with nothing. */
 	
@@ -46,12 +46,13 @@
 	gameVariables.TPMTextScale = 100;				/* DEFAULT: 100%; The percentage of scale on the X axis (left and right) for the text that shows the total prize money. */
 	
 	/* Timer Settings */
-	gameVariables.FirstTierTimer = 1;				/* The amount of seconds for Tier 1 (Questions 1 to 5). */
-	gameVariables.SecondTierTimer = 2;				/* The amount of seconds for Tier 2 (Questions 6 to 10). */
+	gameVariables.FirstTierTimer = 3;				/* The amount of seconds for Tier 1 (Questions 1 to 5): 45 seconds. */
+	gameVariables.SecondTierTimer = 4;				/* The amount of seconds for Tier 2 (Questions 6 to 10): 60 seconds. (Questions 11 to 15: no timer) */
 	/* 1 = 15 seconds */
 	/* 2 = 30 seconds */
 	/* 3 = 45 seconds */
 	/* 4 = 60 seconds */
+	/* 5 = 90 seconds */
 	
 	gameVariables.displaySecondsAndTimerBar = true;
 	/* true = Shows the number of seconds & its timer bar, KBC style */
@@ -132,12 +133,28 @@
 	gameVariables.QuestionsAndAnswers = [];
 	gameVariables.SwitchQuestionsAndAnswers = [];
 	gameVariables.AskTheAudienceVotingPercents = [];
-	gameVariables.PrizeAmounts = [1000,2000,3000,5000,10000,20000,40000,80000,160000,320000,640000,1250000,2500000,5000000,10000000];
+	gameVariables.PrizeAmounts = [100,200,300,500,1000,2000,4000,8000,16000,32000,64000,125000,250000,500000,1000000];
 	gameVariables.FastestFingerContestantWinners = [false,false,true,false,false,false,true,false,false,false];
 	gameVariables.FastestFingerContestantTimes = [2.541,4.541,5.541,6.541,9.541,13.541,15.541,16.541,7.541,19.541];
 	gameVariables.FastestFingerContestants = []
-	gameVariables.LightsDownSounds = ["q1_to_q5_lights_down.mp3","q1_to_q5_lights_down.mp3","q1_to_q5_lights_down.mp3","q1_to_q5_lights_down.mp3","q1_to_q5_lights_down.mp3","lights_down_1.mp3","lights_down_2.mp3","lights_down_3.mp3","lights_down_4.mp3","lights_down_5.mp3","lights_down_1.mp3","lights_down_2.mp3","lights_down_3.mp3","lights_down_4.mp3","lights_down_5.mp3"];
-	gameVariables.RoundBackgroundSounds = ["q1_to_q5_bed.mp3","q1_to_q5_bed.mp3","q1_to_q5_bed.mp3","q1_to_q5_bed.mp3","q1_to_q5_bed.mp3","q6_bed.mp3","q7_bed.mp3","q8_bed.mp3","q9_bed.mp3","q10_bed.mp3","q11_bed.mp3","q12_bed.mp3","q13_bed.mp3","q14_bed.mp3","q15_bed.mp3"];
+	gameVariables.LightsDownSounds = ["q1_to_q5_lights_down.mp3","","","","","lights_down_1.mp3","lights_down_2.mp3","lights_down_3.mp3","lights_down_4.mp3","lights_down_5.mp3","lights_down_1.mp3","lights_down_2.mp3","lights_down_3.mp3","lights_down_4.mp3","lights_down_5.mp3"];
+	gameVariables.RoundBackgroundSounds = [
+		"q1_to_q5_bed.mp3",
+		"q1_to_q5_bed.mp3",
+		"q1_to_q5_bed.mp3",
+		"q1_to_q5_bed.mp3",
+		"q1_to_q5_bed.mp3",
+		"/public/assets/aistudio/q6_bed_f9e5384c.mp3",
+		"/public/assets/aistudio/q7_bed_009125c9.mp3",
+		"/public/assets/aistudio/q8_bed_1535e743.mp3",
+		"/public/assets/aistudio/q9_bed_37107a78.mp3",
+		"/public/assets/aistudio/q10_bed_c1cab28e.mp3",
+		"/public/assets/aistudio/q11_bed_543a1f07.mp3",
+		"/public/assets/aistudio/q12_bed_72a87fa8.mp3",
+		"/public/assets/aistudio/q13_bed_16cf28f1.mp3",
+		"/public/assets/aistudio/q14_bed_7dac6280.mp3",
+		"/public/assets/aistudio/q15_bed_73e371bb.mp3"
+	];
 	gameVariables.FinalAnswerSounds = ["","","","","","final_answer_1.mp3","final_answer_2.mp3","final_answer_3.mp3","final_answer_4.mp3","final_answer_5.mp3","final_answer_1.mp3","final_answer_2.mp3","final_answer_3.mp3","final_answer_4.mp3","final_answer_5.mp3"];
 	gameVariables.CorrectAnswerSounds = ["q1_to_q4_correct.mp3","q1_to_q4_correct.mp3","q1_to_q4_correct.mp3","q1_to_q4_correct.mp3","q5_correct.mp3","q6_correct.mp3","q7_correct.mp3","q8_correct.mp3","q9_correct.mp3","q10_correct.mp3","q11_correct.mp3","q12_correct.mp3","q13_correct.mp3","q14_correct.mp3","q15_correct.mp3"];
 	gameVariables.WrongAnswerSounds = ["q1_to_q5_lose.mp3","q1_to_q5_lose.mp3","q1_to_q5_lose.mp3","q1_to_q5_lose.mp3","q1_to_q5_lose.mp3","q6_lose.mp3","q7_lose.mp3","q8_lose.mp3","q9_lose.mp3","q10_lose.mp3","q11_lose.mp3","q12_lose.mp3","q13_lose.mp3","q14_lose.mp3","q15_lose.mp3"];
